@@ -100,10 +100,12 @@ No es una ayuda ni una subvención: si dejas de pagar, el Estado cubre al banco 
 
 **Bancos adheridos (67):** BBVA, CaixaBank, Santander, Sabadell, Bankinter, Unicaja, Abanca, Kutxabank, Ibercaja, Cajamar y 57 cajas rurales más.
 
-**Validación automática:** La calculadora cruza datos entre pestañas y muestra avisos en tiempo real cuando detecta incompatibilidades con el ICO:
+**Validación automática:** La calculadora cruza datos entre pestañas y muestra avisos cuando detecta incompatibilidades con el ICO:
 - Precio > 325.000 € (supera el máximo del programa)
 - Sueldo > 37.800 €/persona (supera el límite de ingresos)
 - Obra nueva seleccionada (el ICO no aplica para viviendas sobre plano, solo obra terminada o segunda mano)
+
+Los avisos aparecen en tres sitios: inline en la pestaña Calculadora (sección ICO), inline en la pestaña Mi situación (bajo los sueldos), y como **popup modal centrado** que hay que cerrar pulsando "Entendido".
 
 ### Vivienda habitual — obligaciones
 Sección informativa que explica:
@@ -126,11 +128,12 @@ Permite simular si te puedes permitir el piso:
 - **Precio máximo recomendado** según tus ingresos y los parámetros de hipoteca
 - **Dinero necesario en mano** con desglose real (mismos datos que la calculadora)
 
-### Guardar y cargar escenarios
-Botones en la pestaña Calculadora:
+### Guardar, cargar y resetear escenarios
+Botones siempre visibles debajo de las pestañas:
 
-- **Guardar escenario**: descarga un archivo `.json` con todos los datos y resultados. Le pones un nombre (ej: "Piso Deva 4") y se descarga como `casitas-piso-deva-4.json`
+- **Guardar escenario**: descarga un archivo `.json` con todos los datos y resultados (calculadora + situación personal). Le pones un nombre (ej: "Piso Deva 4") y se descarga como `casitas-piso-deva-4.json`
 - **Cargar escenario**: sube un `.json` guardado y rellena automáticamente todos los campos (incluida la pestaña Mi situación). Puedes modificar valores y volver a guardar
+- **Nuevo escenario**: resetea todos los campos a valores por defecto (Madrid, 250k, sin hipoteca, 1 comprador 25k). El navegador recuerda los valores al recargar la página; este botón limpia todo para empezar de cero
 
 Los archivos se pueden compartir por WhatsApp, email, Drive... Cualquiera puede cargarlos en la calculadora.
 
