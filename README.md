@@ -100,6 +100,8 @@ No es una ayuda ni una subvención: si dejas de pagar, el Estado cubre al banco 
 
 **Bancos adheridos (67):** BBVA, CaixaBank, Santander, Sabadell, Bankinter, Unicaja, Abanca, Kutxabank, Ibercaja, Cajamar y 57 cajas rurales más.
 
+**Importante — sobre plano:** El aval ICO **NO aplica para viviendas sobre plano** (que aún no están construidas). Solo aplica para obra nueva ya terminada o segunda mano. La calculadora muestra un aviso cuando se selecciona "Obra nueva" con el ICO activo.
+
 ### Vivienda habitual — obligaciones
 Sección informativa que explica:
 
