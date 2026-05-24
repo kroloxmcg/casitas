@@ -979,6 +979,13 @@ const CCAA_DATA = {
       { id: 'discapacidad', label: 'Discapacidad >= 33% (vivienda habitual < 250.000 €)', hint: 'Tipo del 3,5%. En pareja, basta que uno tenga discapacidad >= 33%.', apply: function(base, precio) { return precio <= 250000 ? base * 0.035 : null; } },
       { id: 'victima', label: 'Victima violencia domestica/terrorismo (< 150.000 €)', hint: 'Tipo del 3,5% para vivienda habitual.', apply: function(base, precio) { return precio <= 150000 ? base * 0.035 : null; } },
       { id: 'vpo', label: 'VPO', hint: 'Tipo del 3,5% para vivienda de proteccion oficial.', apply: function(base) { return base * 0.035; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_habitual', label: 'Vivienda habitual < 150.000 €', hint: 'AJD baja del 1,2% al 1%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.01 : null; } },
+      { id: 'ajd_joven', label: 'Menor de 35 anos (vivienda habitual < 150.000 €)', hint: 'AJD baja al 0,3%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.003 : null; } },
+      { id: 'ajd_familia', label: 'Familia numerosa (vivienda habitual < 250.000 €)', hint: 'AJD baja al 0,1%.', apply: function(base, precio) { return precio <= 250000 ? base * 0.001 : null; } },
+      { id: 'ajd_discapacidad', label: 'Discapacidad >= 33% (vivienda habitual < 250.000 €)', hint: 'AJD baja al 0,1%.', apply: function(base, precio) { return precio <= 250000 ? base * 0.001 : null; } },
+      { id: 'ajd_vpo', label: 'VPO o calificacion energetica A/B', hint: 'AJD baja al 0,1%.', apply: function(base) { return base * 0.001; } }
     ]
   },
   aragon: {
@@ -1007,6 +1014,9 @@ const CCAA_DATA = {
       { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota (tipo efectivo ~7%).', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota (tipo efectivo ~7%).', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } },
       { id: 'victima', label: 'Victima violencia de genero (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota.', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_vpo', label: 'VPP (Vivienda Precio Protegido)', hint: 'AJD baja del 1,5% al 0,3%.', apply: function(base) { return base * 0.003; } }
     ]
   },
   asturias: {
@@ -1026,6 +1036,9 @@ const CCAA_DATA = {
       { id: 'discapacidad', label: 'Discapacidad >= 65%', hint: 'Tipo del 4% para vivienda habitual.', apply: function(base) { return base * 0.04; } },
       { id: 'victima', label: 'Victima violencia de genero', hint: 'Tipo del 4% para vivienda habitual.', apply: function(base) { return base * 0.04; } },
       { id: 'vpo', label: 'VPO', hint: 'Tipo del 3%.', apply: function(base) { return base * 0.03; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_vpo', label: 'VPO', hint: 'AJD baja del 1,2% al 0,3%.', apply: function(base) { return base * 0.003; } }
     ]
   },
   baleares: {
@@ -1047,6 +1060,9 @@ const CCAA_DATA = {
       { id: 'joven30', label: 'Menor de 30 anos (primera vivienda < 270.000 €, 3 anos residencia)', hint: 'Bonificacion 100% (0 € de ITP). Requiere residencia en Baleares 3 anos previos y limites de renta.', apply: function(base, precio) { return precio <= 270000 ? 0 : null; } },
       { id: 'familia', label: 'Familia numerosa / monoparental (< 350.000 €)', hint: 'Tipo del 2% hasta 270k, 8% el exceso. Limite 350.000 €.', apply: function(base, precio) { return precio <= 350000 ? (Math.min(base, 270000) * 0.02 + Math.max(0, base - 270000) * 0.08) : null; } },
       { id: 'discapacidad', label: 'Discapacidad >= 33% (primera vivienda < 270.000 €)', hint: 'Tipo del 2%. Con >= 33% y primera vivienda + 3 anos residencia: bonificacion 100% (0 €).', apply: function(base, precio) { return precio <= 270000 ? base * 0.02 : null; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_habitual', label: 'Primera vivienda habitual (< 270.000 €)', hint: 'AJD baja del 1,5% al 1,2%.', apply: function(base, precio) { return precio <= 270000 ? base * 0.012 : null; } }
     ]
   },
   canarias: {
@@ -1062,6 +1078,10 @@ const CCAA_DATA = {
       { id: 'joven', label: 'Menor de 35 anos', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } },
       { id: 'familia', label: 'Familia numerosa', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65%', hint: 'Tipo del 1%, con limites de renta (24.000 € individual / 42.000 € conjunta).', apply: function(base) { return base * 0.01; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_habitual', label: 'Vivienda habitual', hint: 'AJD baja del 0,75% al 0,4%.', apply: function(base) { return base * 0.004; } },
+      { id: 'ajd_discapacidad', label: 'Discapacidad >= 33% / zona despoblacion', hint: 'AJD baja al 0,15%.', apply: function(base) { return base * 0.0015; } }
     ]
   },
   cantabria: {
@@ -1076,6 +1096,9 @@ const CCAA_DATA = {
       { id: 'familia', label: 'Familia numerosa (vivienda habitual < 300.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
       { id: 'discapacidad33', label: 'Discapacidad 33%-64% (vivienda habitual < 300.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
       { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual < 300.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.03 : null; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 30 anos / familia numerosa / VPP / discapacidad >= 33%', hint: 'AJD baja del 1,5% al 0,3%.', apply: function(base) { return base * 0.003; } }
     ]
   },
   castilla_mancha: {
@@ -1090,6 +1113,9 @@ const CCAA_DATA = {
       { id: 'joven', label: 'Menor de 36 anos (primera vivienda < 240.000 €, > 50% hipoteca)', hint: 'Tipo del 3% (novedad Ley 1/2026).', apply: function(base, precio) { return precio <= 240000 ? base * 0.03 : null; } },
       { id: 'familia', label: 'Familia numerosa / monoparental (primera vivienda < 240.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 240000 ? base * 0.05 : null; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65% (primera vivienda < 240.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 240000 ? base * 0.05 : null; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 36 anos (primera vivienda < 240.000 €)', hint: 'AJD baja del 1,25% al 0,25%.', apply: function(base, precio) { return precio <= 240000 ? base * 0.0025 : null; } }
     ]
   },
   castilla_leon: {
@@ -1104,6 +1130,10 @@ const CCAA_DATA = {
       { id: 'joven_rural', label: 'Menor de 36 anos en municipio < 10.000 hab.', hint: 'Tipo del 0,01%. Practicamente gratis.', apply: function(base) { return base * 0.0001; } },
       { id: 'familia', label: 'Familia numerosa', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 36 anos / familia numerosa / discapacidad >= 65%', hint: 'AJD baja del 1,5% al 0,5%.', apply: function(base) { return base * 0.005; } },
+      { id: 'ajd_rural', label: 'Menor de 36 anos en municipio < 10.000 hab.', hint: 'AJD baja al 0,01%.', apply: function(base) { return base * 0.0001; } }
     ]
   },
   cataluna: {
@@ -1120,6 +1150,11 @@ const CCAA_DATA = {
       { id: 'joven', label: 'Menor de 32 anos (renta < 30.000 €)', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
       { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
       { id: 'discapacidad', label: 'Discapacidad >= 33%', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 35 anos (vivienda habitual, IRPF < 36.000 €)', hint: 'AJD bonificacion 100% (0%).', apply: function(base) { return 0; } },
+      { id: 'ajd_familia', label: 'Familia numerosa', hint: 'AJD bonificacion 50% (baja del 1,5% al 0,75%).', apply: function(base) { return base * 0.0075; } },
+      { id: 'ajd_vpo', label: 'VPO', hint: 'AJD exento (0%).', apply: function(base) { return 0; } }
     ]
   },
   ceuta: {
@@ -1144,6 +1179,10 @@ const CCAA_DATA = {
       { id: 'vpo', label: 'VPO', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } },
       { id: 'discapacidad33', label: 'Discapacidad 33%-64% (vivienda habitual < 300.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
       { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_habitual', label: 'Vivienda habitual', hint: 'AJD baja del 1,5% al 0,75%.', apply: function(base) { return base * 0.0075; } },
+      { id: 'ajd_rural', label: 'Vivienda habitual en zona rural', hint: 'AJD baja al 0,5%.', apply: function(base) { return base * 0.005; } }
     ]
   },
   galicia: {
@@ -1165,6 +1204,10 @@ const CCAA_DATA = {
       { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo del 3%.', apply: function(base) { return base * 0.03; } },
       { id: 'victima', label: 'Victima violencia de genero (< 150.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.03 : null; } },
       { id: 'vpo', label: 'VPO', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_habitual', label: 'Vivienda habitual', hint: 'AJD baja del 1,5% al 1%.', apply: function(base) { return base * 0.01; } },
+      { id: 'ajd_joven', label: 'Menor de 36 anos / familias / discapacidad / victimas VG', hint: 'AJD baja al 0,5%.', apply: function(base) { return base * 0.005; } }
     ]
   },
   madrid: {
@@ -1208,6 +1251,9 @@ const CCAA_DATA = {
       { id: 'joven_emp', label: 'Menor de 40 anos empresario/profesional', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo del 3%, con limites de renta.', apply: function(base) { return base * 0.03; } },
       { id: 'vpo', label: 'VPO (segunda mano)', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 35 anos (vivienda habitual < 150.000 €)', hint: 'AJD baja del 1,5% al 0,1%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.001 : null; } }
     ]
   },
   navarra: {
@@ -1241,6 +1287,9 @@ const CCAA_DATA = {
       { id: 'joven', label: 'Menor de 36 anos (vivienda habitual)', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
       { id: 'familia', label: 'Familia numerosa', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
       { id: 'discapacidad', label: 'Discapacidad >= 33%', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 36 anos / familias / discapacidad >= 33%', hint: 'AJD baja del 1% al 0,5%.', apply: function(base) { return base * 0.005; } }
     ]
   },
   valencia: {
@@ -1260,6 +1309,10 @@ const CCAA_DATA = {
       { id: 'discapacidad_bajo', label: 'Discapacidad >= 65% (vivienda habitual < 180.000 €)', hint: 'Tipo del 3%. Discapacidad fisica/sensorial >= 65% o psiquica >= 33%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.03 : null; } },
       { id: 'discapacidad_alto', label: 'Discapacidad >= 65% (vivienda habitual > 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio > 180000 ? base * 0.04 : null; } },
       { id: 'vpo', label: 'VPO (vivienda habitual)', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+    ],
+    ajdBonificaciones: [
+      { id: 'ajd_joven', label: 'Menor de 35 anos / familia numerosa (< 180.000 €)', hint: 'AJD baja del 2% al 0,1%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.001 : null; } },
+      { id: 'ajd_discapacidad', label: 'Discapacidad >= 65% fis./sens. o >= 33% psiq.', hint: 'AJD baja al 0,1%.', apply: function(base) { return base * 0.001; } }
     ]
   }
 };
@@ -1311,24 +1364,32 @@ function getCCAAData() {
 }
 
 function renderBonificaciones() {
-  const data = getCCAAData();
-  const container = document.getElementById('bonificacionesContent');
-  const card = document.getElementById('cardBonificaciones');
+  var data = getCCAAData();
+  var container = document.getElementById('bonificacionesContent');
+  var card = document.getElementById('cardBonificaciones');
+  var titleEl = card.querySelector('.card-title');
+  var descEl = document.getElementById('bonificacionesDesc');
 
-  if (tipo !== 'segunda') {
-    card.style.display = 'none';
-    return;
+  var bons = [];
+  if (tipo === 'segunda') {
+    bons = data.bonificaciones || [];
+    titleEl.innerHTML = 'Bonificaciones ITP <span class="badge">Segunda mano</span>';
+    descEl.textContent = 'Descuentos en el ITP si cumples ciertos requisitos. Dependen de cada comunidad autonoma.';
+  } else {
+    bons = data.ajdBonificaciones || [];
+    titleEl.innerHTML = 'Bonificaciones AJD <span class="badge">Obra nueva</span>';
+    descEl.textContent = 'Descuentos en el AJD (el IVA 10% no cambia). Dependen de cada comunidad autonoma.';
   }
 
-  if (data.bonificaciones.length === 0) {
+  if (bons.length === 0) {
     card.style.display = 'block';
-    container.innerHTML = '<span style="font-size:0.85rem;color:var(--text-muted)">Esta comunidad no tiene bonificaciones especificas en el ITP.</span>';
+    container.innerHTML = '<span style="font-size:0.85rem;color:var(--text-muted)">Esta comunidad no tiene bonificaciones especificas en ' + (tipo === 'segunda' ? 'el ITP' : 'el AJD') + '.</span>';
     return;
   }
 
   card.style.display = 'block';
-  let html = '';
-  data.bonificaciones.forEach(function(b) {
+  var html = '';
+  bons.forEach(function(b) {
     html += '<label class="checkbox-row">';
     html += '<input type="checkbox" id="bon_' + b.id + '" onchange="calcular()">';
     html += '<span class="checkbox-text">' + b.label;
@@ -1438,6 +1499,23 @@ function calcular() {
 
     ajdPct = data.ajdProgresivo ? data.ajdProgresivo(precio) : data.ajd;
     ajd = precio * ajdPct / 100;
+
+    // Check AJD bonificaciones
+    if (data.ajdBonificaciones) {
+      for (var i = 0; i < data.ajdBonificaciones.length; i++) {
+        var b = data.ajdBonificaciones[i];
+        var chk = document.getElementById('bon_' + b.id);
+        if (chk && chk.checked) {
+          var result = b.apply(precio, precio);
+          if (result !== null) {
+            ajd = result;
+            ajdPct = precio > 0 ? (result / precio * 100) : 0;
+            impuestoDetalle = '(' + b.label + ')';
+          }
+          break;
+        }
+      }
+    }
   }
 
   const gastosFormal = notaria + registro + gestoria;
