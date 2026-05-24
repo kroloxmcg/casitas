@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Gastos de Compra de Vivienda - Madrid</title>
+<title>Calculadora de Gastos de Compra de Vivienda - España</title>
 <style>
   :root {
     --bg: #0f1117;
@@ -124,6 +124,7 @@
     font-size: 1rem;
     outline: none;
     transition: border-color 0.2s;
+    -webkit-appearance: none;
   }
 
   input[type="number"]:focus, select:focus {
@@ -131,6 +132,11 @@
   }
 
   input[type="number"]::-webkit-inner-spin-button { opacity: 1; }
+
+  select option {
+    background: var(--surface2);
+    color: var(--text);
+  }
 
   input.auto-calculated {
     border-color: var(--accent);
@@ -381,6 +387,22 @@
 
   .info-tip strong { color: var(--orange); }
 
+  .ccaa-info {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .ccaa-info .ccaa-rate {
+    color: var(--accent-light);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
   .monthly-box {
     background: var(--surface2);
     border-radius: 10px;
@@ -415,13 +437,39 @@
 <div class="container">
   <header>
     <h1>Calculadora de Compra de Vivienda</h1>
-    <p>Comunidad de Madrid &mdash; Calcula el precio real que vas a pagar</p>
+    <p>Espana &mdash; Calcula el precio real que vas a pagar</p>
   </header>
 
-  <!-- PRECIO Y TIPO -->
+  <!-- COMUNIDAD Y PRECIO -->
   <div class="card">
     <div class="card-title">Datos de la vivienda</div>
     <div class="field">
+      <label for="ccaa">Comunidad Autonoma</label>
+      <select id="ccaa">
+        <option value="andalucia">Andalucia</option>
+        <option value="aragon">Aragon</option>
+        <option value="asturias">Asturias</option>
+        <option value="baleares">Islas Baleares</option>
+        <option value="canarias">Canarias</option>
+        <option value="cantabria">Cantabria</option>
+        <option value="castilla_mancha">Castilla-La Mancha</option>
+        <option value="castilla_leon">Castilla y Leon</option>
+        <option value="cataluna">Cataluna</option>
+        <option value="ceuta">Ceuta</option>
+        <option value="extremadura">Extremadura</option>
+        <option value="galicia">Galicia</option>
+        <option value="madrid" selected>Comunidad de Madrid</option>
+        <option value="melilla">Melilla</option>
+        <option value="murcia">Region de Murcia</option>
+        <option value="navarra">Navarra</option>
+        <option value="pais_vasco">Pais Vasco</option>
+        <option value="rioja">La Rioja</option>
+        <option value="valencia">Comunidad Valenciana</option>
+      </select>
+      <span class="hint">El ITP y el AJD cambian segun la comunidad donde esta el piso. Selecciona la comunidad donde vas a comprar.</span>
+    </div>
+    <div id="ccaaInfo" class="ccaa-info"></div>
+    <div class="field" style="margin-top:1rem">
       <label for="precio">Precio de compra (&euro;)</label>
       <input type="number" id="precio" value="250000" min="0" step="1000">
       <span class="hint">El precio que pide el vendedor o el que habeis pactado.</span>
@@ -444,21 +492,8 @@
   <!-- BONIFICACIONES -->
   <div class="card" id="cardBonificaciones">
     <div class="card-title">Bonificaciones ITP <span class="badge">Segunda mano</span></div>
-    <div class="card-desc">El ITP es el impuesto principal que pagas al comprar de segunda mano (6% del precio). Pero hay descuentos si cumples estos requisitos:</div>
-    <label class="checkbox-row">
-      <input type="checkbox" id="chkViviendaHabitual" checked onchange="calcular()">
-      <span class="checkbox-text">
-        Vivienda habitual y precio &le; 250.000 &euro;
-        <span class="checkbox-hint">Si vas a vivir ahi (no es inversion) y el precio no pasa de 250.000 &euro;, te descuentan un 10% del impuesto. El tipo efectivo baja del 6% al 5,4%.</span>
-      </span>
-    </label>
-    <label class="checkbox-row">
-      <input type="checkbox" id="chkFamiliaNumerosa" onchange="calcular()">
-      <span class="checkbox-text">
-        Familia numerosa
-        <span class="checkbox-hint">Si tienes titulo de familia numerosa, el tipo baja al 4% (en vez del 6%).</span>
-      </span>
-    </label>
+    <div class="card-desc" id="bonificacionesDesc">Descuentos en el ITP si cumples ciertos requisitos. Dependen de cada comunidad autonoma.</div>
+    <div id="bonificacionesContent"></div>
   </div>
 
   <!-- GASTOS FIJOS -->
@@ -469,7 +504,7 @@
       <div class="field">
         <label for="notaria">Notaria (&euro;)</label>
         <input type="number" id="notaria" value="800" min="0" step="50" class="auto-calculated">
-        <span class="hint">El notario da fe publica de la compraventa y redacta la escritura. Su tarifa esta regulada por ley y depende del precio del piso. Se calcula automaticamente.</span>
+        <span class="hint">El notario da fe publica de la compraventa y redacta la escritura. Tarifa regulada por ley. Se calcula automaticamente.</span>
       </div>
       <div class="field">
         <label for="registro">Registro de la Propiedad (&euro;)</label>
@@ -479,7 +514,7 @@
       <div class="field">
         <label for="gestoria">Gestoria (&euro;)</label>
         <input type="number" id="gestoria" value="400" min="0" step="50">
-        <span class="hint">Un gestor tramita los papeles por ti (liquidar impuestos, llevar documentos al registro, etc.). Es opcional pero muy recomendable, especialmente si pides hipoteca. Precio libre: 300-600 &euro; es lo habitual.</span>
+        <span class="hint">Un gestor tramita los papeles por ti (liquidar impuestos, llevar documentos al registro, etc.). Es opcional pero muy recomendable. Precio libre: 300-600 &euro; es lo habitual.</span>
       </div>
     </div>
   </div>
@@ -501,12 +536,12 @@
           <div class="field">
             <label for="hipotecaPct">Porcentaje financiado (%)</label>
             <input type="number" id="hipotecaPct" value="80" min="0" max="100" step="5">
-            <span class="hint">Cuanto te presta el banco del precio total. Lo normal es el 80% (el banco te da 8 de cada 10 euros y tu pones los 2 restantes de tu bolsillo). Algunos bancos dan hasta el 90% pero con peores condiciones.</span>
+            <span class="hint">Cuanto te presta el banco del precio total. Lo normal es el 80% (el banco te da 8 de cada 10 euros y tu pones los 2 restantes). Algunos bancos dan hasta el 90% pero con peores condiciones.</span>
           </div>
           <div class="field">
             <label for="hipotecaInteres">Interes anual fijo (%)</label>
             <input type="number" id="hipotecaInteres" value="2.5" min="0" max="15" step="0.1">
-            <span class="hint">Lo que el banco te cobra cada ano por prestarte el dinero. En 2025-2026, las hipotecas fijas estan entre el 2% y el 3,5%. Puedes comparar en comparadores como iAhorro o HelpMyCash.</span>
+            <span class="hint">Lo que el banco te cobra cada ano por prestarte el dinero. En 2025-2026, las hipotecas fijas estan entre el 2% y el 3,5%.</span>
           </div>
           <div class="field">
             <label for="hipotecaPlazo">Plazo (anos)</label>
@@ -516,17 +551,17 @@
           <div class="field">
             <label for="comisionApertura">Comision de apertura (%)</label>
             <input type="number" id="comisionApertura" value="0" min="0" max="3" step="0.1">
-            <span class="hint">Un cobro unico que te hace el banco al darte la hipoteca. Muchos bancos ya la han eliminado (0%). Si te la cobran, suele ser un 0,5%-1% del capital prestado.</span>
+            <span class="hint">Un cobro unico que te hace el banco al darte la hipoteca. Muchos bancos ya la han eliminado (0%). Si te la cobran, suele ser un 0,5%-1%.</span>
           </div>
           <div class="field">
             <label for="tasacion">Tasacion (&euro;)</label>
             <input type="number" id="tasacion" value="400" min="0" step="50">
-            <span class="hint">Un tasador profesional valora el piso para que el banco sepa cuanto vale realmente. Cuesta entre 300 y 600 &euro;. Solo es necesaria si pides hipoteca.</span>
+            <span class="hint">Un tasador profesional valora el piso para el banco. Cuesta entre 300 y 600 &euro;. Solo necesaria si pides hipoteca.</span>
           </div>
           <div class="field">
             <label for="seguroHogar">Seguro de hogar (&euro;/ano)</label>
             <input type="number" id="seguroHogar" value="250" min="0" step="25">
-            <span class="hint">Obligatorio si tienes hipoteca. Cubre danos al piso (incendio, agua, robo...). Cuesta 150-400 &euro;/ano segun coberturas. El banco no puede obligarte a contratarlo con ellos.</span>
+            <span class="hint">Obligatorio si tienes hipoteca. Cubre danos al piso (incendio, agua, robo...). Cuesta 150-400 &euro;/ano. El banco no puede obligarte a contratarlo con ellos.</span>
           </div>
         </div>
       </div>
@@ -544,12 +579,263 @@
   </div>
 
   <footer>
-    Calculadora orientativa &mdash; Comunidad de Madrid 2025/2026<br>
+    Calculadora orientativa &mdash; Espana 2025/2026<br>
     Los importes son aproximados. Consulta con un profesional para tu caso concreto.
   </footer>
 </div>
 
 <script>
+const CCAA_DATA = {
+  andalucia: {
+    nombre: 'Andalucia',
+    itpGeneral: 7,
+    itpCalc: function(base) { return base * 0.07; },
+    ajd: 1.2,
+    ivaNueva: 10,
+    info: 'ITP general del 7%. Para vivienda habitual < 150.000 € baja al 6%.',
+    bonificaciones: [
+      { id: 'habitual150', label: 'Vivienda habitual < 150.000 €', hint: 'El tipo baja del 7% al 6% si la vivienda va a ser tu residencia y su valor no supera los 150.000 €.', apply: function(base, precio) { return precio <= 150000 ? base * 0.06 : null; } },
+      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 150.000 €)', hint: 'El tipo baja al 3,5% si eres menor de 35 anos, es tu vivienda habitual y el valor no supera 150.000 €.', apply: function(base, precio) { return precio <= 150000 ? base * 0.035 : null; } },
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'El tipo baja al 3,5% para familias numerosas en vivienda habitual, sin limite de precio.', apply: function(base) { return base * 0.035; } }
+    ]
+  },
+  aragon: {
+    nombre: 'Aragon',
+    itpGeneral: '8-10%',
+    itpCalc: function(base) {
+      if (base <= 400000) return base * 0.08;
+      if (base <= 450000) return 400000 * 0.08 + (base - 400000) * 0.085;
+      if (base <= 500000) return 400000 * 0.08 + 50000 * 0.085 + (base - 450000) * 0.09;
+      if (base <= 750000) return 400000 * 0.08 + 50000 * 0.085 + 50000 * 0.09 + (base - 500000) * 0.095;
+      return 400000 * 0.08 + 50000 * 0.085 + 50000 * 0.09 + 250000 * 0.095 + (base - 750000) * 0.10;
+    },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP progresivo por tramos: 8% hasta 400k, sube hasta 10% a partir de 750k.',
+    bonificaciones: [
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3% para familias numerosas. Uno de los mas bajos de Espana.', apply: function(base) { return base * 0.03; } }
+    ]
+  },
+  asturias: {
+    nombre: 'Asturias',
+    itpGeneral: 8,
+    itpCalc: function(base) { return base * 0.08; },
+    ajd: 1.2,
+    ivaNueva: 10,
+    info: 'ITP general del 8%.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 150.000 €)', hint: 'Tipo del 4% si eres menor de 35 anos y la vivienda no supera 150.000 €.', apply: function(base, precio) { return precio <= 150000 ? base * 0.04 : null; } },
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65%', hint: 'Tipo reducido del 4% para personas con discapacidad igual o superior al 65%.', apply: function(base) { return base * 0.04; } }
+    ]
+  },
+  baleares: {
+    nombre: 'Islas Baleares',
+    itpGeneral: '8-13%',
+    itpCalc: function(base) {
+      if (base <= 400000) return base * 0.08;
+      if (base <= 600000) return 400000 * 0.08 + (base - 400000) * 0.09;
+      if (base <= 1000000) return 400000 * 0.08 + 200000 * 0.09 + (base - 600000) * 0.10;
+      if (base <= 2000000) return 400000 * 0.08 + 200000 * 0.09 + 400000 * 0.10 + (base - 1000000) * 0.12;
+      return 400000 * 0.08 + 200000 * 0.09 + 400000 * 0.10 + 1000000 * 0.12 + (base - 2000000) * 0.13;
+    },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP progresivo: 8% hasta 400k, 9% hasta 600k, 10% hasta 1M, 12% hasta 2M, 13% a partir de 2M.',
+    bonificaciones: [
+      { id: 'joven30', label: 'Menor de 30 anos (primera vivienda habitual)', hint: 'Bonificacion del 100% (tipo efectivo 0%) para primera vivienda de jovenes < 30 anos con requisitos de renta y precio.', apply: function(base) { return 0; } },
+      { id: 'primera', label: 'Primera vivienda habitual (< 270.000 €)', hint: 'Tipo reducido del 5% si es tu primera vivienda habitual y no supera 270.000 €.', apply: function(base, precio) { return precio <= 270000 ? base * 0.05 : null; } },
+      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo reducido del 2%.', apply: function(base) { return base * 0.02; } }
+    ]
+  },
+  canarias: {
+    nombre: 'Canarias',
+    itpGeneral: 6.5,
+    itpCalc: function(base) { return base * 0.065; },
+    ajd: 0.75,
+    ivaNueva: 7,
+    ivaLabel: 'IGIC',
+    info: 'ITP general del 6,5%. En obra nueva se paga IGIC (7%) en vez de IVA (10%), lo que hace Canarias mas barata para obra nueva.',
+    bonificaciones: [
+      { id: 'habitual', label: 'Vivienda habitual < 150.000 €', hint: 'Tipo reducido del 5%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.05 : null; } },
+      { id: 'joven', label: 'Menor de 35 anos', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4% (1% para familia numerosa especial, monoparental o discapacidad >= 65%).', apply: function(base) { return base * 0.04; } }
+    ]
+  },
+  cantabria: {
+    nombre: 'Cantabria',
+    itpGeneral: 10,
+    itpCalc: function(base) { return base * 0.10; },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP general del 10%. Una de las comunidades con el tipo mas alto.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 30 anos (vivienda habitual < 300.000 €)', hint: 'Tipo del 5% para jovenes < 30 anos si la vivienda es habitual y no supera 300.000 €.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual < 300.000 €)', hint: 'Tipo del 5% para familias numerosas con vivienda habitual < 300.000 €.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33% (vivienda habitual < 300.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } }
+    ]
+  },
+  castilla_mancha: {
+    nombre: 'Castilla-La Mancha',
+    itpGeneral: 9,
+    itpCalc: function(base) { return base * 0.09; },
+    ajd: 1.25,
+    ivaNueva: 10,
+    info: 'ITP general del 9%.',
+    bonificaciones: [
+      { id: 'habitual', label: 'Primera vivienda habitual < 180.000 € (financiada al 50%+ con hipoteca)', hint: 'Tipo reducido del 6%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.06 : null; } },
+      { id: 'joven', label: 'Menor de 36 anos / familia numerosa (primera vivienda < 180.000 €)', hint: 'Tipo reducido del 5%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } }
+    ]
+  },
+  castilla_leon: {
+    nombre: 'Castilla y Leon',
+    itpGeneral: 8,
+    itpCalc: function(base) { return base * 0.08; },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP general del 8%.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 36 anos (primera vivienda)', hint: 'Tipo reducido del 4% con renta familiar < 31.500 €.', apply: function(base) { return base * 0.04; } },
+      { id: 'joven_rural', label: 'Menor de 36 anos en municipio < 10.000 hab.', hint: 'Tipo practicamente nulo (0,01%).', apply: function(base) { return base * 0.0001; } },
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } }
+    ]
+  },
+  cataluna: {
+    nombre: 'Cataluna',
+    itpGeneral: 10,
+    itpCalc: function(base) {
+      if (base <= 1000000) return base * 0.10;
+      return 1000000 * 0.10 + (base - 1000000) * 0.11;
+    },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP del 10% (11% a partir de 1M €). Una de las comunidades mas caras.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 32 anos (renta < 30.000 €)', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } },
+      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33%', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } }
+    ]
+  },
+  ceuta: {
+    nombre: 'Ceuta',
+    itpGeneral: 6,
+    itpCalc: function(base) { return base * 0.06; },
+    ajd: 0.5,
+    ivaNueva: 10,
+    info: 'ITP del 6%. Bonificacion del 50% en determinadas operaciones.',
+    bonificaciones: []
+  },
+  extremadura: {
+    nombre: 'Extremadura',
+    itpGeneral: 8,
+    itpCalc: function(base) { return base * 0.08; },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP general del 8%.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual)', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
+      { id: 'vpo', label: 'VPO', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } }
+    ]
+  },
+  galicia: {
+    nombre: 'Galicia',
+    itpGeneral: 10,
+    itpCalc: function(base) { return base * 0.10; },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP general del 10%.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 150.000 €)', hint: 'Tipo reducido del 3%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.03 : null; } },
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3%.', apply: function(base) { return base * 0.03; } }
+    ]
+  },
+  madrid: {
+    nombre: 'Comunidad de Madrid',
+    itpGeneral: 6,
+    itpCalc: function(base) { return base * 0.06; },
+    ajd: 0.75,
+    ajdProgresivo: function(precio) {
+      if (precio <= 120000) return 0.4;
+      if (precio <= 180000) return 0.5;
+      return 0.75;
+    },
+    ivaNueva: 10,
+    info: 'ITP del 6%, uno de los mas bajos de Espana. AJD progresivo: 0,4% hasta 120k, 0,5% hasta 180k, 0,75% a partir de 180k.',
+    bonificaciones: [
+      { id: 'habitual', label: 'Vivienda habitual <= 250.000 €', hint: 'Bonificacion del 10% en la cuota. El tipo efectivo baja del 6% al 5,4%.', apply: function(base, precio) { return precio <= 250000 ? base * 0.054 : null; } },
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } }
+    ]
+  },
+  melilla: {
+    nombre: 'Melilla',
+    itpGeneral: 6,
+    itpCalc: function(base) { return base * 0.06; },
+    ajd: 0.5,
+    ivaNueva: 10,
+    info: 'ITP del 6%. Bonificacion del 50% en determinadas operaciones.',
+    bonificaciones: []
+  },
+  murcia: {
+    nombre: 'Region de Murcia',
+    itpGeneral: 8,
+    itpCalc: function(base) { return base * 0.08; },
+    ajd: 1.5,
+    ivaNueva: 10,
+    info: 'ITP general del 8%.',
+    bonificaciones: [
+      { id: 'joven_emp', label: 'Menor de 40 anos empresario/profesional', hint: 'Tipo reducido del 5% para jovenes empresarios o profesionales.', apply: function(base) { return base * 0.05; } }
+    ]
+  },
+  navarra: {
+    nombre: 'Navarra',
+    itpGeneral: 6,
+    itpCalc: function(base) { return base * 0.06; },
+    ajd: 0.5,
+    ivaNueva: 10,
+    info: 'ITP del 6%, al mismo nivel que Madrid. Sin bonificaciones especificas actualmente.',
+    bonificaciones: []
+  },
+  pais_vasco: {
+    nombre: 'Pais Vasco',
+    itpGeneral: 4,
+    itpCalc: function(base) { return base * 0.04; },
+    ajd: 0,
+    ivaNueva: 10,
+    info: 'ITP del 4% para vivienda, el mas bajo de Espana. AJD del 0%. Cada territorio foral (Alava, Bizkaia, Gipuzkoa) puede tener variaciones.',
+    bonificaciones: [
+      { id: 'familia_bizkaia', label: 'Familia numerosa en Bizkaia', hint: 'Tipo super-reducido del 2,5% en Bizkaia.', apply: function(base) { return base * 0.025; } }
+    ]
+  },
+  rioja: {
+    nombre: 'La Rioja',
+    itpGeneral: 7,
+    itpCalc: function(base) { return base * 0.07; },
+    ajd: 1.0,
+    ivaNueva: 10,
+    info: 'ITP general del 7%.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual)', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } },
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33%', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } }
+    ]
+  },
+  valencia: {
+    nombre: 'Comunidad Valenciana',
+    itpGeneral: 10,
+    itpCalc: function(base) {
+      if (base <= 1000000) return base * 0.10;
+      return 1000000 * 0.10 + (base - 1000000) * 0.11;
+    },
+    ajd: 2.0,
+    ivaNueva: 10,
+    info: 'ITP del 10% (11% a partir de 1M €). AJD del 2%, el mas alto de Espana. Nota: a partir de julio 2026 el ITP bajara al 9%.',
+    bonificaciones: [
+      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual)', hint: 'Tipo reducido del 8%, con condiciones de renta.', apply: function(base) { return base * 0.08; } }
+    ]
+  }
+};
+
 let tipo = 'segunda';
 let notariaManual = false;
 let registroManual = false;
@@ -579,13 +865,56 @@ function estimarRegistro(precio) {
 document.getElementById('notaria').addEventListener('focus', function() { notariaManual = true; this.classList.remove('auto-calculated'); });
 document.getElementById('registro').addEventListener('focus', function() { registroManual = true; this.classList.remove('auto-calculated'); });
 
+function getCCAAData() {
+  return CCAA_DATA[document.getElementById('ccaa').value];
+}
+
+function renderBonificaciones() {
+  const data = getCCAAData();
+  const container = document.getElementById('bonificacionesContent');
+  const card = document.getElementById('cardBonificaciones');
+
+  if (tipo !== 'segunda') {
+    card.style.display = 'none';
+    return;
+  }
+
+  if (data.bonificaciones.length === 0) {
+    card.style.display = 'block';
+    container.innerHTML = '<span style="font-size:0.85rem;color:var(--text-muted)">Esta comunidad no tiene bonificaciones especificas en el ITP.</span>';
+    return;
+  }
+
+  card.style.display = 'block';
+  let html = '';
+  data.bonificaciones.forEach(function(b) {
+    html += '<label class="checkbox-row">';
+    html += '<input type="checkbox" id="bon_' + b.id + '" onchange="calcular()">';
+    html += '<span class="checkbox-text">' + b.label;
+    html += '<span class="checkbox-hint">' + b.hint + '</span>';
+    html += '</span></label>';
+  });
+  container.innerHTML = html;
+}
+
+function renderCCAAInfo() {
+  const data = getCCAAData();
+  document.getElementById('ccaaInfo').innerHTML = '<span class="ccaa-rate">' + data.nombre + '</span> &mdash; ' + data.info;
+}
+
 function setTipo(t) {
   tipo = t;
   document.getElementById('btnSegundaMano').classList.toggle('active', t === 'segunda');
   document.getElementById('btnObraNueva').classList.toggle('active', t === 'nueva');
-  document.getElementById('cardBonificaciones').style.display = t === 'segunda' ? 'block' : 'none';
+  renderBonificaciones();
   calcular();
 }
+
+document.getElementById('ccaa').addEventListener('change', function() {
+  renderBonificaciones();
+  renderCCAAInfo();
+  calcular();
+});
 
 function toggleMortgage() {
   const chk = document.getElementById('chkHipoteca');
@@ -602,6 +931,7 @@ function fmt(n) {
 }
 
 function calcular() {
+  const data = getCCAAData();
   const precio = parseFloat(document.getElementById('precio').value) || 0;
   const valorRef = parseFloat(document.getElementById('valorRef').value) || 0;
   const baseImponible = Math.max(precio, valorRef);
@@ -619,39 +949,47 @@ function calcular() {
 
   const incluyeHipoteca = document.getElementById('chkHipoteca').checked;
 
+  let impuesto = 0;
   let impuestoNombre = '';
-  let impuestoPct = 0;
-  let impuestoBase = 0;
+  let impuestoPctLabel = '';
   let ajd = 0;
   let ajdPct = 0;
-  let itpDetalle = '';
+  let impuestoDetalle = '';
 
   if (tipo === 'segunda') {
-    const esHabitual = document.getElementById('chkViviendaHabitual').checked;
-    const esFamilia = document.getElementById('chkFamiliaNumerosa').checked;
-
     impuestoNombre = 'ITP';
-    impuestoBase = baseImponible;
+    impuesto = data.itpCalc(baseImponible);
+    impuestoPctLabel = typeof data.itpGeneral === 'number' ? data.itpGeneral + '%' : data.itpGeneral;
 
-    if (esFamilia) {
-      impuestoPct = 4;
-      itpDetalle = '(tipo reducido familia numerosa)';
-    } else if (esHabitual && precio <= 250000) {
-      impuestoPct = 5.4;
-      itpDetalle = '(bonificacion 10% vivienda habitual)';
-    } else {
-      impuestoPct = 6;
-      itpDetalle = '';
+    // Check bonificaciones
+    let bonApplied = false;
+    if (data.bonificaciones) {
+      for (let i = 0; i < data.bonificaciones.length; i++) {
+        const b = data.bonificaciones[i];
+        const chk = document.getElementById('bon_' + b.id);
+        if (chk && chk.checked) {
+          const result = b.apply(baseImponible, precio);
+          if (result !== null) {
+            impuesto = result;
+            impuestoDetalle = '(' + b.label + ')';
+            const pctEfectivo = baseImponible > 0 ? (result / baseImponible * 100).toFixed(1) : '0';
+            impuestoPctLabel = pctEfectivo + '%';
+            bonApplied = true;
+          }
+          break;
+        }
+      }
     }
   } else {
-    impuestoNombre = 'IVA';
-    impuestoPct = 10;
-    impuestoBase = precio;
-    ajdPct = 0.75;
+    const ivaLabel = data.ivaLabel || 'IVA';
+    impuestoNombre = ivaLabel;
+    impuesto = precio * data.ivaNueva / 100;
+    impuestoPctLabel = data.ivaNueva + '%';
+
+    ajdPct = data.ajdProgresivo ? data.ajdProgresivo(precio) : data.ajd;
     ajd = precio * ajdPct / 100;
   }
 
-  const impuesto = impuestoBase * impuestoPct / 100;
   const gastosFormal = notaria + registro + gestoria;
   const totalImpuestos = impuesto + ajd;
 
@@ -697,97 +1035,99 @@ function calcular() {
   let html = '';
 
   // Impuestos
-  html += `<div class="result-section"><h3>Impuestos</h3>`;
+  html += '<div class="result-section"><h3>Impuestos (' + data.nombre + ')</h3>';
   if (tipo === 'segunda') {
     if (valorRef > precio && valorRef > 0) {
-      html += `<div class="result-row"><span class="label">Base imponible (valor ref. catastral)</span><span class="value">${fmt(baseImponible)}</span></div>`;
+      html += '<div class="result-row"><span class="label">Base imponible (valor ref. catastral)</span><span class="value">' + fmt(baseImponible) + '</span></div>';
     }
-    html += `<div class="result-row"><span class="label">${impuestoNombre} ${impuestoPct}% ${itpDetalle}</span><span class="value">${fmt(impuesto)}</span></div>`;
+    html += '<div class="result-row"><span class="label">' + impuestoNombre + ' ' + impuestoPctLabel + ' ' + impuestoDetalle + '</span><span class="value">' + fmt(impuesto) + '</span></div>';
   } else {
-    html += `<div class="result-row"><span class="label">${impuestoNombre} ${impuestoPct}%</span><span class="value">${fmt(impuesto)}</span></div>`;
-    html += `<div class="result-row"><span class="label">AJD ${ajdPct}%</span><span class="value">${fmt(ajd)}</span></div>`;
+    html += '<div class="result-row"><span class="label">' + impuestoNombre + ' ' + impuestoPctLabel + '</span><span class="value">' + fmt(impuesto) + '</span></div>';
+    html += '<div class="result-row"><span class="label">AJD ' + ajdPct + '%</span><span class="value">' + fmt(ajd) + '</span></div>';
   }
-  html += `<div class="result-row subtotal"><span class="label">Subtotal impuestos</span><span class="value">${fmt(totalImpuestos)}</span></div>`;
-  html += `</div>`;
+  html += '<div class="result-row subtotal"><span class="label">Subtotal impuestos</span><span class="value">' + fmt(totalImpuestos) + '</span></div>';
+  html += '</div>';
 
   // Formalizacion
-  html += `<div class="result-section"><h3>Formalizacion</h3>`;
-  html += `<div class="result-row"><span class="label">Notaria</span><span class="value">${fmt(notaria)}</span></div>`;
-  html += `<div class="result-row"><span class="label">Registro de la Propiedad</span><span class="value">${fmt(registro)}</span></div>`;
-  html += `<div class="result-row"><span class="label">Gestoria</span><span class="value">${fmt(gestoria)}</span></div>`;
-  html += `<div class="result-row subtotal"><span class="label">Subtotal formalizacion</span><span class="value">${fmt(gastosFormal)}</span></div>`;
-  html += `</div>`;
+  html += '<div class="result-section"><h3>Formalizacion</h3>';
+  html += '<div class="result-row"><span class="label">Notaria</span><span class="value">' + fmt(notaria) + '</span></div>';
+  html += '<div class="result-row"><span class="label">Registro de la Propiedad</span><span class="value">' + fmt(registro) + '</span></div>';
+  html += '<div class="result-row"><span class="label">Gestoria</span><span class="value">' + fmt(gestoria) + '</span></div>';
+  html += '<div class="result-row subtotal"><span class="label">Subtotal formalizacion</span><span class="value">' + fmt(gastosFormal) + '</span></div>';
+  html += '</div>';
 
   // Hipoteca
   if (incluyeHipoteca) {
-    html += `<div class="result-section"><h3>Gastos de hipoteca</h3>`;
-    html += `<div class="result-row"><span class="label">Capital hipoteca (${hipotecaPct}%)</span><span class="value">${fmt(capitalHipoteca)}</span></div>`;
-    html += `<div class="result-row"><span class="label">Tasacion</span><span class="value">${fmt(tasacion)}</span></div>`;
+    html += '<div class="result-section"><h3>Gastos de hipoteca</h3>';
+    html += '<div class="result-row"><span class="label">Capital hipoteca (' + hipotecaPct + '%)</span><span class="value">' + fmt(capitalHipoteca) + '</span></div>';
+    html += '<div class="result-row"><span class="label">Tasacion</span><span class="value">' + fmt(tasacion) + '</span></div>';
     if (comisionAp > 0) {
-      html += `<div class="result-row"><span class="label">Comision de apertura</span><span class="value">${fmt(comisionAp)}</span></div>`;
+      html += '<div class="result-row"><span class="label">Comision de apertura</span><span class="value">' + fmt(comisionAp) + '</span></div>';
     }
-    html += `<div class="result-row subtotal"><span class="label">Subtotal hipoteca (gastos iniciales)</span><span class="value">${fmt(gastosHipoteca)}</span></div>`;
-    html += `</div>`;
+    html += '<div class="result-row subtotal"><span class="label">Subtotal hipoteca (gastos iniciales)</span><span class="value">' + fmt(gastosHipoteca) + '</span></div>';
+    html += '</div>';
 
-    html += `<div class="monthly-box">`;
-    html += `<div class="monthly-row"><span class="label">Cuota mensual estimada</span><span class="value" style="color:var(--accent-light);font-size:1.15rem">${fmt(cuotaMensual)}</span></div>`;
-    html += `<div class="monthly-row"><span class="label">Total intereses (${plazo} anos)</span><span class="value" style="color:var(--orange)">${fmt(totalIntereses)}</span></div>`;
-    html += `<div class="monthly-row"><span class="label">Total pagado al banco (capital + intereses)</span><span class="value" style="color:var(--red)">${fmt(capitalHipoteca + totalIntereses)}</span></div>`;
+    html += '<div class="monthly-box">';
+    html += '<div class="monthly-row"><span class="label">Cuota mensual estimada</span><span class="value" style="color:var(--accent-light);font-size:1.15rem">' + fmt(cuotaMensual) + '</span></div>';
+    html += '<div class="monthly-row"><span class="label">Total intereses (' + plazo + ' anos)</span><span class="value" style="color:var(--orange)">' + fmt(totalIntereses) + '</span></div>';
+    html += '<div class="monthly-row"><span class="label">Total pagado al banco (capital + intereses)</span><span class="value" style="color:var(--red)">' + fmt(capitalHipoteca + totalIntereses) + '</span></div>';
     if (seguroHogar > 0) {
-      html += `<div class="monthly-row"><span class="label">Seguro de hogar</span><span class="value">${fmt(seguroHogar)}/ano</span></div>`;
+      html += '<div class="monthly-row"><span class="label">Seguro de hogar</span><span class="value">' + fmt(seguroHogar) + '/ano</span></div>';
     }
-    html += `</div>`;
+    html += '</div>';
   }
 
   // Total
-  html += `<div class="total-box">`;
-  html += `<div class="total-row"><span class="label">Precio de compra</span><span class="value" style="color:var(--text)">${fmt(precio)}</span></div>`;
-  html += `<div class="total-row" style="margin-top:0.3rem"><span class="label">+ Total gastos e impuestos</span><span class="value" style="color:var(--orange);font-size:1.15rem">${fmt(totalGastos)}</span></div>`;
-  html += `<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>`;
-  html += `<div class="total-row"><span class="label">PRECIO FINAL</span><span class="value">${fmt(precioFinal)}</span></div>`;
-  html += `<div class="pct-extra">${pctExtra.toFixed(1)}% sobre el precio de compra</div>`;
+  html += '<div class="total-box">';
+  html += '<div class="total-row"><span class="label">Precio de compra</span><span class="value" style="color:var(--text)">' + fmt(precio) + '</span></div>';
+  html += '<div class="total-row" style="margin-top:0.3rem"><span class="label">+ Total gastos e impuestos</span><span class="value" style="color:var(--orange);font-size:1.15rem">' + fmt(totalGastos) + '</span></div>';
+  html += '<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>';
+  html += '<div class="total-row"><span class="label">PRECIO FINAL</span><span class="value">' + fmt(precioFinal) + '</span></div>';
+  html += '<div class="pct-extra">' + pctExtra.toFixed(1) + '% sobre el precio de compra</div>';
 
   if (incluyeHipoteca) {
-    html += `<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>`;
-    html += `<div class="total-row"><span class="label">Dinero necesario en mano</span><span class="value" style="color:var(--red);font-size:1.2rem">${fmt(dineroNecesario)}</span></div>`;
-    html += `<div class="pct-extra">Entrada (${(100 - hipotecaPct)}% = ${fmt(entradaNecesaria)}) + gastos (${fmt(totalGastos)})</div>`;
+    html += '<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>';
+    html += '<div class="total-row"><span class="label">Dinero necesario en mano</span><span class="value" style="color:var(--red);font-size:1.2rem">' + fmt(dineroNecesario) + '</span></div>';
+    html += '<div class="pct-extra">Entrada (' + (100 - hipotecaPct) + '% = ' + fmt(entradaNecesaria) + ') + gastos (' + fmt(totalGastos) + ')</div>';
   }
-  html += `</div>`;
+  html += '</div>';
 
   // Barra visual
   const colors = ['#6c8cff', '#a78bfa', '#fb923c', '#f87171'];
   const segments = [
     { label: 'Precio', value: precio, color: '#4b5563' },
     { label: 'Impuestos', value: totalImpuestos, color: colors[0] },
-    { label: 'Formalizacion', value: gastosFormal, color: colors[1] },
+    { label: 'Formalizacion', value: gastosFormal, color: colors[1] }
   ];
   if (incluyeHipoteca && gastosHipoteca > 0) {
     segments.push({ label: 'Hipoteca', value: gastosHipoteca, color: colors[2] });
   }
 
-  const total = segments.reduce((s, seg) => s + seg.value, 0);
+  const total = segments.reduce(function(s, seg) { return s + seg.value; }, 0);
 
-  html += `<div class="bar-container">`;
-  html += `<div class="bar-visual">`;
-  segments.forEach(seg => {
+  html += '<div class="bar-container">';
+  html += '<div class="bar-visual">';
+  segments.forEach(function(seg) {
     const pct = total > 0 ? (seg.value / total * 100) : 0;
-    html += `<div class="bar-segment" style="width:${pct}%;background:${seg.color}"></div>`;
+    html += '<div class="bar-segment" style="width:' + pct + '%;background:' + seg.color + '"></div>';
   });
-  html += `</div>`;
-  html += `<div class="bar-legend">`;
-  segments.forEach(seg => {
-    html += `<span class="legend-item"><span class="legend-dot" style="background:${seg.color}"></span>${seg.label}: ${fmt(seg.value)}</span>`;
+  html += '</div>';
+  html += '<div class="bar-legend">';
+  segments.forEach(function(seg) {
+    html += '<span class="legend-item"><span class="legend-dot" style="background:' + seg.color + '"></span>' + seg.label + ': ' + fmt(seg.value) + '</span>';
   });
-  html += `</div>`;
-  html += `</div>`;
+  html += '</div>';
+  html += '</div>';
 
   document.getElementById('resultContent').innerHTML = html;
 }
 
-document.querySelectorAll('input[type="number"]').forEach(input => {
+document.querySelectorAll('input[type="number"]').forEach(function(input) {
   input.addEventListener('input', calcular);
 });
 
+renderCCAAInfo();
+renderBonificaciones();
 calcular();
 </script>
 
