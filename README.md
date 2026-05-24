@@ -6,7 +6,11 @@ Pensada para gente que compra por primera vez y no sabe qué gastos se va a enco
 
 ## Usar
 
-Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni dependencias. Todos los cálculos se actualizan en tiempo real.
+**Online:** [https://kroloxmcg.github.io/casitas/](https://kroloxmcg.github.io/casitas/) — funciona en móvil y escritorio.
+
+**Local:** Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni dependencias.
+
+Todos los cálculos se actualizan en tiempo real.
 
 ## Comunidades autónomas soportadas
 
