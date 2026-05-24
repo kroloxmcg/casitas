@@ -1616,8 +1616,6 @@ function calcular() {
             const pctEfectivo = baseImponible > 0 ? (result / baseImponible * 100).toFixed(1) : '0';
             impuestoPctLabel = pctEfectivo + '%';
             bonApplied = true;
-          } else {
-            showToast('Has marcado "' + b.label + '" pero el precio de tu vivienda (' + fmt(precio) + ') supera el limite. Se aplica el <strong>tipo general (' + (typeof data.itpGeneral === 'number' ? data.itpGeneral + '%' : data.itpGeneral) + ')</strong> en vez del reducido.');
           }
           break;
         }
@@ -1643,8 +1641,6 @@ function calcular() {
             ajd = result;
             ajdPct = precio > 0 ? (result / precio * 100) : 0;
             impuestoDetalle = '(' + b.label + ')';
-          } else {
-            showToast('Has marcado "' + b.label + '" pero el precio de tu vivienda (' + fmt(precio) + ') supera el limite. Se aplica el <strong>AJD general (' + data.ajd + '%)</strong> en vez del reducido.');
           }
           break;
         }
@@ -1960,7 +1956,10 @@ function recogerDatos() {
       ico: document.getElementById('chkICO').checked,
       numCompradores: numCompradores,
       sueldo1: bruto1,
-      sueldo2: bruto2
+      sueldo2: bruto2,
+      ibiAnual: parseFloat(document.getElementById('ibiAnual').value) || 0,
+      comunidad: parseFloat(document.getElementById('comunidad').value) || 0,
+      suministros: parseFloat(document.getElementById('suministros').value) || 0
     },
     resultados: {
       precioFinal: lastCalc.precio + lastCalc.totalGastos,
@@ -2029,6 +2028,10 @@ function cargarDatos(obj) {
   document.getElementById('sueldo1').value = d.sueldo1 || 25000;
   document.getElementById('sueldo2').value = d.sueldo2 || 25000;
 
+  document.getElementById('ibiAnual').value = d.ibiAnual || 500;
+  document.getElementById('comunidad').value = d.comunidad || 80;
+  document.getElementById('suministros').value = d.suministros || 150;
+
   calcular();
   calcularSituacion();
 }
@@ -2068,7 +2071,8 @@ document.getElementById('btnReset').addEventListener('click', function() {
       notariaManual: false, registroManual: false,
       hipoteca: false, hipotecaPct: 80, interes: 2.5, plazo: 25,
       comisionApertura: 0, tasacion: 400, seguroHogar: 250, ico: false,
-      numCompradores: 1, sueldo1: 25000, sueldo2: 25000
+      numCompradores: 1, sueldo1: 25000, sueldo2: 25000,
+      ibiAnual: 500, comunidad: 80, suministros: 150
     },
     resultados: {}
   };
@@ -2318,14 +2322,8 @@ function calcularSituacion() {
     var boxClass = 'green';
     var verdict = 'Te lo puedes permitir';
     var verdictColor = 'var(--green)';
-    if (ratio > 40) {
-      boxClass = 'red'; verdict = 'No recomendable'; verdictColor = 'var(--red)';
-      showToast('La cuota de la hipoteca (' + fmt(cuotaActual) + ') supone el <strong>' + ratio.toFixed(1) + '%</strong> de tu neto mensual. Por encima del 40% el banco probablemente <strong>no te apruebe</strong> la hipoteca.');
-    }
-    else if (ratio > 35) {
-      boxClass = 'orange'; verdict = 'Justo — riesgo'; verdictColor = 'var(--orange)';
-      showToast('La cuota de la hipoteca (' + fmt(cuotaActual) + ') supone el <strong>' + ratio.toFixed(1) + '%</strong> de tu neto mensual. Entre el 35% y 40% es <strong>zona de riesgo</strong>. El banco podria ponerlo dificil.');
-    }
+    if (ratio > 40) { boxClass = 'red'; verdict = 'No recomendable'; verdictColor = 'var(--red)'; }
+    else if (ratio > 35) { boxClass = 'orange'; verdict = 'Justo — riesgo'; verdictColor = 'var(--orange)'; }
 
     ah += '<div class="afford-box ' + boxClass + '">';
     ah += '<div class="afford-verdict" style="color:' + verdictColor + '">' + verdict + '</div>';
