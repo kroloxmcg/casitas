@@ -100,7 +100,10 @@ No es una ayuda ni una subvención: si dejas de pagar, el Estado cubre al banco 
 
 **Bancos adheridos (67):** BBVA, CaixaBank, Santander, Sabadell, Bankinter, Unicaja, Abanca, Kutxabank, Ibercaja, Cajamar y 57 cajas rurales más.
 
-**Importante — sobre plano:** El aval ICO **NO aplica para viviendas sobre plano** (que aún no están construidas). Solo aplica para obra nueva ya terminada o segunda mano. La calculadora muestra un aviso cuando se selecciona "Obra nueva" con el ICO activo.
+**Validación automática:** La calculadora cruza datos entre pestañas y muestra avisos en tiempo real cuando detecta incompatibilidades con el ICO:
+- Precio > 325.000 € (supera el máximo del programa)
+- Sueldo > 37.800 €/persona (supera el límite de ingresos)
+- Obra nueva seleccionada (el ICO no aplica para viviendas sobre plano, solo obra terminada o segunda mano)
 
 ### Vivienda habitual — obligaciones
 Sección informativa que explica:
