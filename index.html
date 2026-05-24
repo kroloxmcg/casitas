@@ -944,19 +944,19 @@
       <div class="card-desc">La cuota de la hipoteca no es lo unico que pagas cada mes. Anade los gastos fijos para ver cuanto te cuesta realmente el piso.</div>
       <div class="grid-2">
         <div class="field">
-          <label for="ibiAnual">IBI (&euro;/ano)</label>
-          <input type="number" id="ibiAnual" value="500" min="0" step="50">
-          <span class="hint">Impuesto municipal por ser propietario. Consultalo en el recibo del vendedor o en el ayuntamiento. Tipico: 300-1.000 €/ano.</span>
+          <label for="ibiAnual">IBI (&euro;/ano) &mdash; NO es tu sueldo</label>
+          <input type="number" id="ibiAnual" value="500" min="0" max="5000" step="50">
+          <span class="hint">Impuesto municipal por ser propietario (300-1.000 €/ANO, no al mes). Pidele al vendedor el ultimo recibo del IBI o consultalo en el ayuntamiento con la referencia catastral.</span>
         </div>
         <div class="field">
           <label for="comunidad">Comunidad de propietarios (&euro;/mes)</label>
-          <input type="number" id="comunidad" value="80" min="0" step="10">
-          <span class="hint">Cuota mensual del edificio. Pregunta al vendedor o administrador. Tipico: 50-150 €/mes (mas con piscina/portero).</span>
+          <input type="number" id="comunidad" value="80" min="0" max="1000" step="10">
+          <span class="hint">Cuota mensual del edificio (50-150 €/mes). Pidele al vendedor o al administrador de la finca el ultimo recibo. Tambien puedes pedir el certificado de deudas de la comunidad.</span>
         </div>
         <div class="field">
           <label for="suministros">Suministros: luz + agua + gas (&euro;/mes)</label>
-          <input type="number" id="suministros" value="150" min="0" step="10">
-          <span class="hint">Estimacion mensual de todos los suministros. Tipico: 120-250 €/mes para un piso normal.</span>
+          <input type="number" id="suministros" value="150" min="0" max="1000" step="10">
+          <span class="hint">Estimacion mensual de todos los suministros (120-250 €/mes). Pide al vendedor los ultimos recibos de luz, agua y gas para ver el consumo real del piso.</span>
         </div>
       </div>
       <div id="costeMensualResult" style="margin-top:1rem"></div>
@@ -2371,11 +2371,19 @@ function calcularSituacion() {
   var ibiAnual = parseFloat(document.getElementById('ibiAnual').value) || 0;
   var comunidad = parseFloat(document.getElementById('comunidad').value) || 0;
   var suministros = parseFloat(document.getElementById('suministros').value) || 0;
+
+  var avisoCoste = '';
+  if (ibiAnual > 2000) {
+    avisoCoste += '<div style="background:rgba(251,146,60,0.1);border:1px solid var(--orange);border-radius:8px;padding:0.5rem 0.75rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--orange);line-height:1.4"><strong>Ojo:</strong> Has puesto ' + fmt(ibiAnual) + ' de IBI al ano. El IBI tipico en Espana es de 300-1.000 €/ano. Seguro que no es tu sueldo? Consultalo en el recibo del vendedor.</div>';
+  }
+  if (comunidad > 500) {
+    avisoCoste += '<div style="background:rgba(251,146,60,0.1);border:1px solid var(--orange);border-radius:8px;padding:0.5rem 0.75rem;margin-bottom:0.75rem;font-size:0.78rem;color:var(--orange);line-height:1.4"><strong>Ojo:</strong> Has puesto ' + fmt(comunidad) + '/mes de comunidad. Esto es muy alto. Solo urbanizaciones de lujo superan los 300-400 €/mes. Verificalo con el administrador.</div>';
+  }
   var seguroH = incluyeHipoteca ? (parseFloat(document.getElementById('seguroHogar').value) || 0) : 0;
 
   var costeMensual = cuotaActual + (ibiAnual / 12) + comunidad + suministros + (seguroH / 12);
 
-  var cm = '';
+  var cm = avisoCoste;
   cm += '<div class="total-box">';
   cm += '<div class="result-row"><span class="label">Cuota hipoteca</span><span class="value">' + fmt(cuotaActual) + '/mes</span></div>';
   cm += '<div class="result-row"><span class="label">IBI</span><span class="value">' + fmt(ibiAnual / 12) + '/mes</span></div>';
