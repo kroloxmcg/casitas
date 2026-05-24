@@ -10,11 +10,14 @@ Pensada para gente que compra por primera vez y no sabe qué gastos se va a enco
 
 **Local:** Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni dependencias.
 
-Todos los cálculos se actualizan en tiempo real. La app tiene tres pestañas:
+Todos los cálculos se actualizan en tiempo real. La app tiene cuatro pestañas:
 
-- **Calculadora**: gastos, impuestos, hipoteca, ICO, vivienda habitual + guardar/cargar escenarios
-- **Mi situación**: comprar solo o en pareja, sueldos, si te lo puedes permitir
+- **Calculadora**: gastos, impuestos, hipoteca, ICO, vivienda habitual
+- **Mi situación**: compradores, sueldos, si te lo puedes permitir, coste mensual real
 - **Comparar**: subir varios escenarios guardados (.json) y verlos lado a lado en tabla
+- **Post-compra**: gastos de mantenimiento, ITE, checklist de documentos, plusvalía
+
+Botones siempre visibles: guardar/cargar/nuevo escenario. Al recargar la página siempre empieza limpio con valores por defecto.
 
 ## Comunidades autónomas
 
@@ -127,6 +130,15 @@ Permite simular si te puedes permitir el piso:
   - Rojo (> 40%): no recomendable
 - **Precio máximo recomendado** según tus ingresos y los parámetros de hipoteca
 - **Dinero necesario en mano** con desglose real (mismos datos que la calculadora)
+- **Coste mensual real** = cuota hipoteca + IBI/12 + comunidad + suministros + seguro/12. Muestra el porcentaje real de tus ingresos que se va en vivienda. Campos editables con valores por defecto (IBI 500€/año, comunidad 80€/mes, suministros 150€/mes). Validación: avisa si el IBI parece demasiado alto (>2.000€) o la comunidad (>500€/mes)
+
+### Post-compra (pestaña)
+Información para después de comprar:
+
+- **Gastos anuales de mantenimiento**: IBI, comunidad, derramas, suministros, seguro, tasa basuras con rangos típicos y cómo consultarlos antes de comprar
+- **ITE** (Inspección Técnica del Edificio): obligatoria a los 30 años en Madrid, 45 en Barcelona, 50 resto. Reparaciones si sale desfavorable: 5.000-50.000€
+- **Checklist de 10 documentos** que pedir antes de firmar (nota simple, certificado deudas comunidad, actas juntas, recibo IBI, certificado energético, informe ITE, cédula habitabilidad, recibos suministros, valor referencia catastral, verificar inquilinos)
+- **Plusvalía municipal**: la paga el vendedor, verificar en contrato de arras
 
 ### Guardar, cargar y resetear escenarios
 Botones siempre visibles debajo de las pestañas:
