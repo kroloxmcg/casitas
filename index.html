@@ -2409,6 +2409,22 @@ document.getElementById('ibiAnual').addEventListener('input', calcularSituacion)
 document.getElementById('comunidad').addEventListener('input', calcularSituacion);
 document.getElementById('suministros').addEventListener('input', calcularSituacion);
 
+// Force default values on page load (override browser autocomplete)
+document.getElementById('precio').value = 250000;
+document.getElementById('valorRef').value = 0;
+document.getElementById('hipotecaPct').value = 80;
+document.getElementById('hipotecaInteres').value = 2.5;
+document.getElementById('hipotecaPlazo').value = 25;
+document.getElementById('comisionApertura').value = 0;
+document.getElementById('tasacion').value = 400;
+document.getElementById('seguroHogar').value = 250;
+document.getElementById('gestoria').value = 400;
+document.getElementById('sueldo1').value = 25000;
+document.getElementById('sueldo2').value = 25000;
+document.getElementById('ibiAnual').value = 500;
+document.getElementById('comunidad').value = 80;
+document.getElementById('suministros').value = 150;
+
 renderCCAAInfo();
 renderBonificaciones();
 calcular();
