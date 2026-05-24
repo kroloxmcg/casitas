@@ -490,6 +490,80 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .tabs {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .tabs button {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tabs button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .afford-box {
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-top: 0.75rem;
+    text-align: center;
+  }
+
+  .afford-box.green { background: rgba(74, 222, 128, 0.1); border: 1px solid var(--green); }
+  .afford-box.orange { background: rgba(251, 146, 60, 0.1); border: 1px solid var(--orange); }
+  .afford-box.red { background: rgba(248, 113, 113, 0.1); border: 1px solid var(--red); }
+  .afford-box.neutral { background: var(--surface2); border: 1px solid var(--border); }
+
+  .afford-verdict {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .afford-detail {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .ratio-bar-bg {
+    width: 100%;
+    height: 24px;
+    background: var(--surface2);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0.75rem 0 0.3rem 0;
+  }
+
+  .ratio-bar-fill {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 0.4s ease;
+  }
+
+  .ratio-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
   footer {
     text-align: center;
     color: var(--text-muted);
@@ -497,6 +571,13 @@
     margin-top: 2rem;
     padding-top: 1rem;
     border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .tabs button { padding: 0.6rem 0.5rem; font-size: 0.82rem; }
+    .tabs { margin-bottom: 1rem; }
+    .afford-verdict { font-size: 1.1rem; }
+    .afford-detail { font-size: 0.78rem; }
   }
 </style>
 </head>
@@ -507,6 +588,15 @@
     <h1>Calculadora de Compra de Vivienda</h1>
     <p>Espana &mdash; Calcula el precio real que vas a pagar</p>
   </header>
+
+  <!-- PESTANAS -->
+  <div class="tabs">
+    <button type="button" id="tabBtnCalc" class="active">Calculadora</button>
+    <button type="button" id="tabBtnSitu">Mi situacion</button>
+  </div>
+
+  <!-- TAB: CALCULADORA -->
+  <div id="tabCalculadora" class="tab-panel active">
 
   <!-- COMUNIDAD Y PRECIO -->
   <div class="card">
@@ -705,6 +795,50 @@
   <div class="info-tip">
     <strong>Recuerda:</strong> El ITP se calcula sobre el mayor valor entre el precio de compra y el valor de referencia catastral. Consultalo gratis en la <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--orange)">Sede Electronica del Catastro</a> (necesitas certificado digital o Cl@ve) antes de negociar el precio.
   </div>
+
+  </div><!-- /tabCalculadora -->
+
+  <!-- TAB: MI SITUACION -->
+  <div id="tabSituacion" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">Compradores</div>
+      <div class="card-desc">Indica cuantas personas van a comprar el piso y el sueldo bruto anual de cada una. Calcularemos el sueldo neto aproximado y si os podeis permitir la cuota.</div>
+      <div class="field">
+        <label>Numero de compradores</label>
+        <div class="toggle-group">
+          <button type="button" id="btn1comp" class="active">1 persona</button>
+          <button type="button" id="btn2comp">2 personas</button>
+        </div>
+        <span class="hint">Si comprais en pareja, los dos figurais en la escritura y la hipoteca. El banco suma los ingresos de ambos para decidir si os la concede.</span>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="sueldo1">Sueldo bruto anual - Comprador 1 (&euro;)</label>
+          <input type="number" id="sueldo1" value="25000" min="0" step="500">
+          <span class="hint">Tu sueldo bruto anual (lo que pone en el contrato, antes de impuestos).</span>
+        </div>
+        <div class="field" id="campo2comprador" style="display:none">
+          <label for="sueldo2">Sueldo bruto anual - Comprador 2 (&euro;)</label>
+          <input type="number" id="sueldo2" value="25000" min="0" step="500">
+          <span class="hint">Sueldo bruto anual de la segunda persona.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Resultado: sueldo neto estimado</div>
+      <div class="card-desc">Estimacion orientativa aplicando retenciones IRPF 2025/2026 y Seguridad Social (6,35%). Para un calculo exacto usa tu nomina real.</div>
+      <div id="sueldoResult"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Te lo puedes permitir?</div>
+      <div class="card-desc">Los bancos y asesores recomiendan que la cuota de la hipoteca no supere el 35% de tu sueldo neto mensual. Por encima del 40% es arriesgado.</div>
+      <div id="affordResult"></div>
+    </div>
+
+  </div><!-- /tabSituacion -->
 
   <footer>
     Calculadora orientativa &mdash; Espana 2025/2026<br>
@@ -1278,6 +1412,183 @@ document.getElementById('chkICO').addEventListener('change', function() {
   }
   calcular();
 });
+
+// Tabs
+document.getElementById('tabBtnCalc').addEventListener('click', function() { switchTab('calc'); });
+document.getElementById('tabBtnSitu').addEventListener('click', function() { switchTab('situ'); });
+
+function switchTab(tab) {
+  document.getElementById('tabBtnCalc').classList.toggle('active', tab === 'calc');
+  document.getElementById('tabBtnSitu').classList.toggle('active', tab === 'situ');
+  document.getElementById('tabCalculadora').classList.toggle('active', tab === 'calc');
+  document.getElementById('tabSituacion').classList.toggle('active', tab === 'situ');
+  if (tab === 'situ') calcularSituacion();
+}
+
+// Compradores toggle
+var numCompradores = 1;
+document.getElementById('btn1comp').addEventListener('click', function() {
+  numCompradores = 1;
+  document.getElementById('btn1comp').classList.add('active');
+  document.getElementById('btn2comp').classList.remove('active');
+  document.getElementById('campo2comprador').style.display = 'none';
+  calcularSituacion();
+});
+document.getElementById('btn2comp').addEventListener('click', function() {
+  numCompradores = 2;
+  document.getElementById('btn2comp').classList.add('active');
+  document.getElementById('btn1comp').classList.remove('active');
+  document.getElementById('campo2comprador').style.display = 'block';
+  calcularSituacion();
+});
+
+document.getElementById('sueldo1').addEventListener('input', calcularSituacion);
+document.getElementById('sueldo2').addEventListener('input', calcularSituacion);
+
+function calcularNetoAnual(bruto) {
+  if (bruto <= 0) return 0;
+  var ss = bruto * 0.0635;
+  var baseIRPF = bruto - ss;
+  var irpf = 0;
+  var tramos = [
+    { hasta: 12450, tipo: 0.19 },
+    { hasta: 20200, tipo: 0.24 },
+    { hasta: 35200, tipo: 0.30 },
+    { hasta: 60000, tipo: 0.37 },
+    { hasta: 300000, tipo: 0.45 },
+    { hasta: Infinity, tipo: 0.47 }
+  ];
+  var prev = 0;
+  for (var i = 0; i < tramos.length; i++) {
+    var t = tramos[i];
+    if (baseIRPF <= prev) break;
+    var tramo = Math.min(baseIRPF, t.hasta) - prev;
+    if (tramo > 0) irpf += tramo * t.tipo;
+    prev = t.hasta;
+  }
+  return bruto - ss - irpf;
+}
+
+function calcularSituacion() {
+  var bruto1 = parseFloat(document.getElementById('sueldo1').value) || 0;
+  var bruto2 = numCompradores === 2 ? (parseFloat(document.getElementById('sueldo2').value) || 0) : 0;
+
+  var neto1 = calcularNetoAnual(bruto1);
+  var neto2 = calcularNetoAnual(bruto2);
+  var netoTotal = neto1 + neto2;
+  var netoMensual = netoTotal / 12;
+
+  // Sueldo result
+  var sh = '';
+  sh += '<div class="result-row"><span class="label">Sueldo bruto anual (Comprador 1)</span><span class="value">' + fmt(bruto1) + '</span></div>';
+  sh += '<div class="result-row"><span class="label">Sueldo neto anual (Comprador 1)</span><span class="value">' + fmt(neto1) + '</span></div>';
+  sh += '<div class="result-row"><span class="label">Neto mensual (Comprador 1)</span><span class="value">' + fmt(neto1 / 12) + '</span></div>';
+  if (numCompradores === 2) {
+    sh += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
+    sh += '<div class="result-row"><span class="label">Sueldo bruto anual (Comprador 2)</span><span class="value">' + fmt(bruto2) + '</span></div>';
+    sh += '<div class="result-row"><span class="label">Sueldo neto anual (Comprador 2)</span><span class="value">' + fmt(neto2) + '</span></div>';
+    sh += '<div class="result-row"><span class="label">Neto mensual (Comprador 2)</span><span class="value">' + fmt(neto2 / 12) + '</span></div>';
+    sh += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
+    sh += '<div class="result-row subtotal"><span class="label">Neto mensual conjunto</span><span class="value">' + fmt(netoMensual) + '</span></div>';
+  }
+  document.getElementById('sueldoResult').innerHTML = sh;
+
+  // Affordability
+  var cuotaMax35 = netoMensual * 0.35;
+  var cuotaMax40 = netoMensual * 0.40;
+
+  var incluyeHipoteca = document.getElementById('chkHipoteca').checked;
+  var cuotaActual = 0;
+  if (incluyeHipoteca) {
+    var precio = parseFloat(document.getElementById('precio').value) || 0;
+    var hipPct = parseFloat(document.getElementById('hipotecaPct').value) || 0;
+    var interes = parseFloat(document.getElementById('hipotecaInteres').value) || 0;
+    var plazo = parseInt(document.getElementById('hipotecaPlazo').value) || 0;
+    var capital = precio * hipPct / 100;
+    if (interes > 0 && plazo > 0 && capital > 0) {
+      var r = interes / 100 / 12;
+      var n = plazo * 12;
+      cuotaActual = capital * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    } else if (plazo > 0 && capital > 0) {
+      cuotaActual = capital / (plazo * 12);
+    }
+  }
+
+  var ratio = netoMensual > 0 ? (cuotaActual / netoMensual * 100) : 0;
+
+  // Precio maximo recomendado (35% neto mensual con mismos parametros de hipoteca)
+  var precioMaxRec = 0;
+  if (incluyeHipoteca) {
+    var interes2 = parseFloat(document.getElementById('hipotecaInteres').value) || 0;
+    var plazo2 = parseInt(document.getElementById('hipotecaPlazo').value) || 0;
+    var hipPct2 = parseFloat(document.getElementById('hipotecaPct').value) || 0;
+    if (interes2 > 0 && plazo2 > 0 && hipPct2 > 0) {
+      var r2 = interes2 / 100 / 12;
+      var n2 = plazo2 * 12;
+      var capitalMax = cuotaMax35 * (Math.pow(1 + r2, n2) - 1) / (r2 * Math.pow(1 + r2, n2));
+      precioMaxRec = capitalMax / (hipPct2 / 100);
+    }
+  }
+
+  var ah = '';
+
+  if (!incluyeHipoteca) {
+    ah += '<div class="afford-box neutral">';
+    ah += '<div class="afford-verdict" style="color:var(--text-muted)">Activa la hipoteca en la calculadora</div>';
+    ah += '<div class="afford-detail">Para calcular si te lo puedes permitir, necesito saber la cuota mensual. Ve a la pestana Calculadora y activa "Incluir hipoteca".</div>';
+    ah += '</div>';
+  } else if (netoMensual <= 0) {
+    ah += '<div class="afford-box neutral">';
+    ah += '<div class="afford-verdict" style="color:var(--text-muted)">Introduce tu sueldo</div>';
+    ah += '<div class="afford-detail">Pon tu sueldo bruto anual arriba para ver el analisis.</div>';
+    ah += '</div>';
+  } else {
+    var boxClass = 'green';
+    var verdict = 'Te lo puedes permitir';
+    var verdictColor = 'var(--green)';
+    if (ratio > 40) { boxClass = 'red'; verdict = 'No recomendable'; verdictColor = 'var(--red)'; }
+    else if (ratio > 35) { boxClass = 'orange'; verdict = 'Justo — riesgo'; verdictColor = 'var(--orange)'; }
+
+    ah += '<div class="afford-box ' + boxClass + '">';
+    ah += '<div class="afford-verdict" style="color:' + verdictColor + '">' + verdict + '</div>';
+    ah += '<div class="afford-detail">La cuota (' + fmt(cuotaActual) + ') supone el <strong>' + ratio.toFixed(1) + '%</strong> de tu neto mensual (' + fmt(netoMensual) + ')</div>';
+    ah += '</div>';
+
+    // Ratio bar
+    var barPct = Math.min(ratio, 60);
+    var barColor = ratio <= 35 ? 'var(--green)' : (ratio <= 40 ? 'var(--orange)' : 'var(--red)');
+    ah += '<div class="ratio-bar-bg"><div class="ratio-bar-fill" style="width:' + (barPct / 60 * 100) + '%;background:' + barColor + '"></div></div>';
+    ah += '<div class="ratio-labels"><span>0%</span><span style="color:var(--green)">35% recomendado</span><span style="color:var(--red)">60%</span></div>';
+
+    // Summary
+    ah += '<div style="margin-top:1.25rem">';
+    ah += '<div class="result-row"><span class="label">Cuota mensual hipoteca</span><span class="value">' + fmt(cuotaActual) + '</span></div>';
+    ah += '<div class="result-row"><span class="label">Neto mensual conjunto</span><span class="value">' + fmt(netoMensual) + '</span></div>';
+    ah += '<div class="result-row"><span class="label">Ratio de endeudamiento</span><span class="value" style="color:' + verdictColor + '">' + ratio.toFixed(1) + '%</span></div>';
+    ah += '<div class="result-row"><span class="label">Cuota maxima recomendada (35%)</span><span class="value" style="color:var(--green)">' + fmt(cuotaMax35) + '</span></div>';
+    if (precioMaxRec > 0) {
+      ah += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
+      ah += '<div class="result-row"><span class="label">Precio maximo de vivienda recomendado</span><span class="value" style="color:var(--accent-light)">' + fmt(precioMaxRec) + '</span></div>';
+      ah += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem">Con los mismos parametros de hipoteca (' + (parseFloat(document.getElementById('hipotecaPct').value) || 80) + '%, ' + (parseFloat(document.getElementById('hipotecaInteres').value) || 2.5) + '% interes, ' + (parseInt(document.getElementById('hipotecaPlazo').value) || 25) + ' anos)</div>';
+    }
+
+    // Dinero en mano
+    var precio3 = parseFloat(document.getElementById('precio').value) || 0;
+    var hipPct3 = parseFloat(document.getElementById('hipotecaPct').value) || 0;
+    var capital3 = precio3 * hipPct3 / 100;
+    var entrada3 = precio3 - capital3;
+    // recalculate totalGastos from main calc
+    calcular();
+    var gastosEst = precio3 * 0.11;
+    var dineroMano = entrada3 + gastosEst;
+    ah += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
+    ah += '<div class="result-row"><span class="label">Dinero necesario en mano (est.)</span><span class="value" style="color:var(--red)">' + fmt(dineroMano) + '</span></div>';
+    ah += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem">Entrada (' + fmt(entrada3) + ') + gastos estimados ~11% (' + fmt(gastosEst) + '). El desglose exacto esta en la pestana Calculadora.</div>';
+    ah += '</div>';
+  }
+
+  document.getElementById('affordResult').innerHTML = ah;
+}
 
 renderCCAAInfo();
 renderBonificaciones();

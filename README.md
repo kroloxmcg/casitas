@@ -10,7 +10,10 @@ Pensada para gente que compra por primera vez y no sabe qué gastos se va a enco
 
 **Local:** Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni dependencias.
 
-Todos los cálculos se actualizan en tiempo real.
+Todos los cálculos se actualizan en tiempo real. La app tiene dos pestañas:
+
+- **Calculadora**: gastos, impuestos, hipoteca, ICO, vivienda habitual
+- **Mi situación**: comprar solo o en pareja, sueldos, si te lo puedes permitir
 
 ## Comunidades autónomas soportadas
 
@@ -102,6 +105,18 @@ Sección informativa que explica:
 - Cómo lo comprueba Hacienda (no solo empadronamiento: facturas de suministros, DNI, etc.)
 - Qué pasa si no cumples (reclamación de ITP + intereses)
 - **Si vives en el extranjero**: no puedes aplicar bonificaciones de vivienda habitual salvo que te mudes en plazo; para el aval ICO necesitas 2 años de residencia previa en España
+
+### Mi situación (pestaña)
+Permite simular si te puedes permitir el piso:
+
+- **1 o 2 compradores** (solo o en pareja)
+- **Sueldo bruto anual** por persona → calcula el neto estimado (IRPF por tramos + SS 6,35%)
+- **Ratio de endeudamiento**: cuota vs. 35% del neto mensual
+  - Verde (< 35%): te lo puedes permitir
+  - Naranja (35-40%): justo, riesgo
+  - Rojo (> 40%): no recomendable
+- **Precio máximo recomendado** según tus ingresos y los parámetros de hipoteca
+- **Dinero necesario en mano** (entrada + gastos)
 
 ### Resultado
 - Desglose completo de cada gasto
