@@ -968,10 +968,13 @@
     <input type="file" id="fileCargar" accept=".json" style="display:none">
   </div>
 
-  <!-- TOAST POPUP -->
-  <div id="toast" style="display:none;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);max-width:90%;width:500px;background:var(--surface);border:1px solid var(--orange);border-radius:10px;padding:0.85rem 1rem;padding-right:2.5rem;box-shadow:0 4px 24px rgba(0,0,0,0.5);z-index:9999;font-size:0.85rem;color:var(--orange);line-height:1.5">
-    <span id="toastMsg"></span>
-    <button type="button" id="toastClose" style="position:absolute;top:0.5rem;right:0.75rem;background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;padding:0.25rem">&times;</button>
+  <!-- POPUP OVERLAY -->
+  <div id="popupOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9998;justify-content:center;align-items:center">
+    <div style="background:var(--surface);border:2px solid var(--orange);border-radius:14px;padding:1.5rem;max-width:90%;width:480px;box-shadow:0 8px 40px rgba(0,0,0,0.6);position:relative">
+      <div style="font-size:1.1rem;font-weight:700;color:var(--orange);margin-bottom:0.75rem">Aviso</div>
+      <div id="popupMsg" style="font-size:0.95rem;color:var(--text);line-height:1.6"></div>
+      <button type="button" id="popupClose" style="margin-top:1.25rem;width:100%;padding:0.7rem;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:0.95rem;font-weight:600;cursor:pointer">Entendido</button>
+    </div>
   </div>
 
   <footer>
@@ -1777,27 +1780,26 @@ function validateICO() {
   }
 }
 
-var lastToastText = '';
-var toastTimer = null;
+var lastPopupText = '';
 
 function showToast(html) {
-  if (html === lastToastText) return;
-  lastToastText = html;
-  var toast = document.getElementById('toast');
-  var msg = document.getElementById('toastMsg');
-  msg.innerHTML = '<strong>Aviso ICO:</strong> ' + html;
-  toast.style.display = 'block';
-  if (toastTimer) clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { hideToast(); }, 8000);
+  if (html === lastPopupText) return;
+  lastPopupText = html;
+  var overlay = document.getElementById('popupOverlay');
+  var msg = document.getElementById('popupMsg');
+  msg.innerHTML = html;
+  overlay.style.display = 'flex';
 }
 
-function hideToast() {
-  document.getElementById('toast').style.display = 'none';
-  lastToastText = '';
-  if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+function hidePopup() {
+  document.getElementById('popupOverlay').style.display = 'none';
+  lastPopupText = '';
 }
 
-document.getElementById('toastClose').addEventListener('click', hideToast);
+document.getElementById('popupClose').addEventListener('click', hidePopup);
+document.getElementById('popupOverlay').addEventListener('click', function(e) {
+  if (e.target === this) hidePopup();
+});
 
 // Tabs
 document.getElementById('tabBtnCalc').addEventListener('click', function() { switchTab('calc'); });
