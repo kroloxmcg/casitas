@@ -1320,12 +1320,15 @@ const CCAA_DATA = {
     ivaNueva: 10,
     info: 'ITP 10% (11% > 1M €). AJD 2%, el mas alto de Espana. A partir de junio/julio 2026 el ITP bajara al 9%.',
     bonificaciones: [
-      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 180.000 €)', hint: 'Tipo del 6%. Renta < 30.000 € individual / 47.000 € conjunta.', apply: function(base, precio) { return precio <= 180000 ? base * 0.06 : null; } },
-      { id: 'familia_bajo', label: 'Familia numerosa (vivienda habitual < 180.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.03 : null; } },
-      { id: 'familia_alto', label: 'Familia numerosa (vivienda habitual > 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio > 180000 ? base * 0.04 : null; } },
-      { id: 'discapacidad_bajo', label: 'Discapacidad >= 65% (vivienda habitual < 180.000 €)', hint: 'Tipo del 3%. Discapacidad fisica/sensorial >= 65% o psiquica >= 33%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.03 : null; } },
-      { id: 'discapacidad_alto', label: 'Discapacidad >= 65% (vivienda habitual > 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio > 180000 ? base * 0.04 : null; } },
-      { id: 'vpo', label: 'VPO (vivienda habitual)', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+      { id: 'joven_bajo', label: 'Menor de 35 anos (vivienda habitual <= 180.000 €)', hint: 'Tipo del 6%. Renta < 30.000 € individual / 47.000 € conjunta.', apply: function(base, precio) { return precio <= 180000 ? base * 0.06 : null; } },
+      { id: 'joven_alto', label: 'Menor de 35 anos (vivienda habitual > 180.000 €)', hint: 'Tipo del 8%.', apply: function(base, precio) { return precio > 180000 ? base * 0.08 : null; } },
+      { id: 'familia_bajo', label: 'Familia numerosa / monoparental (vivienda habitual <= 180.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.03 : null; } },
+      { id: 'familia_alto', label: 'Familia numerosa / monoparental (vivienda habitual > 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio > 180000 ? base * 0.04 : null; } },
+      { id: 'discapacidad_bajo', label: 'Discapacidad >= 65% fis./sens. o >= 33% psiq. (vivienda habitual <= 180.000 €)', hint: 'Tipo del 3%. Renta < 30.000 € individual / 47.000 € conjunta.', apply: function(base, precio) { return precio <= 180000 ? base * 0.03 : null; } },
+      { id: 'discapacidad_alto', label: 'Discapacidad >= 65% fis./sens. o >= 33% psiq. (vivienda habitual > 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio > 180000 ? base * 0.04 : null; } },
+      { id: 'victima_bajo', label: 'Victima violencia de genero (vivienda habitual <= 180.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.03 : null; } },
+      { id: 'victima_alto', label: 'Victima violencia de genero (vivienda habitual > 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio > 180000 ? base * 0.04 : null; } },
+      { id: 'vpo', label: 'VPO (vivienda habitual <= 180.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.04 : null; } }
     ],
     ajdBonificaciones: [
       { id: 'ajd_joven', label: 'Menor de 35 anos / familia numerosa (< 180.000 €)', hint: 'AJD baja del 2% al 0,1%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.001 : null; } },

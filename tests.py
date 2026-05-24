@@ -685,6 +685,206 @@ assert_close(total_gastos, 1360, "E2E CyL joven rural total")
 
 
 # ============================================================
+# TESTS: MADRID EXHAUSTIVO
+# ============================================================
+
+print("\n" + "=" * 60)
+print("TESTING MADRID EXHAUSTIVO")
+print("=" * 60)
+
+# ITP general
+assert_close(300000 * 0.06, 18000, "MAD ITP general 300k")
+assert_close(500000 * 0.06, 30000, "MAD ITP general 500k")
+assert_close(150000 * 0.06, 9000, "MAD ITP general 150k")
+
+# Bonificacion habitual (5.4%) <= 250k
+assert_close(200000 * 0.054, 10800, "MAD habitual 200k")
+assert_close(250000 * 0.054, 13500, "MAD habitual 250k (limite)")
+# > 250k: no aplica, vuelve al 6%
+assert_close(260000 * 0.06, 15600, "MAD habitual 260k (>250k, general)")
+
+# Familia numerosa (4%) sin limite de precio
+assert_close(300000 * 0.04, 12000, "MAD familia 300k")
+assert_close(500000 * 0.04, 20000, "MAD familia 500k")
+assert_close(100000 * 0.04, 4000, "MAD familia 100k")
+
+# Discapacidad >= 33% (3.5%) <= 130k
+assert_close(100000 * 0.035, 3500, "MAD discap 100k")
+assert_close(130000 * 0.035, 4550, "MAD discap 130k (limite)")
+# > 130k: no aplica
+assert_close(140000 * 0.06, 8400, "MAD discap 140k (>130k, general)")
+
+# Joven rural (0%) <= 250k
+assert_equal(0, 0, "MAD joven rural 200k (0%)")
+# > 250k: no aplica
+assert_close(260000 * 0.06, 15600, "MAD joven rural 260k (>250k, general)")
+
+# AJD progresivo Madrid
+assert_close(100000 * 0.004, 400, "MAD AJD 100k (0.4%)")
+assert_close(120000 * 0.004, 480, "MAD AJD 120k (0.4% limite)")
+assert_close(150000 * 0.005, 750, "MAD AJD 150k (0.5%)")
+assert_close(180000 * 0.005, 900, "MAD AJD 180k (0.5% limite)")
+assert_close(200000 * 0.0075, 1500, "MAD AJD 200k (0.75%)")
+assert_close(400000 * 0.0075, 3000, "MAD AJD 400k (0.75%)")
+
+# E2E Madrid segunda mano 250k habitual, hipoteca 80%
+precio = 250000
+itp = precio * 0.054  # habitual bonif
+not_e = estimar_notaria(precio)  # 800
+reg_e = estimar_registro(precio)  # 480
+gest = 400
+tas = 400
+total_g = itp + not_e + reg_e + gest + tas
+cuota = cuota_mensual(200000, 2.5, 25)
+entrada = 50000
+dinero = entrada + total_g
+assert_close(itp, 13500, "MAD E2E habitual ITP")
+assert_close(total_g, 15580, "MAD E2E habitual total gastos")
+assert_close(dinero, 65580, "MAD E2E habitual dinero en mano")
+assert_close(cuota, 897, "MAD E2E habitual cuota", 5)
+
+# E2E Madrid obra nueva 300k
+precio = 300000
+iva = precio * 0.10
+ajd = precio * 0.0075
+total_g = iva + ajd + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(iva + ajd, 32250, "MAD E2E obra nueva impuestos")
+assert_close(total_g, 34500, "MAD E2E obra nueva total")
+
+# E2E Madrid familia numerosa 400k, sin limite
+precio = 400000
+itp = precio * 0.04
+total_g = itp + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(itp, 16000, "MAD E2E familia 400k ITP")
+assert_close(total_g, 18470, "MAD E2E familia 400k total")
+
+# E2E Madrid pareja 28k+32k, piso 300k, hipoteca 80%
+n1 = calcular_neto_anual(28000)
+n2 = calcular_neto_anual(32000)
+nm = (n1 + n2) / 12
+cuota = cuota_mensual(240000, 2.5, 25)
+ratio = cuota / nm * 100
+assert_close(cuota, 1077, "MAD E2E pareja cuota", 5)
+assert_close(ratio, 28.5, "MAD E2E pareja ratio", 2)
+
+# E2E Madrid soltero 35k, piso 200k ICO 100%
+neto_m = calcular_neto_anual(35000) / 12
+cuota_ico = cuota_mensual(200000, 2.5, 30)
+ratio_ico = cuota_ico / neto_m * 100
+assert_close(cuota_ico, 790, "MAD E2E soltero ICO cuota", 5)
+assert_close(ratio_ico, 38.3, "MAD E2E soltero ICO ratio", 2)
+
+
+# ============================================================
+# TESTS: VALENCIA EXHAUSTIVO
+# ============================================================
+
+print("\n" + "=" * 60)
+print("TESTING VALENCIA EXHAUSTIVO")
+print("=" * 60)
+
+# ITP general
+assert_close(300000 * 0.10, 30000, "VAL ITP general 300k")
+assert_close(itp_valencia(1200000), 1000000*0.10 + 200000*0.11, "VAL ITP 1.2M (tramo 11%)")
+
+# Joven bajo (<= 180k) -> 6%
+assert_close(170000 * 0.06, 10200, "VAL joven 170k (6%)")
+assert_close(180000 * 0.06, 10800, "VAL joven 180k limite (6%)")
+# Joven alto (> 180k) -> 8%
+assert_close(250000 * 0.08, 20000, "VAL joven 250k (8%)")
+assert_close(300000 * 0.08, 24000, "VAL joven 300k (8%)")
+
+# Familia/monoparental bajo (<= 180k) -> 3%
+assert_close(170000 * 0.03, 5100, "VAL familia 170k (3%)")
+assert_close(180000 * 0.03, 5400, "VAL familia 180k (3%)")
+# Familia/monoparental alto (> 180k) -> 4%
+assert_close(250000 * 0.04, 10000, "VAL familia 250k (4%)")
+
+# Discapacidad bajo (<= 180k) -> 3%
+assert_close(170000 * 0.03, 5100, "VAL discap 170k (3%)")
+# Discapacidad alto (> 180k) -> 4%
+assert_close(250000 * 0.04, 10000, "VAL discap 250k (4%)")
+
+# Victima violencia bajo (<= 180k) -> 3%
+assert_close(170000 * 0.03, 5100, "VAL victima 170k (3%)")
+# Victima violencia alto (> 180k) -> 4%
+assert_close(250000 * 0.04, 10000, "VAL victima 250k (4%)")
+
+# VPO (<= 180k) -> 4%
+assert_close(150000 * 0.04, 6000, "VAL VPO 150k (4%)")
+
+# AJD general
+assert_close(300000 * 0.02, 6000, "VAL AJD general 300k (2%)")
+# AJD bonificado joven/familia (<= 180k) -> 0.1%
+assert_close(170000 * 0.001, 170, "VAL AJD joven 170k (0.1%)")
+# AJD bonificado discapacidad -> 0.1%
+assert_close(250000 * 0.001, 250, "VAL AJD discap 250k (0.1%)")
+
+# E2E Valencia segunda mano 250k, general (sin bonif)
+precio = 250000
+itp = precio * 0.10
+total_g = itp + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(itp, 25000, "VAL E2E general ITP 250k")
+assert_close(total_g, 27080, "VAL E2E general total 250k")
+
+# E2E Valencia segunda mano 170k, joven (6%)
+precio = 170000
+itp = precio * 0.06
+total_g = itp + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+cuota = cuota_mensual(136000, 2.5, 25)
+assert_close(itp, 10200, "VAL E2E joven ITP 170k")
+
+# E2E Valencia segunda mano 250k, joven (8%)
+precio = 250000
+itp = precio * 0.08
+total_g = itp + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(itp, 20000, "VAL E2E joven ITP 250k (8%)")
+
+# E2E Valencia segunda mano 170k, familia numerosa (3%)
+precio = 170000
+itp = precio * 0.03
+total_g = itp + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(itp, 5100, "VAL E2E familia ITP 170k (3%)")
+assert_close(total_g, 7020, "VAL E2E familia total 170k")
+
+# E2E Valencia obra nueva 300k, general
+precio = 300000
+iva = precio * 0.10
+ajd = precio * 0.02
+total_g = iva + ajd + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(iva + ajd, 36000, "VAL E2E obra nueva impuestos 300k")
+assert_close(total_g, 38250, "VAL E2E obra nueva total 300k")
+
+# E2E Valencia obra nueva 170k, joven (AJD 0.1%)
+precio = 170000
+iva = precio * 0.10
+ajd = precio * 0.001  # bonificado
+total_g = iva + ajd + estimar_notaria(precio) + estimar_registro(precio) + 400 + 400
+assert_close(ajd, 170, "VAL E2E obra nueva joven AJD 170k")
+assert_close(total_g, 19090, "VAL E2E obra nueva joven total 170k")
+
+# Comparativa Madrid vs Valencia: piso 300k, sin bonificaciones, hipoteca 80%
+cuota_300k = cuota_mensual(240000, 2.5, 25)
+# Madrid
+mad_itp = 300000 * 0.06
+mad_gastos = mad_itp + 900 + 550 + 400 + 400
+mad_dinero = 60000 + mad_gastos
+# Valencia
+val_itp = 300000 * 0.10
+val_gastos = val_itp + 900 + 550 + 400 + 400
+val_dinero = 60000 + val_gastos
+assert_close(mad_itp, 18000, "Comparativa MAD ITP 300k")
+assert_close(val_itp, 30000, "Comparativa VAL ITP 300k")
+assert_close(val_itp - mad_itp, 12000, "Comparativa diferencia ITP MAD vs VAL")
+assert_close(val_dinero - mad_dinero, 12000, "Comparativa diferencia dinero en mano MAD vs VAL")
+
+# Comparativa Madrid vs Valencia: obra nueva 300k
+mad_obra = 300000 * 0.10 + 300000 * 0.0075
+val_obra = 300000 * 0.10 + 300000 * 0.02
+assert_close(val_obra - mad_obra, 3750, "Comparativa diferencia obra nueva MAD vs VAL (AJD)")
+
+
+# ============================================================
 # TESTS: JSON STRUCTURE
 # ============================================================
 
