@@ -963,6 +963,7 @@
     <div class="action-buttons" style="margin-top:0">
       <button type="button" class="btn btn-primary" id="btnGuardar">Guardar escenario</button>
       <button type="button" class="btn btn-secondary" id="btnCargar">Cargar escenario</button>
+      <button type="button" class="btn btn-secondary" id="btnReset" style="background:rgba(248,113,113,0.1);border-color:var(--red);color:var(--red)">Nuevo escenario</button>
     </div>
     <input type="file" id="fileCargar" accept=".json" style="display:none">
   </div>
@@ -1954,6 +1955,28 @@ document.getElementById('btnGuardar').addEventListener('click', function() {
 
 document.getElementById('btnCargar').addEventListener('click', function() {
   document.getElementById('fileCargar').click();
+});
+
+document.getElementById('btnReset').addEventListener('click', function() {
+  var defaults = {
+    nombre: '',
+    fecha: '',
+    datos: {
+      ccaa: 'madrid', precio: 250000, valorRef: 0, tipo: 'segunda',
+      bonificaciones: [], notaria: 800, registro: 480, gestoria: 400,
+      notariaManual: false, registroManual: false,
+      hipoteca: false, hipotecaPct: 80, interes: 2.5, plazo: 25,
+      comisionApertura: 0, tasacion: 400, seguroHogar: 250, ico: false,
+      numCompradores: 1, sueldo1: 25000, sueldo2: 25000
+    },
+    resultados: {}
+  };
+  notariaManual = false;
+  registroManual = false;
+  document.getElementById('notaria').classList.add('auto-calculated');
+  document.getElementById('registro').classList.add('auto-calculated');
+  cargarDatos(defaults);
+  switchTab('calc');
 });
 
 document.getElementById('fileCargar').addEventListener('change', function(e) {
