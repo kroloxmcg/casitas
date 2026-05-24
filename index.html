@@ -600,11 +600,42 @@
     <div class="mortgage-section" id="mortgageSection">
       <div style="margin-top:1rem">
         <div class="card-desc">Si no pagas el piso entero de golpe, necesitas una hipoteca (prestamo del banco). Desde 2019, el banco paga la mayoria de los gastos de la hipoteca (notaria, registro, AJD). Tu solo pagas la tasacion y, si la hay, la comision de apertura.</div>
+
+        <!-- AVAL ICO -->
+        <div style="background:var(--surface2);border:1px solid var(--accent);border-radius:10px;padding:0.85rem;margin-bottom:1rem">
+          <label class="checkbox-row" style="margin-bottom:0.5rem">
+            <input type="checkbox" id="chkICO">
+            <span class="checkbox-text" style="font-weight:600">
+              Aval ICO primera vivienda
+              <span class="checkbox-hint">El Estado avala el 20% que el banco no te presta, permitiendote financiar hasta el 100%. Programa temporal hasta diciembre 2027.</span>
+            </span>
+          </label>
+          <div id="icoInfo" style="display:none">
+            <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.5;margin-top:0.5rem">
+              <strong style="color:var(--accent-light)">Requisitos del Aval ICO:</strong><br>
+              &bull; Menor de <strong>35 anos</strong> (o familia con menores, sin limite de edad)<br>
+              &bull; <strong>Primera vivienda</strong> (nunca haber sido propietario, ni por herencia)<br>
+              &bull; Precio maximo <strong>325.000 &euro;</strong><br>
+              &bull; Ingresos maximos <strong>37.800 &euro;/ano</strong> por persona (4,5x IPREM)<br>
+              &bull; Patrimonio maximo <strong>100.000 &euro;</strong><br>
+              &bull; <strong>Residencia en Espana los 2 ultimos anos</strong> (si vives en el extranjero, no cumples este requisito)<br>
+              &bull; Vivir en la vivienda minimo <strong>10 anos</strong><br>
+              &bull; Tener ahorrado el <strong>~10-12%</strong> del precio para impuestos y gastos (el aval cubre la entrada, no los gastos)<br>
+              <br>
+              <strong style="color:var(--orange)">Bancos que lo trabajan:</strong> BBVA, CaixaBank, Santander, Sabadell, Bankinter, Unicaja, Abanca, Kutxabank, Ibercaja, Cajamar y 57 entidades mas.
+              <br><br>
+              <strong style="color:var(--red)">Ojo:</strong> Si dejas de pagar, el ICO paga al banco pero luego el Estado te reclama la deuda con intereses y recargos.
+              <br>
+              <span style="color:var(--orange)">Programa temporal: activo hasta <strong>31 diciembre 2027</strong>. Solo se ha usado el 10% del presupuesto.</span>
+            </div>
+          </div>
+        </div>
+
         <div class="grid-2">
           <div class="field">
             <label for="hipotecaPct">Porcentaje financiado (%)</label>
             <input type="number" id="hipotecaPct" value="80" min="0" max="100" step="5">
-            <span class="hint">Cuanto te presta el banco del precio total. Lo normal es el 80% (el banco te da 8 de cada 10 euros y tu pones los 2 restantes). Algunos bancos dan hasta el 90% pero con peores condiciones.</span>
+            <span class="hint">Cuanto te presta el banco del precio total. Lo normal es el 80%. Con aval ICO puede llegar al 100%.</span>
           </div>
           <div class="field">
             <label for="hipotecaInteres">Interes anual fijo (%)</label>
@@ -632,6 +663,35 @@
             <span class="hint">Obligatorio si tienes hipoteca. Cubre danos al piso (incendio, agua, robo...). Cuesta 150-400 &euro;/ano. El banco no puede obligarte a contratarlo con ellos.</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIVIENDA HABITUAL -->
+  <div class="card" id="cardHabitual">
+    <div class="card-title">Vivienda habitual — lo que debes saber</div>
+    <div class="card-desc">Si marcas bonificaciones por "vivienda habitual", estas son las obligaciones que asumes con Hacienda:</div>
+    <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.6">
+      <strong style="color:var(--text)">Plazos obligatorios:</strong><br>
+      &bull; <strong>12 meses</strong> desde la compra para mudarte y vivir ahi<br>
+      &bull; <strong>3 anos minimo</strong> de residencia continuada<br>
+      &bull; Empadronarte en los primeros <strong>15-30 dias</strong> tras mudarte<br>
+      <br>
+      <strong style="color:var(--text)">Como lo comprueba Hacienda:</strong><br>
+      El empadronamiento solo NO es suficiente. Hacienda puede pedir:<br>
+      &bull; Facturas de <strong>luz, agua y gas</strong> con consumo real (no solo dados de alta)<br>
+      &bull; Correspondencia bancaria a esa direccion<br>
+      &bull; Direccion actualizada en el <strong>DNI</strong><br>
+      &bull; Certificado de la comunidad de propietarios<br>
+      <br>
+      <strong style="color:var(--text)">Si no cumples:</strong><br>
+      &bull; Te reclaman la <strong>diferencia de ITP</strong> al tipo general + intereses de demora<br>
+      &bull; El plazo de prescripcion es de <strong>4 anos</strong> desde que acaba el plazo de 12 meses<br>
+      <br>
+      <div style="background:var(--surface2);border-left:3px solid var(--red);border-radius:0 8px 8px 0;padding:0.6rem 0.75rem;margin-top:0.5rem">
+        <strong style="color:var(--red)">Si vives en el extranjero:</strong><br>
+        Puedes comprar un piso en Espana viviendo fuera, pero <strong>no podras aplicar las bonificaciones de vivienda habitual</strong> a menos que te mudes en los 12 meses siguientes a la compra y residas alli de forma continuada. Si fiscalizas fuera de Espana, Hacienda no considerara el piso como vivienda habitual.<br><br>
+        Para el <strong>aval ICO</strong> se exige residencia legal y continuada en Espana durante los <strong>2 anos anteriores</strong> a la solicitud — si vives en el extranjero actualmente, no cumples este requisito.
       </div>
     </div>
   </div>
@@ -1205,6 +1265,19 @@ document.querySelectorAll('input[type="number"]').forEach(function(input) {
 
 document.getElementById('btnSegundaMano').addEventListener('click', function() { setTipo('segunda'); });
 document.getElementById('btnObraNueva').addEventListener('click', function() { setTipo('nueva'); });
+
+document.getElementById('chkICO').addEventListener('change', function() {
+  var icoInfo = document.getElementById('icoInfo');
+  var hipotecaPct = document.getElementById('hipotecaPct');
+  if (this.checked) {
+    icoInfo.style.display = 'block';
+    hipotecaPct.value = 100;
+  } else {
+    icoInfo.style.display = 'none';
+    hipotecaPct.value = 80;
+  }
+  calcular();
+});
 
 renderCCAAInfo();
 renderBonificaciones();

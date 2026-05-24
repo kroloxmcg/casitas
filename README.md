@@ -63,6 +63,25 @@ Activable con un toggle. Incluye:
 - Tasación (300–600 €)
 - Seguro de hogar anual (obligatorio con hipoteca)
 
+### Aval ICO primera vivienda (programa temporal)
+Checkbox dentro de la sección de hipoteca. Al activarlo:
+
+- Sube el porcentaje financiado al 100%
+- Muestra todos los requisitos (edad, ingresos, precio máximo, patrimonio, residencia)
+- Muestra los bancos adheridos (67 entidades)
+- Aviso de que es un **programa temporal hasta diciembre 2027**
+
+Requisitos principales: menor de 35 años, primera vivienda, precio ≤ 325.000 €, ingresos ≤ 37.800 €/año, patrimonio ≤ 100.000 €, residencia en España los últimos 2 años.
+
+### Vivienda habitual — obligaciones
+Sección informativa que explica:
+
+- **12 meses** para mudarse tras la compra
+- **3 años mínimo** de residencia continuada
+- Cómo lo comprueba Hacienda (no solo empadronamiento: facturas de suministros, DNI, etc.)
+- Qué pasa si no cumples (reclamación de ITP + intereses)
+- **Si vives en el extranjero**: no puedes aplicar bonificaciones de vivienda habitual salvo que te mudes en plazo; para el aval ICO necesitas 2 años de residencia previa en España
+
 ### Resultado
 - Desglose completo de cada gasto
 - Precio final (compra + gastos)
@@ -78,6 +97,10 @@ Para consultarlo: [Sede Electrónica del Catastro](https://www.sedecatastro.gob.
 
 ## Fuentes
 
+- [Aval ICO primera vivienda — ICO](https://www.ico.es/en/linea-avales-hipoteca-primera-vivienda)
+- [Aval ICO requisitos y bancos 2026 — Housfy](https://housfy.com/blog/hipoteca-ico-bancos-adheridos-y-requisitos-en-2026/)
+- [Concepto vivienda habitual — Agencia Tributaria](https://sede.agenciatributaria.gob.es/Sede/vivienda-otros-inmuebles/deduccion-inversion-vivienda-habitual/concepto-vivienda-habitual.html)
+- [Acreditar vivienda habitual ante Hacienda](https://asesorexcelente.com/acreditar-vivienda-habitual/)
 - [ITP por comunidades 2026 — Calcula España](https://calculaespana.com/blog/itp-por-comunidades-autonomas)
 - [ITP por comunidades — Idealista](https://www.idealista.com/news/inmobiliario/vivienda/2024/09/18/819047-itp-por-comunidades-2024-conoce-los-tipos-aplicables)
 - [AJD por comunidades — Rankia](https://www.rankia.com/blog/mejores-hipotecas/2574021-impuesto-actos-juridicos-documentados-ajd-segun-comunidad-autonoma)
