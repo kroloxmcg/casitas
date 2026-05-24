@@ -894,12 +894,6 @@
     <strong>Recuerda:</strong> El ITP se calcula sobre el mayor valor entre el precio de compra y el valor de referencia catastral. Consultalo gratis en la <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--orange)">Sede Electronica del Catastro</a> (necesitas certificado digital o Cl@ve) antes de negociar el precio.
   </div>
 
-  <div class="action-buttons">
-    <button type="button" class="btn btn-primary" id="btnGuardar">Guardar escenario</button>
-    <button type="button" class="btn btn-secondary" id="btnCargar">Cargar escenario</button>
-  </div>
-  <input type="file" id="fileCargar" accept=".json" style="display:none">
-
   </div><!-- /tabCalculadora -->
 
   <!-- TAB: MI SITUACION -->
@@ -959,6 +953,17 @@
       <div class="compare-empty">Aun no has anadido ningun escenario. Pulsa "Anadir escenario" para subir archivos .json guardados.</div>
     </div>
   </div><!-- /tabComparar -->
+
+  <!-- GUARDAR / CARGAR (siempre visible, fuera de pestanas) -->
+  <div class="card" style="margin-top:1.25rem">
+    <div class="card-title">Guardar y cargar escenarios</div>
+    <div class="card-desc">Guarda toda la simulacion (calculadora + tu situacion personal) en un archivo .json. Puedes compartirlo o volver a cargarlo para modificarlo.</div>
+    <div class="action-buttons" style="margin-top:0">
+      <button type="button" class="btn btn-primary" id="btnGuardar">Guardar escenario</button>
+      <button type="button" class="btn btn-secondary" id="btnCargar">Cargar escenario</button>
+    </div>
+    <input type="file" id="fileCargar" accept=".json" style="display:none">
+  </div>
 
   <footer>
     Calculadora orientativa &mdash; Espana 2025/2026<br>
