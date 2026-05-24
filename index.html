@@ -1026,7 +1026,8 @@ const CCAA_DATA = {
     bonificaciones: [
       { id: 'joven30', label: 'Menor de 30 anos (primera vivienda habitual)', hint: 'Bonificacion del 100% (tipo efectivo 0%) para primera vivienda de jovenes < 30 anos con requisitos de renta y precio.', apply: function(base) { return 0; } },
       { id: 'primera', label: 'Primera vivienda habitual (< 270.000 €)', hint: 'Tipo reducido del 5% si es tu primera vivienda habitual y no supera 270.000 €.', apply: function(base, precio) { return precio <= 270000 ? base * 0.05 : null; } },
-      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo reducido del 2%.', apply: function(base) { return base * 0.02; } }
+      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo reducido del 2%.', apply: function(base) { return base * 0.02; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33% (primera vivienda habitual < 270.000 €)', hint: 'Bonificacion del 100% (tipo efectivo 0%) para personas con discapacidad >= 33% en primera vivienda habitual. Valor maximo 270.000 € (307.000 € en Mallorca, 378.000 € en Eivissa/Formentera). Requiere residencia en Baleares 3 anos previos.', apply: function(base, precio) { return precio <= 307000 ? 0 : null; } }
     ]
   },
   canarias: {
@@ -1166,13 +1167,16 @@ const CCAA_DATA = {
   },
   murcia: {
     nombre: 'Region de Murcia',
-    itpGeneral: 8,
-    itpCalc: function(base) { return base * 0.08; },
+    itpGeneral: 7.75,
+    itpCalc: function(base) { return base * 0.0775; },
     ajd: 1.5,
     ivaNueva: 10,
-    info: 'ITP general del 8%.',
+    info: 'ITP general del 7,75% (reducido desde el 8% en julio 2025).',
     bonificaciones: [
-      { id: 'joven_emp', label: 'Menor de 40 anos empresario/profesional', hint: 'Tipo reducido del 5% para jovenes empresarios o profesionales.', apply: function(base) { return base * 0.05; } }
+      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 150.000 €)', hint: 'Tipo reducido del 3%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.03 : null; } },
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3%, sin limite de precio.', apply: function(base) { return base * 0.03; } },
+      { id: 'joven_emp', label: 'Menor de 40 anos empresario/profesional', hint: 'Tipo reducido del 5%.', apply: function(base) { return base * 0.05; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo reducido del 3% para discapacidad >= 65%, con limites de renta.', apply: function(base) { return base * 0.03; } }
     ]
   },
   navarra: {
