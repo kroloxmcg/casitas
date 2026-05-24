@@ -816,6 +816,7 @@
             <div id="icoWarningPlano" style="display:none;background:rgba(248,113,113,0.1);border:1px solid var(--red);border-radius:8px;padding:0.6rem 0.75rem;margin-top:0.75rem;font-size:0.8rem;color:var(--red);line-height:1.4">
               <strong>Atencion:</strong> Si has seleccionado "Obra nueva", ten en cuenta que el aval ICO <strong>NO aplica para viviendas sobre plano</strong> (las que aun no estan construidas). Solo aplica para obra nueva ya terminada o segunda mano.
             </div>
+            <div id="icoValidationWarnings" style="margin-top:0.5rem"></div>
           </div>
         </div>
 
@@ -1685,6 +1686,8 @@ function calcular() {
   lastCalc.precio = precio;
   lastCalc.hipotecaPct = hipotecaPct;
   lastCalc.capitalHipoteca = capitalHipoteca;
+
+  validateICO();
 }
 
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
@@ -1716,6 +1719,46 @@ function updateIcoWarning() {
   if (warning && chkICO) {
     warning.style.display = (chkICO.checked && tipo === 'nueva') ? 'block' : 'none';
   }
+  validateICO();
+}
+
+function validateICO() {
+  var container = document.getElementById('icoValidationWarnings');
+  var chkICO = document.getElementById('chkICO');
+  if (!container || !chkICO || !chkICO.checked) {
+    if (container) container.innerHTML = '';
+    return;
+  }
+
+  var warnings = [];
+  var precio = parseFloat(document.getElementById('precio').value) || 0;
+  var sueldo1 = parseFloat(document.getElementById('sueldo1').value) || 0;
+  var sueldo2 = numCompradores === 2 ? (parseFloat(document.getElementById('sueldo2').value) || 0) : 0;
+
+  if (precio > 325000) {
+    warnings.push('El precio (' + fmt(precio) + ') supera el maximo del aval ICO (<strong>325.000 €</strong>). No cumples este requisito.');
+  }
+
+  if (sueldo1 > 37800) {
+    warnings.push('El sueldo del Comprador 1 (' + fmt(sueldo1) + ') supera el limite de ingresos del ICO (<strong>37.800 €/ano</strong> por persona). Ajusta en la pestana "Mi situacion".');
+  }
+
+  if (numCompradores === 2 && sueldo2 > 37800) {
+    warnings.push('El sueldo del Comprador 2 (' + fmt(sueldo2) + ') supera el limite de ingresos del ICO (<strong>37.800 €/ano</strong> por persona). Ajusta en la pestana "Mi situacion".');
+  }
+
+  if (warnings.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+
+  var html = '';
+  warnings.forEach(function(w) {
+    html += '<div style="background:rgba(251,146,60,0.1);border:1px solid var(--orange);border-radius:8px;padding:0.5rem 0.75rem;margin-top:0.5rem;font-size:0.78rem;color:var(--orange);line-height:1.4">';
+    html += '<strong>Incompatible:</strong> ' + w;
+    html += '</div>';
+  });
+  container.innerHTML = html;
 }
 
 // Tabs
@@ -2052,6 +2095,7 @@ function calcularNetoAnual(bruto) {
 }
 
 function calcularSituacion() {
+  validateICO();
   var bruto1 = parseFloat(document.getElementById('sueldo1').value) || 0;
   var bruto2 = numCompradores === 2 ? (parseFloat(document.getElementById('sueldo2').value) || 0) : 0;
 
