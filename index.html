@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Gastos de Compra de Vivienda - Madrid</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #242836;
+    --border: #2e3347;
+    --text: #e4e6f0;
+    --text-muted: #8b8fa8;
+    --accent: #6c8cff;
+    --accent-light: #8ba6ff;
+    --green: #4ade80;
+    --orange: #fb923c;
+    --red: #f87171;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-title .badge {
+    font-size: 0.7rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+  }
+
+  input[type="number"], select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    color: var(--text);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  input[type="number"]:focus, select:focus {
+    border-color: var(--accent);
+  }
+
+  input[type="number"]::-webkit-inner-spin-button { opacity: 1; }
+
+  .toggle-group {
+    display: flex;
+    background: var(--surface2);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .toggle-group button {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+  }
+
+  .toggle-group button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .switch-row .switch-label {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+  }
+
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .switch .slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    transition: 0.3s;
+  }
+
+  .switch .slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    transition: 0.3s;
+  }
+
+  .switch input:checked + .slider {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .switch input:checked + .slider::before {
+    transform: translateX(20px);
+    background: #fff;
+  }
+
+  .mortgage-section {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s;
+    opacity: 0;
+  }
+
+  .mortgage-section.open {
+    max-height: 600px;
+    opacity: 1;
+  }
+
+  .results {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .results h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .result-section {
+    margin-bottom: 1.25rem;
+  }
+
+  .result-section h3 {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+    font-size: 0.95rem;
+  }
+
+  .result-row .label { color: var(--text); }
+  .result-row .value { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .result-row.subtotal {
+    border-top: 1px solid var(--border);
+    padding-top: 0.6rem;
+    margin-top: 0.3rem;
+  }
+
+  .result-row.subtotal .value { color: var(--accent-light); }
+
+  .total-box {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .total-row .label {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .total-row .value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .pct-extra {
+    text-align: right;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+  }
+
+  .bar-container {
+    margin-top: 1.25rem;
+  }
+
+  .bar-visual {
+    display: flex;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+
+  .bar-segment {
+    transition: width 0.4s ease;
+    min-width: 2px;
+  }
+
+  .bar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .info-tip {
+    background: var(--surface2);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .info-tip strong { color: var(--orange); }
+
+  .monthly-box {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-top: 0.75rem;
+  }
+
+  .monthly-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.25rem 0;
+  }
+
+  .monthly-row .value {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Calculadora de Compra de Vivienda</h1>
+    <p>Comunidad de Madrid &mdash; Calcula el precio real que vas a pagar</p>
+  </header>
+
+  <!-- PRECIO Y TIPO -->
+  <div class="card">
+    <div class="card-title">Datos de la vivienda</div>
+    <div class="field">
+      <label for="precio">Precio de compra (&euro;)</label>
+      <input type="number" id="precio" value="250000" min="0" step="1000">
+    </div>
+    <div class="field">
+      <label for="valorRef">Valor de referencia catastral (&euro;) &mdash; <a href="https://www1.sedecatastro.gob.es/Accesos/SECAccvrc.aspx" target="_blank" style="color:var(--accent);font-size:0.85rem">consultar</a></label>
+      <input type="number" id="valorRef" value="0" min="0" step="1000">
+      <span style="font-size:0.78rem;color:var(--text-muted)">Pon 0 si no lo conoces (se usara el precio de compra)</span>
+    </div>
+    <div class="field">
+      <label>Tipo de vivienda</label>
+      <div class="toggle-group">
+        <button id="btnSegundaMano" class="active" onclick="setTipo('segunda')">Segunda mano</button>
+        <button id="btnObraNueva" onclick="setTipo('nueva')">Obra nueva</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BONIFICACIONES -->
+  <div class="card" id="cardBonificaciones">
+    <div class="card-title">Bonificaciones ITP <span class="badge">Segunda mano</span></div>
+    <label class="checkbox-row">
+      <input type="checkbox" id="chkViviendaHabitual" checked onchange="calcular()">
+      Vivienda habitual y precio &le; 250.000 &euro; (tipo efectivo 5,4%)
+    </label>
+    <label class="checkbox-row">
+      <input type="checkbox" id="chkFamiliaNumerosa" onchange="calcular()">
+      Familia numerosa (tipo reducido 4%)
+    </label>
+  </div>
+
+  <!-- GASTOS FIJOS -->
+  <div class="card">
+    <div class="card-title">Gastos de formalizacion</div>
+    <div class="grid-2">
+      <div class="field">
+        <label for="notaria">Notaria (&euro;)</label>
+        <input type="number" id="notaria" value="800" min="0" step="50">
+      </div>
+      <div class="field">
+        <label for="registro">Registro de la Propiedad (&euro;)</label>
+        <input type="number" id="registro" value="500" min="0" step="50">
+      </div>
+      <div class="field">
+        <label for="gestoria">Gestoria (&euro;)</label>
+        <input type="number" id="gestoria" value="400" min="0" step="50">
+      </div>
+    </div>
+  </div>
+
+  <!-- HIPOTECA (OPCIONAL) -->
+  <div class="card">
+    <div class="switch-row" onclick="toggleMortgage()">
+      <span class="switch-label">Incluir hipoteca</span>
+      <label class="switch" onclick="event.stopPropagation()">
+        <input type="checkbox" id="chkHipoteca" onchange="toggleMortgage()">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="mortgage-section" id="mortgageSection">
+      <div style="margin-top:1rem">
+        <div class="grid-2">
+          <div class="field">
+            <label for="hipotecaPct">Porcentaje financiado (%)</label>
+            <input type="number" id="hipotecaPct" value="80" min="0" max="100" step="5">
+          </div>
+          <div class="field">
+            <label for="hipotecaInteres">Interes anual (%)</label>
+            <input type="number" id="hipotecaInteres" value="2.5" min="0" max="15" step="0.1">
+          </div>
+          <div class="field">
+            <label for="hipotecaPlazo">Plazo (anos)</label>
+            <input type="number" id="hipotecaPlazo" value="25" min="1" max="40" step="1">
+          </div>
+          <div class="field">
+            <label for="comisionApertura">Comision de apertura (%)</label>
+            <input type="number" id="comisionApertura" value="0" min="0" max="3" step="0.1">
+          </div>
+          <div class="field">
+            <label for="tasacion">Tasacion (&euro;)</label>
+            <input type="number" id="tasacion" value="400" min="0" step="50">
+          </div>
+          <div class="field">
+            <label for="seguroHogar">Seguro de hogar (&euro;/ano)</label>
+            <input type="number" id="seguroHogar" value="250" min="0" step="25">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="results" id="resultados">
+    <h2>Desglose de gastos</h2>
+    <div id="resultContent"></div>
+  </div>
+
+  <div class="info-tip">
+    <strong>Recuerda:</strong> El ITP se calcula sobre el mayor valor entre el precio de compra y el valor de referencia catastral. Consultalo gratis en la <a href="https://www1.sedecatastro.gob.es/Accesos/SECAccvrc.aspx" target="_blank" style="color:var(--orange)">Sede Electronica del Catastro</a> antes de negociar el precio.
+  </div>
+
+  <footer>
+    Calculadora orientativa &mdash; Comunidad de Madrid 2025/2026<br>
+    Los importes son aproximados. Consulta con un profesional para tu caso concreto.
+  </footer>
+</div>
+
+<script>
+let tipo = 'segunda';
+
+function setTipo(t) {
+  tipo = t;
+  document.getElementById('btnSegundaMano').classList.toggle('active', t === 'segunda');
+  document.getElementById('btnObraNueva').classList.toggle('active', t === 'nueva');
+  document.getElementById('cardBonificaciones').style.display = t === 'segunda' ? 'block' : 'none';
+  calcular();
+}
+
+function toggleMortgage() {
+  const chk = document.getElementById('chkHipoteca');
+  const section = document.getElementById('mortgageSection');
+  // If called from the row click, toggle the checkbox
+  if (!event || event.currentTarget !== chk) {
+    chk.checked = !chk.checked;
+  }
+  section.classList.toggle('open', chk.checked);
+  calcular();
+}
+
+function fmt(n) {
+  return n.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+}
+
+function calcular() {
+  const precio = parseFloat(document.getElementById('precio').value) || 0;
+  const valorRef = parseFloat(document.getElementById('valorRef').value) || 0;
+  const baseImponible = Math.max(precio, valorRef);
+
+  const notaria = parseFloat(document.getElementById('notaria').value) || 0;
+  const registro = parseFloat(document.getElementById('registro').value) || 0;
+  const gestoria = parseFloat(document.getElementById('gestoria').value) || 0;
+
+  const incluyeHipoteca = document.getElementById('chkHipoteca').checked;
+
+  let impuestoNombre = '';
+  let impuestoPct = 0;
+  let impuestoBase = 0;
+  let ajd = 0;
+  let ajdPct = 0;
+  let itpDetalle = '';
+
+  if (tipo === 'segunda') {
+    const esHabitual = document.getElementById('chkViviendaHabitual').checked;
+    const esFamilia = document.getElementById('chkFamiliaNumerosa').checked;
+
+    impuestoNombre = 'ITP';
+    impuestoBase = baseImponible;
+
+    if (esFamilia) {
+      impuestoPct = 4;
+      itpDetalle = '(tipo reducido familia numerosa)';
+    } else if (esHabitual && precio <= 250000) {
+      impuestoPct = 5.4;
+      itpDetalle = '(bonificacion 10% vivienda habitual)';
+    } else {
+      impuestoPct = 6;
+      itpDetalle = '';
+    }
+  } else {
+    impuestoNombre = 'IVA';
+    impuestoPct = 10;
+    impuestoBase = precio;
+    ajdPct = 0.75;
+    ajd = precio * ajdPct / 100;
+  }
+
+  const impuesto = impuestoBase * impuestoPct / 100;
+  const gastosFormal = notaria + registro + gestoria;
+  const totalImpuestos = impuesto + ajd;
+
+  let gastosHipoteca = 0;
+  let tasacion = 0;
+  let comisionAp = 0;
+  let seguroHogar = 0;
+  let capitalHipoteca = 0;
+  let cuotaMensual = 0;
+  let totalIntereses = 0;
+  let hipotecaPct = 0;
+  let plazo = 0;
+  let interes = 0;
+
+  if (incluyeHipoteca) {
+    hipotecaPct = parseFloat(document.getElementById('hipotecaPct').value) || 0;
+    interes = parseFloat(document.getElementById('hipotecaInteres').value) || 0;
+    plazo = parseInt(document.getElementById('hipotecaPlazo').value) || 0;
+    const comisionPct = parseFloat(document.getElementById('comisionApertura').value) || 0;
+    tasacion = parseFloat(document.getElementById('tasacion').value) || 0;
+    seguroHogar = parseFloat(document.getElementById('seguroHogar').value) || 0;
+
+    capitalHipoteca = precio * hipotecaPct / 100;
+    comisionAp = capitalHipoteca * comisionPct / 100;
+    gastosHipoteca = tasacion + comisionAp;
+
+    // Cuota mensual (formula francesa)
+    if (interes > 0 && plazo > 0 && capitalHipoteca > 0) {
+      const r = interes / 100 / 12;
+      const n = plazo * 12;
+      cuotaMensual = capitalHipoteca * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      totalIntereses = cuotaMensual * n - capitalHipoteca;
+    } else if (plazo > 0 && capitalHipoteca > 0) {
+      cuotaMensual = capitalHipoteca / (plazo * 12);
+    }
+  }
+
+  const totalGastos = totalImpuestos + gastosFormal + gastosHipoteca;
+  const precioFinal = precio + totalGastos;
+  const pctExtra = precio > 0 ? (totalGastos / precio * 100) : 0;
+  const entradaNecesaria = incluyeHipoteca ? (precio - capitalHipoteca) : precio;
+  const dineroNecesario = entradaNecesaria + totalGastos;
+
+  // Build HTML
+  let html = '';
+
+  // Impuestos
+  html += `<div class="result-section"><h3>Impuestos</h3>`;
+  if (tipo === 'segunda') {
+    if (valorRef > precio && valorRef > 0) {
+      html += `<div class="result-row"><span class="label">Base imponible (valor ref. catastral)</span><span class="value">${fmt(baseImponible)}</span></div>`;
+    }
+    html += `<div class="result-row"><span class="label">${impuestoNombre} ${impuestoPct}% ${itpDetalle}</span><span class="value">${fmt(impuesto)}</span></div>`;
+  } else {
+    html += `<div class="result-row"><span class="label">${impuestoNombre} ${impuestoPct}%</span><span class="value">${fmt(impuesto)}</span></div>`;
+    html += `<div class="result-row"><span class="label">AJD ${ajdPct}%</span><span class="value">${fmt(ajd)}</span></div>`;
+  }
+  html += `<div class="result-row subtotal"><span class="label">Subtotal impuestos</span><span class="value">${fmt(totalImpuestos)}</span></div>`;
+  html += `</div>`;
+
+  // Formalizacion
+  html += `<div class="result-section"><h3>Formalizacion</h3>`;
+  html += `<div class="result-row"><span class="label">Notaria</span><span class="value">${fmt(notaria)}</span></div>`;
+  html += `<div class="result-row"><span class="label">Registro de la Propiedad</span><span class="value">${fmt(registro)}</span></div>`;
+  html += `<div class="result-row"><span class="label">Gestoria</span><span class="value">${fmt(gestoria)}</span></div>`;
+  html += `<div class="result-row subtotal"><span class="label">Subtotal formalizacion</span><span class="value">${fmt(gastosFormal)}</span></div>`;
+  html += `</div>`;
+
+  // Hipoteca
+  if (incluyeHipoteca) {
+    html += `<div class="result-section"><h3>Gastos de hipoteca</h3>`;
+    html += `<div class="result-row"><span class="label">Capital hipoteca (${hipotecaPct}%)</span><span class="value">${fmt(capitalHipoteca)}</span></div>`;
+    html += `<div class="result-row"><span class="label">Tasacion</span><span class="value">${fmt(tasacion)}</span></div>`;
+    if (comisionAp > 0) {
+      html += `<div class="result-row"><span class="label">Comision de apertura</span><span class="value">${fmt(comisionAp)}</span></div>`;
+    }
+    html += `<div class="result-row subtotal"><span class="label">Subtotal hipoteca (gastos iniciales)</span><span class="value">${fmt(gastosHipoteca)}</span></div>`;
+    html += `</div>`;
+
+    // Cuotas
+    html += `<div class="monthly-box">`;
+    html += `<div class="monthly-row"><span class="label">Cuota mensual estimada</span><span class="value" style="color:var(--accent-light);font-size:1.15rem">${fmt(cuotaMensual)}</span></div>`;
+    html += `<div class="monthly-row"><span class="label">Total intereses (${plazo} anos)</span><span class="value" style="color:var(--orange)">${fmt(totalIntereses)}</span></div>`;
+    if (seguroHogar > 0) {
+      html += `<div class="monthly-row"><span class="label">Seguro de hogar</span><span class="value">${fmt(seguroHogar)}/ano</span></div>`;
+    }
+    html += `</div>`;
+  }
+
+  // Total
+  html += `<div class="total-box">`;
+  html += `<div class="total-row"><span class="label">Precio de compra</span><span class="value" style="color:var(--text)">${fmt(precio)}</span></div>`;
+  html += `<div class="total-row" style="margin-top:0.3rem"><span class="label">+ Total gastos e impuestos</span><span class="value" style="color:var(--orange);font-size:1.15rem">${fmt(totalGastos)}</span></div>`;
+  html += `<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>`;
+  html += `<div class="total-row"><span class="label">PRECIO FINAL</span><span class="value">${fmt(precioFinal)}</span></div>`;
+  html += `<div class="pct-extra">${pctExtra.toFixed(1)}% sobre el precio de compra</div>`;
+
+  if (incluyeHipoteca) {
+    html += `<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>`;
+    html += `<div class="total-row"><span class="label">Dinero necesario en mano</span><span class="value" style="color:var(--red);font-size:1.2rem">${fmt(dineroNecesario)}</span></div>`;
+    html += `<div class="pct-extra">Entrada (${(100 - hipotecaPct)}%) + gastos</div>`;
+  }
+  html += `</div>`;
+
+  // Barra visual
+  const colors = ['#6c8cff', '#a78bfa', '#fb923c', '#f87171'];
+  const segments = [
+    { label: 'Precio', value: precio, color: '#4b5563' },
+    { label: 'Impuestos', value: totalImpuestos, color: colors[0] },
+    { label: 'Formalizacion', value: gastosFormal, color: colors[1] },
+  ];
+  if (incluyeHipoteca && gastosHipoteca > 0) {
+    segments.push({ label: 'Hipoteca', value: gastosHipoteca, color: colors[2] });
+  }
+
+  const total = segments.reduce((s, seg) => s + seg.value, 0);
+
+  html += `<div class="bar-container">`;
+  html += `<div class="bar-visual">`;
+  segments.forEach(seg => {
+    const pct = total > 0 ? (seg.value / total * 100) : 0;
+    html += `<div class="bar-segment" style="width:${pct}%;background:${seg.color}"></div>`;
+  });
+  html += `</div>`;
+  html += `<div class="bar-legend">`;
+  segments.forEach(seg => {
+    html += `<span class="legend-item"><span class="legend-dot" style="background:${seg.color}"></span>${seg.label}: ${fmt(seg.value)}</span>`;
+  });
+  html += `</div>`;
+  html += `</div>`;
+
+  document.getElementById('resultContent').innerHTML = html;
+}
+
+// Attach listeners to all inputs
+document.querySelectorAll('input[type="number"]').forEach(input => {
+  input.addEventListener('input', calcular);
+});
+
+// Initial calc
+calcular();
+</script>
+
+</body>
+</html>
