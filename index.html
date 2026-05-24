@@ -813,6 +813,9 @@
               <br>
               <span style="color:var(--orange)">Programa temporal: activo hasta <strong>31 diciembre 2027</strong>. Solo se ha usado el 10% del presupuesto.</span>
             </div>
+            <div id="icoWarningPlano" style="display:none;background:rgba(248,113,113,0.1);border:1px solid var(--red);border-radius:8px;padding:0.6rem 0.75rem;margin-top:0.75rem;font-size:0.8rem;color:var(--red);line-height:1.4">
+              <strong>Atencion:</strong> Si has seleccionado "Obra nueva", ten en cuenta que el aval ICO <strong>NO aplica para viviendas sobre plano</strong> (las que aun no estan construidas). Solo aplica para obra nueva ya terminada o segunda mano.
+            </div>
           </div>
         </div>
 
@@ -1409,6 +1412,7 @@ function setTipo(t) {
   document.getElementById('btnSegundaMano').classList.toggle('active', t === 'segunda');
   document.getElementById('btnObraNueva').classList.toggle('active', t === 'nueva');
   renderBonificaciones();
+  updateIcoWarning();
   calcular();
 }
 
@@ -1671,15 +1675,26 @@ document.getElementById('btnObraNueva').addEventListener('click', function() { s
 document.getElementById('chkICO').addEventListener('change', function() {
   var icoInfo = document.getElementById('icoInfo');
   var hipotecaPct = document.getElementById('hipotecaPct');
+  var warning = document.getElementById('icoWarningPlano');
   if (this.checked) {
     icoInfo.style.display = 'block';
     hipotecaPct.value = 100;
+    warning.style.display = (tipo === 'nueva') ? 'block' : 'none';
   } else {
     icoInfo.style.display = 'none';
+    warning.style.display = 'none';
     hipotecaPct.value = 80;
   }
   calcular();
 });
+
+function updateIcoWarning() {
+  var warning = document.getElementById('icoWarningPlano');
+  var chkICO = document.getElementById('chkICO');
+  if (warning && chkICO) {
+    warning.style.display = (chkICO.checked && tipo === 'nueva') ? 'block' : 'none';
+  }
+}
 
 // Tabs
 document.getElementById('tabBtnCalc').addEventListener('click', function() { switchTab('calc'); });
