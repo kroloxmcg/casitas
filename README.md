@@ -18,29 +18,31 @@ Todos los cálculos se actualizan en tiempo real. La app tiene tres pestañas:
 
 ## Comunidades autónomas
 
-Todas las CCAA con sus tipos impositivos, escalas progresivas y bonificaciones auditadas una a una:
+Todas las CCAA con sus tipos impositivos, escalas progresivas y bonificaciones auditadas una a una.
 
-| Comunidad | ITP (2ª mano) | AJD (obra nueva) | Bonificaciones disponibles |
+**Segunda mano** → pagas **ITP** (varía por comunidad). **Obra nueva** → pagas **IVA 10% + AJD** (el IVA es fijo en toda España excepto Canarias que paga IGIC 7%; el AJD varía por comunidad).
+
+| Comunidad | ITP (2ª mano) | Obra nueva (IVA + AJD) | Bonificaciones ITP disponibles |
 |---|---|---|---|
-| Andalucía | 7% | 1,2% | Habitual 6%, jóvenes/familias/discapacidad ≥33%/víctimas 3,5%, VPO 3,5% |
-| Aragón | 8–10% (progresivo) | 1,5% | Familias 50% bonif. cuota, jóvenes/discapacidad/víctimas 12,5% bonif. (<100k) |
-| Asturias | 8–10% (progresivo) | 1,2% | Jóvenes 4% (<150k), familias/monop./discapacidad ≥65%/víctimas 4%, VPO 3% |
-| Islas Baleares | 8–13% (progresivo) | 1,5% | Primera vivienda 4%, jóvenes <36 2%, <30 años/discap. ≥33% 0%, familias 2% |
-| Canarias | 6,5% (IGIC 7%) | 0,75% | Habitual 5% (<150k), jóvenes/familias 4%, discapacidad ≥65% 1% |
-| Cantabria | 10% | 1,5% | Jóvenes/familias 5%, discap. 33-64% 4%, discap. ≥65% 3% (todo <300k) |
-| Castilla-La Mancha | 9% | 1,25% | Habitual 6%, jóvenes 3% (Ley 1/2026), familias/discap. 5% (todo <240k) |
-| Castilla y León | 8% | 1,5% | Jóvenes/familias/discap. 4%, jóvenes rural <10k hab. 0,01% |
-| Cataluña | 10% (11% >1M€) | 1,5% | Jóvenes <32/familias/monop./discap. ≥33% 5% |
-| Ceuta | 6% | 0,5% | — |
-| Extremadura | 8% | 1,5% | Jóvenes/familias/VPO/discap. ≥65% 4%, discap. ≥33% 5% (<300k) |
-| Galicia | 8–10% (progresivo) | 1,5% | Habitual 7%, jóvenes/familias/monop./discap./víctimas 3%, VPO 4%, rural 0% |
-| **Madrid** | **6%** | **0,75%** | **Habitual 5,4% (≤250k), familias 4%, discap. ≥33% 3,5% (≤130k), joven rural 0%** |
-| Melilla | 6% | 0,5% | — |
-| Murcia | 7,75% | 1,5% | Jóvenes/familias/discap. ≥65% 3%, VPO 4% |
-| Navarra | 6% | 0,5% | — |
-| País Vasco | 4% | 0% | Familias Bizkaia 2,5% |
-| La Rioja | 7% | 1% | Jóvenes/familias/discap. ≥33% 5% |
-| C. Valenciana | 10% (→9% jun. 2026) | 2% | Jóvenes 6% (<180k), familias/discap. 3-4%, VPO 4% |
+| Andalucía | 7% | 10% + 1,2% = **11,2%** | Habitual 6%, jóvenes/familias/discap. ≥33%/víctimas 3,5%, VPO 3,5% |
+| Aragón | 8–10% (progresivo) | 10% + 1,5% = **11,5%** | Familias 50% bonif. cuota, jóvenes/discap./víctimas 12,5% bonif. (<100k) |
+| Asturias | 8–10% (progresivo) | 10% + 1,2% = **11,2%** | Jóvenes 4% (<150k), familias/monop./discap. ≥65%/víctimas 4%, VPO 3% |
+| Islas Baleares | 8–13% (progresivo) | 10% + 1,5% = **11,5%** | 1ª vivienda 4%, jóvenes <36 2%, <30/discap. ≥33% 0%, familias 2% |
+| Canarias | 6,5% | **IGIC 7%** + 0,75% = **7,75%** | Habitual 5% (<150k), jóvenes/familias 4%, discap. ≥65% 1% |
+| Cantabria | 10% | 10% + 1,5% = **11,5%** | Jóvenes/familias 5%, discap. 33-64% 4%, discap. ≥65% 3% (todo <300k) |
+| Castilla-La Mancha | 9% | 10% + 1,25% = **11,25%** | Habitual 6%, jóvenes 3% (Ley 1/2026), familias/discap. 5% (todo <240k) |
+| Castilla y León | 8% | 10% + 1,5% = **11,5%** | Jóvenes/familias/discap. 4%, jóvenes rural <10k hab. 0,01% |
+| Cataluña | 10% (11% >1M€) | 10% + 1,5% = **11,5%** | Jóvenes <32/familias/monop./discap. ≥33% 5% |
+| Ceuta | 6% | 10% + 0,5% = **10,5%** | — |
+| Extremadura | 8% | 10% + 1,5% = **11,5%** | Jóvenes/familias/VPO/discap. ≥65% 4%, discap. ≥33% 5% (<300k) |
+| Galicia | 8–10% (progresivo) | 10% + 1,5% = **11,5%** | Habitual 7%, jóvenes/familias/monop./discap./víctimas 3%, VPO 4%, rural 0% |
+| **Madrid** | **6%** | **10% + 0,75% = 10,75%** | **Habitual 5,4% (≤250k), familias 4%, discap. ≥33% 3,5% (≤130k), joven rural 0%** |
+| Melilla | 6% | 10% + 0,5% = **10,5%** | — |
+| Murcia | 7,75% | 10% + 1,5% = **11,5%** | Jóvenes/familias/discap. ≥65% 3%, VPO 4% |
+| Navarra | 6% | 10% + 0,5% = **10,5%** | — |
+| País Vasco | 4% | 10% + 0% = **10%** | Familias Bizkaia 2,5% |
+| La Rioja | 7% | 10% + 1% = **11%** | Jóvenes/familias/discap. ≥33% 5% |
+| C. Valenciana | 10% (→9% jun. 2026) | 10% + 2% = **12%** | Jóvenes 6% (<180k), familias/discap. 3-4%, VPO 4% |
 
 ## Qué calcula
 
