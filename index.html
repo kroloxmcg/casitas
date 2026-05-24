@@ -688,6 +688,7 @@
     <button type="button" id="tabBtnCalc" class="active">Calculadora</button>
     <button type="button" id="tabBtnSitu">Mi situacion</button>
     <button type="button" id="tabBtnComp">Comparar</button>
+    <button type="button" id="tabBtnPost">Post-compra</button>
   </div>
 
   <!-- TAB: CALCULADORA -->
@@ -938,6 +939,29 @@
       <div id="affordResult"></div>
     </div>
 
+    <div class="card">
+      <div class="card-title">Coste mensual real de vivir ahi</div>
+      <div class="card-desc">La cuota de la hipoteca no es lo unico que pagas cada mes. Anade los gastos fijos para ver cuanto te cuesta realmente el piso.</div>
+      <div class="grid-2">
+        <div class="field">
+          <label for="ibiAnual">IBI (&euro;/ano)</label>
+          <input type="number" id="ibiAnual" value="500" min="0" step="50">
+          <span class="hint">Impuesto municipal por ser propietario. Consultalo en el recibo del vendedor o en el ayuntamiento. Tipico: 300-1.000 €/ano.</span>
+        </div>
+        <div class="field">
+          <label for="comunidad">Comunidad de propietarios (&euro;/mes)</label>
+          <input type="number" id="comunidad" value="80" min="0" step="10">
+          <span class="hint">Cuota mensual del edificio. Pregunta al vendedor o administrador. Tipico: 50-150 €/mes (mas con piscina/portero).</span>
+        </div>
+        <div class="field">
+          <label for="suministros">Suministros: luz + agua + gas (&euro;/mes)</label>
+          <input type="number" id="suministros" value="150" min="0" step="10">
+          <span class="hint">Estimacion mensual de todos los suministros. Tipico: 120-250 €/mes para un piso normal.</span>
+        </div>
+      </div>
+      <div id="costeMensualResult" style="margin-top:1rem"></div>
+    </div>
+
   </div><!-- /tabSituacion -->
 
   <!-- TAB: COMPARAR -->
@@ -955,6 +979,74 @@
       <div class="compare-empty">Aun no has anadido ningun escenario. Pulsa "Anadir escenario" para subir archivos .json guardados.</div>
     </div>
   </div><!-- /tabComparar -->
+
+  <!-- TAB: POST-COMPRA -->
+  <div id="tabPostcompra" class="tab-panel">
+
+    <div class="card">
+      <div class="card-title">Gastos anuales de mantenimiento</div>
+      <div class="card-desc">Ser propietario cuesta dinero cada mes, no solo la hipoteca. Estos son los gastos fijos que tendras mientras seas dueno del piso.</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <div class="result-row"><span class="label"><strong style="color:var(--text)">IBI (Impuesto de Bienes Inmuebles)</strong></span><span class="value">300-1.000 &euro;/ano</span></div>
+        <div style="font-size:0.78rem;margin-bottom:0.5rem">Lo cobra el ayuntamiento por ser propietario. Se calcula sobre el valor catastral, no sobre el precio de compra. Se paga una vez al ano. Pidele al vendedor el ultimo recibo para saber cuanto es.</div>
+
+        <div class="result-row"><span class="label"><strong style="color:var(--text)">Comunidad de propietarios</strong></span><span class="value">50-400 &euro;/mes</span></div>
+        <div style="font-size:0.78rem;margin-bottom:0.5rem">Cuota mensual para mantener el edificio (limpieza, ascensor, luz escalera, seguro edificio). Con piscina, portero o jardin puede subir mucho. Pregunta siempre ANTES de firmar.</div>
+
+        <div class="result-row"><span class="label"><strong style="color:var(--text)">Derramas extraordinarias</strong></span><span class="value">0-10.000 &euro;</span></div>
+        <div style="font-size:0.78rem;margin-bottom:0.5rem">Pagos puntuales aprobados por la comunidad para obras: fachada, ascensor, impermeabilizacion, eficiencia energetica. Revisa las actas de las ultimas juntas para ver si hay alguna prevista.</div>
+
+        <div class="result-row"><span class="label"><strong style="color:var(--text)">Suministros (luz + agua + gas)</strong></span><span class="value">120-250 &euro;/mes</span></div>
+        <div style="font-size:0.78rem;margin-bottom:0.5rem">Dependera del tamano del piso y tu consumo. Al cambiar de propietario hay que hacer el cambio de titular de los contratos (agua, luz, gas). Coste del alta: 0-50 &euro; por suministro.</div>
+
+        <div class="result-row"><span class="label"><strong style="color:var(--text)">Seguro de hogar</strong></span><span class="value">150-400 &euro;/ano</span></div>
+        <div style="font-size:0.78rem;margin-bottom:0.5rem">Obligatorio si tienes hipoteca. Cubre danos (incendio, agua, robo). El banco no puede obligarte a contratarlo con ellos. Compara precios.</div>
+
+        <div class="result-row"><span class="label"><strong style="color:var(--text)">Tasa de basuras</strong></span><span class="value">80-250 &euro;/ano</span></div>
+        <div style="font-size:0.78rem;margin-bottom:0.5rem">Algunos ayuntamientos la cobran por separado del IBI. Otros la incluyen.</div>
+      </div>
+
+      <div class="info-tip" style="margin-top:1rem">
+        <strong>Estimacion total:</strong> Ser propietario cuesta entre <strong>300 y 800 &euro;/mes</strong> extras encima de la cuota de la hipoteca (IBI + comunidad + suministros + seguro). Tenlo en cuenta al calcular si te lo puedes permitir.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ITE (Inspeccion Tecnica del Edificio)</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        <div style="margin-bottom:0.5rem">Los edificios antiguos deben pasar una inspeccion periodica. Si no la pasan, puede haber obras obligatorias costosas.</div>
+        &bull; <strong>Madrid:</strong> obligatoria para edificios de mas de <strong>30 anos</strong><br>
+        &bull; <strong>Barcelona:</strong> a partir de <strong>45 anos</strong><br>
+        &bull; <strong>Resto de Espana:</strong> generalmente a partir de <strong>50 anos</strong><br>
+        <div style="margin-top:0.5rem">Si la ITE sale desfavorable, las reparaciones pueden costar entre <strong>5.000 y 50.000 &euro;</strong> por propietario. <strong>Pide el informe ITE antes de comprar.</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Checklist: documentos que pedir ANTES de firmar</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.8">
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Nota simple del Registro de la Propiedad (verifica quien es el dueno y si hay cargas)</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Certificado de deudas con la comunidad de propietarios (que no haya impagos)</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Actas de las ultimas 2-3 juntas de propietarios (para ver derramas previstas)</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Ultimo recibo de IBI (para saber cuanto pagas de impuesto municipal)</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Certificado de eficiencia energetica (obligatorio para vender, el vendedor debe tenerlo)</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Informe ITE/IEE del edificio (si tiene mas de 30 anos en Madrid)</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Cedula de habitabilidad o licencia de primera ocupacion</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Ultimos recibos de suministros (luz, gas, agua) para verificar que estan al dia</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Consultar valor de referencia catastral en la Sede Electronica del Catastro</span></label>
+        <label class="checkbox-row"><input type="checkbox"><span class="checkbox-text">Verificar que no hay inquilinos con contrato vigente</span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Plusvalia municipal</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);line-height:1.7">
+        La plusvalia municipal (IIVTNU) grava el aumento del valor del terreno. <strong>La paga el vendedor</strong>, no tu. Pero verificalo en el contrato de arras — algunos vendedores intentan pactar que la pague el comprador.<br><br>
+        Si el vendedor es <strong>no residente</strong>, el comprador responde subsidiariamente (si el vendedor no paga, te la pueden reclamar a ti). Rango tipico: 1.000-6.000 &euro;.
+      </div>
+    </div>
+
+  </div><!-- /tabPostcompra -->
 
   <!-- GUARDAR / CARGAR (siempre visible, fuera de pestanas) -->
   <div class="card" style="margin-top:1.25rem">
@@ -1809,14 +1901,17 @@ document.getElementById('popupOverlay').addEventListener('click', function(e) {
 document.getElementById('tabBtnCalc').addEventListener('click', function() { switchTab('calc'); });
 document.getElementById('tabBtnSitu').addEventListener('click', function() { switchTab('situ'); });
 document.getElementById('tabBtnComp').addEventListener('click', function() { switchTab('comp'); });
+document.getElementById('tabBtnPost').addEventListener('click', function() { switchTab('post'); });
 
 function switchTab(tab) {
   document.getElementById('tabBtnCalc').classList.toggle('active', tab === 'calc');
   document.getElementById('tabBtnSitu').classList.toggle('active', tab === 'situ');
   document.getElementById('tabBtnComp').classList.toggle('active', tab === 'comp');
+  document.getElementById('tabBtnPost').classList.toggle('active', tab === 'post');
   document.getElementById('tabCalculadora').classList.toggle('active', tab === 'calc');
   document.getElementById('tabSituacion').classList.toggle('active', tab === 'situ');
   document.getElementById('tabComparar').classList.toggle('active', tab === 'comp');
+  document.getElementById('tabPostcompra').classList.toggle('active', tab === 'post');
   if (tab === 'situ') calcularSituacion();
   if (tab === 'comp') renderCompare();
 }
@@ -2273,7 +2368,40 @@ function calcularSituacion() {
   }
 
   document.getElementById('affordResult').innerHTML = ah;
+
+  // Coste mensual real
+  var ibiAnual = parseFloat(document.getElementById('ibiAnual').value) || 0;
+  var comunidad = parseFloat(document.getElementById('comunidad').value) || 0;
+  var suministros = parseFloat(document.getElementById('suministros').value) || 0;
+  var seguroH = incluyeHipoteca ? (parseFloat(document.getElementById('seguroHogar').value) || 0) : 0;
+
+  var costeMensual = cuotaActual + (ibiAnual / 12) + comunidad + suministros + (seguroH / 12);
+
+  var cm = '';
+  cm += '<div class="total-box">';
+  cm += '<div class="result-row"><span class="label">Cuota hipoteca</span><span class="value">' + fmt(cuotaActual) + '/mes</span></div>';
+  cm += '<div class="result-row"><span class="label">IBI</span><span class="value">' + fmt(ibiAnual / 12) + '/mes</span></div>';
+  cm += '<div class="result-row"><span class="label">Comunidad</span><span class="value">' + fmt(comunidad) + '/mes</span></div>';
+  cm += '<div class="result-row"><span class="label">Suministros (luz/agua/gas)</span><span class="value">' + fmt(suministros) + '/mes</span></div>';
+  if (seguroH > 0) {
+    cm += '<div class="result-row"><span class="label">Seguro de hogar</span><span class="value">' + fmt(seguroH / 12) + '/mes</span></div>';
+  }
+  cm += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
+  cm += '<div class="total-row"><span class="label">COSTE MENSUAL REAL</span><span class="value" style="color:var(--red)">' + fmt(costeMensual) + '</span></div>';
+  cm += '<div class="pct-extra">Esto es lo que realmente sale de tu bolsillo cada mes</div>';
+
+  if (netoMensual > 0) {
+    var pctIngresos = costeMensual / netoMensual * 100;
+    cm += '<div style="margin-top:0.5rem"><div class="result-row"><span class="label">Porcentaje de tu neto mensual</span><span class="value" style="color:' + (pctIngresos > 50 ? 'var(--red)' : pctIngresos > 40 ? 'var(--orange)' : 'var(--green)') + '">' + pctIngresos.toFixed(1) + '%</span></div></div>';
+  }
+  cm += '</div>';
+
+  document.getElementById('costeMensualResult').innerHTML = cm;
 }
+
+document.getElementById('ibiAnual').addEventListener('input', calcularSituacion);
+document.getElementById('comunidad').addEventListener('input', calcularSituacion);
+document.getElementById('suministros').addEventListener('input', calcularSituacion);
 
 renderCCAAInfo();
 renderBonificaciones();
