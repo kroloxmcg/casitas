@@ -929,6 +929,7 @@
       <div class="card-title">Resultado: sueldo neto estimado</div>
       <div class="card-desc">Estimacion orientativa aplicando retenciones IRPF 2025/2026 y Seguridad Social (6,35%). Para un calculo exacto usa tu nomina real.</div>
       <div id="sueldoResult"></div>
+      <div id="icoWarningSituacion" style="margin-top:0.75rem"></div>
     </div>
 
     <div class="card">
@@ -1724,9 +1725,12 @@ function updateIcoWarning() {
 
 function validateICO() {
   var container = document.getElementById('icoValidationWarnings');
+  var containerSitu = document.getElementById('icoWarningSituacion');
   var chkICO = document.getElementById('chkICO');
-  if (!container || !chkICO || !chkICO.checked) {
+
+  if (!chkICO || !chkICO.checked) {
     if (container) container.innerHTML = '';
+    if (containerSitu) containerSitu.innerHTML = '';
     return;
   }
 
@@ -1736,29 +1740,28 @@ function validateICO() {
   var sueldo2 = numCompradores === 2 ? (parseFloat(document.getElementById('sueldo2').value) || 0) : 0;
 
   if (precio > 325000) {
-    warnings.push('El precio (' + fmt(precio) + ') supera el maximo del aval ICO (<strong>325.000 €</strong>). No cumples este requisito.');
+    warnings.push('El precio (' + fmt(precio) + ') supera el maximo del aval ICO (<strong>325.000 €</strong>).');
   }
 
   if (sueldo1 > 37800) {
-    warnings.push('El sueldo del Comprador 1 (' + fmt(sueldo1) + ') supera el limite de ingresos del ICO (<strong>37.800 €/ano</strong> por persona). Ajusta en la pestana "Mi situacion".');
+    warnings.push('El sueldo del Comprador 1 (' + fmt(sueldo1) + ') supera el limite de ingresos del ICO (<strong>37.800 €/ano</strong> por persona).');
   }
 
   if (numCompradores === 2 && sueldo2 > 37800) {
-    warnings.push('El sueldo del Comprador 2 (' + fmt(sueldo2) + ') supera el limite de ingresos del ICO (<strong>37.800 €/ano</strong> por persona). Ajusta en la pestana "Mi situacion".');
-  }
-
-  if (warnings.length === 0) {
-    container.innerHTML = '';
-    return;
+    warnings.push('El sueldo del Comprador 2 (' + fmt(sueldo2) + ') supera el limite de ingresos del ICO (<strong>37.800 €/ano</strong> por persona).');
   }
 
   var html = '';
-  warnings.forEach(function(w) {
-    html += '<div style="background:rgba(251,146,60,0.1);border:1px solid var(--orange);border-radius:8px;padding:0.5rem 0.75rem;margin-top:0.5rem;font-size:0.78rem;color:var(--orange);line-height:1.4">';
-    html += '<strong>Incompatible:</strong> ' + w;
-    html += '</div>';
-  });
-  container.innerHTML = html;
+  if (warnings.length > 0) {
+    warnings.forEach(function(w) {
+      html += '<div style="background:rgba(251,146,60,0.1);border:1px solid var(--orange);border-radius:8px;padding:0.5rem 0.75rem;margin-top:0.5rem;font-size:0.78rem;color:var(--orange);line-height:1.4">';
+      html += '<strong>Aval ICO incompatible:</strong> ' + w;
+      html += '</div>';
+    });
+  }
+
+  if (container) container.innerHTML = html;
+  if (containerSitu) containerSitu.innerHTML = html;
 }
 
 // Tabs
