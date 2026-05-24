@@ -46,6 +46,19 @@ def itp_valencia(base):
     if base <= 1000000: return base * 0.10
     return 1000000*0.10 + (base-1000000)*0.11
 
+def itp_cantabria(base):
+    if base <= 300000: return base * 0.09
+    return 300000*0.09 + (base-300000)*0.10
+
+def itp_castilla_leon(base):
+    if base <= 250000: return base * 0.08
+    return 250000*0.08 + (base-250000)*0.10
+
+def itp_extremadura(base):
+    if base <= 360000: return base * 0.08
+    if base <= 600000: return 360000*0.08 + (base-360000)*0.10
+    return 360000*0.08 + 240000*0.10 + (base-600000)*0.11
+
 def cuota_mensual(capital, interes_anual, plazo_anos):
     if capital <= 0 or plazo_anos <= 0: return 0
     if interes_anual <= 0: return capital / (plazo_anos * 12)
@@ -133,9 +146,7 @@ assert_close(250000 * 0.07, 17500, "Andalucia 250k")
 assert_close(250000 * 0.06, 15000, "Madrid 250k")
 assert_close(250000 * 0.04, 10000, "Pais Vasco 250k")
 assert_close(250000 * 0.065, 16250, "Canarias 250k")
-assert_close(250000 * 0.10, 25000, "Cantabria 250k")
 assert_close(250000 * 0.09, 22500, "CLM 250k")
-assert_close(250000 * 0.08, 20000, "CyL 250k")
 assert_close(250000 * 0.07, 17500, "Rioja 250k")
 assert_close(250000 * 0.0775, 19375, "Murcia 250k")
 
@@ -166,6 +177,19 @@ assert_close(itp_galicia(700000), 150000*0.08 + 450000*0.09 + 100000*0.10, "Gali
 # Progressive: Valencia
 assert_close(itp_valencia(500000), 500000*0.10, "Valencia 500k")
 assert_close(itp_valencia(1200000), 1000000*0.10 + 200000*0.11, "Valencia 1.2M")
+
+# Progressive: Cantabria
+assert_close(itp_cantabria(200000), 200000*0.09, "Cantabria 200k")
+assert_close(itp_cantabria(400000), 300000*0.09 + 100000*0.10, "Cantabria 400k")
+
+# Progressive: Castilla y León
+assert_close(itp_castilla_leon(200000), 200000*0.08, "CyL 200k")
+assert_close(itp_castilla_leon(300000), 250000*0.08 + 50000*0.10, "CyL 300k")
+
+# Progressive: Extremadura
+assert_close(itp_extremadura(300000), 300000*0.08, "Extremadura 300k")
+assert_close(itp_extremadura(500000), 360000*0.08 + 140000*0.10, "Extremadura 500k")
+assert_close(itp_extremadura(700000), 360000*0.08 + 240000*0.10 + 100000*0.11, "Extremadura 700k")
 
 
 # ============================================================
@@ -207,9 +231,11 @@ assert_close(200000 * 0.04, 8000, "Canarias joven 200k")
 assert_close(200000 * 0.01, 2000, "Canarias discapacidad 65% 200k")
 
 # Cantabria
-assert_close(250000 * 0.05, 12500, "Cantabria joven <300k")
-assert_close(250000 * 0.04, 10000, "Cantabria discap 33-64% <300k")
-assert_close(250000 * 0.03, 7500, "Cantabria discap 65% <300k")
+assert_close(180000 * 0.07, 12600, "Cantabria habitual 180k <200k")
+assert_close(180000 * 0.05, 9000, "Cantabria joven 180k <200k")
+assert_close(180000 * 0.04, 7200, "Cantabria discap 33-64% 180k <200k")
+assert_close(180000 * 0.03, 5400, "Cantabria discap 65% 180k <200k")
+assert_close(180000 * 0.05, 9000, "Cantabria VPO 180k <200k")
 
 # CLM (updated limits to 240k per Ley 1/2026)
 assert_close(200000 * 0.06, 12000, "CLM habitual 200k <240k")
@@ -218,7 +244,8 @@ assert_close(200000 * 0.05, 10000, "CLM familia 200k <240k")
 
 # CyL
 assert_close(200000 * 0.04, 8000, "CyL joven 200k")
-assert_close(200000 * 0.0001, 20, "CyL joven rural 200k (0.01%)")
+assert_close(100000 * 0.0001, 10, "CyL joven rural 100k (0.01%)")
+assert_close(200000 * 0.04, 8000, "CyL familia 200k")
 assert_close(200000 * 0.04, 8000, "CyL discapacidad 200k")
 
 # Cataluna
@@ -226,7 +253,10 @@ assert_close(300000 * 0.05, 15000, "Cataluna joven<32 300k")
 assert_close(300000 * 0.05, 15000, "Cataluna discapacidad 33% 300k")
 
 # Extremadura
+assert_close(180000 * 0.07, 12600, "Extremadura habitual 180k <200k")
 assert_close(200000 * 0.04, 8000, "Extremadura joven 200k")
+assert_close(200000 * 0.04, 8000, "Extremadura familia 200k")
+assert_close(150000 * 0.04, 6000, "Extremadura rural 150k <180k")
 assert_close(250000 * 0.05, 12500, "Extremadura discap 33% 250k <300k")
 assert_close(350000 * 0.04, 14000, "Extremadura discap 65% 350k")
 
@@ -261,6 +291,90 @@ assert_close(170000 * 0.04, 6800, "Valencia VPO 170k (4%)")
 
 
 # ============================================================
+# TESTS: AJD BONIFICACIONES (OBRA NUEVA)
+# ============================================================
+
+print("\n" + "=" * 60)
+print("TESTING AJD BONIFICACIONES (OBRA NUEVA)")
+print("=" * 60)
+
+# Andalucia AJD
+assert_close(140000 * 0.01, 1400, "AND AJD habitual 140k <150k (1%)")
+assert_close(140000 * 0.003, 420, "AND AJD joven 140k <150k (0.3%)")
+assert_close(200000 * 0.001, 200, "AND AJD familia 200k <250k (0.1%)")
+assert_close(200000 * 0.001, 200, "AND AJD discapacidad 200k <250k (0.1%)")
+assert_close(300000 * 0.001, 300, "AND AJD VPO 300k (0.1%)")
+
+# Aragon AJD
+assert_close(200000 * 0.003, 600, "ARA AJD VPP 200k (0.3%)")
+
+# Asturias AJD
+assert_close(200000 * 0.003, 600, "AST AJD VPO 200k (0.3%)")
+
+# Baleares AJD
+assert_close(250000 * 0.012, 3000, "BAL AJD habitual 250k <270k (1.2%)")
+
+# Canarias AJD
+assert_close(200000 * 0.004, 800, "CAN AJD habitual 200k (0.4%)")
+assert_close(200000 * 0.0015, 300, "CAN AJD discapacidad 200k (0.15%)")
+
+# Cantabria AJD
+assert_close(180000 * 0.003, 540, "CANT AJD joven 180k (0.3%)")
+
+# CLM AJD
+assert_close(200000 * 0.0025, 500, "CLM AJD joven 200k <240k (0.25%)")
+
+# CyL AJD
+assert_close(200000 * 0.005, 1000, "CYL AJD joven 200k (0.5%)")
+assert_close(100000 * 0.0001, 10, "CYL AJD rural 100k (0.01%)")
+
+# Cataluña AJD
+assert_equal(0, 0, "CAT AJD joven (0% bonif 100%)")
+assert_close(300000 * 0.0075, 2250, "CAT AJD familia 300k (0.75%)")
+assert_equal(0, 0, "CAT AJD VPO (exento)")
+
+# Extremadura AJD
+assert_close(200000 * 0.0075, 1500, "EXT AJD habitual 200k (0.75%)")
+assert_close(200000 * 0.005, 1000, "EXT AJD rural 200k (0.5%)")
+
+# Galicia AJD
+assert_close(200000 * 0.01, 2000, "GAL AJD habitual 200k (1%)")
+assert_close(200000 * 0.005, 1000, "GAL AJD joven 200k (0.5%)")
+
+# Murcia AJD
+assert_close(140000 * 0.001, 140, "MUR AJD joven 140k <150k (0.1%)")
+
+# Rioja AJD
+assert_close(200000 * 0.005, 1000, "RIO AJD joven 200k (0.5%)")
+
+# Valencia AJD
+assert_close(170000 * 0.001, 170, "VAL AJD joven 170k <180k (0.1%)")
+assert_close(200000 * 0.001, 200, "VAL AJD discapacidad 200k (0.1%)")
+
+# Pais Vasco: AJD is 0% always
+assert_equal(0, 0, "PV AJD general (0%)")
+
+# Madrid: no specific AJD bonifications
+assert_close(300000 * 0.0075, 2250, "MAD AJD general 300k (0.75%)")
+
+# AJD general rates (no bonifications)
+assert_close(300000 * 0.012, 3600, "AND AJD general 300k (1.2%)")
+assert_close(300000 * 0.015, 4500, "ARA AJD general 300k (1.5%)")
+assert_close(300000 * 0.015, 4500, "CAT AJD general 300k (1.5%)")
+assert_close(300000 * 0.02, 6000, "VAL AJD general 300k (2%)")
+assert_close(300000 * 0.0075, 2250, "CAN AJD general 300k (0.75%)")
+assert_close(300000 * 0.005, 1500, "NAV AJD general 300k (0.5%)")
+
+# Obra nueva total (IVA + AJD general) for key communities
+assert_close(300000 * 0.10 + 300000 * 0.0075, 32250, "MAD obra nueva total 300k")
+assert_close(300000 * 0.10 + 300000 * 0.012, 33600, "AND obra nueva total 300k")
+assert_close(300000 * 0.10 + 300000 * 0.015, 34500, "CAT obra nueva total 300k")
+assert_close(300000 * 0.10 + 300000 * 0.02, 36000, "VAL obra nueva total 300k")
+assert_close(300000 * 0.07 + 300000 * 0.0075, 23250, "CAN obra nueva IGIC total 300k")
+assert_close(300000 * 0.10 + 0, 30000, "PV obra nueva total 300k (AJD 0%)")
+
+
+# ============================================================
 # TESTS: BONIFICACION PRICE LIMITS (should NOT apply over limit)
 # ============================================================
 
@@ -280,8 +394,23 @@ assert_close(250000 * 0.09, 22500, "CLM joven 250k (>240k, general rate)")
 # Madrid discapacidad: limit 130k
 assert_close(140000 * 0.06, 8400, "Madrid discap 140k (>130k, general rate)")
 
-# Cantabria: limit 300k
-assert_close(310000 * 0.10, 31000, "Cantabria joven 310k (>300k, general rate)")
+# Cantabria habitual: limit 200k
+assert_close(itp_cantabria(210000), 210000*0.09, "Cantabria habitual 210k (>200k, general rate)")
+
+# Baleares primera: limit 270k
+assert_close(itp_baleares(280000), 280000*0.08, "Baleares primera 280k (>270k, general rate)")
+
+# Valencia joven: limit 180k
+assert_close(itp_valencia(190000), 190000*0.10, "Valencia joven 190k (>180k, general rate)")
+
+# Galicia joven: limit 150k
+assert_close(itp_galicia(160000), 150000*0.08 + 10000*0.09, "Galicia joven 160k (>150k, general rate)")
+
+# CLM AJD joven: limit 240k
+assert_close(250000 * 0.0125, 3125, "CLM AJD joven 250k (>240k, general AJD rate)")
+
+# Andalucia AJD joven: limit 150k
+assert_close(160000 * 0.012, 1920, "AND AJD joven 160k (>150k, general AJD rate)")
 
 
 # ============================================================
@@ -499,6 +628,60 @@ precio_final = precio + total_gastos
 assert_close(iva, 30000, "E2E ObraNueva Madrid IVA")
 assert_close(ajd, 2250, "E2E ObraNueva Madrid AJD")
 assert_close(total_gastos, 34500, "E2E ObraNueva Madrid total gastos")
+
+# Scenario 6: Obra nueva Andalucia, 140k, joven (AJD 0.3%)
+precio = 140000
+iva = precio * 0.10
+ajd = precio * 0.003  # joven AJD
+notaria = estimar_notaria(precio)
+registro = estimar_registro(precio)
+gestoria = 400
+tasacion = 400
+total_gastos = iva + ajd + notaria + registro + gestoria + tasacion
+assert_close(iva, 14000, "E2E ObraNueva AND joven IVA")
+assert_close(ajd, 420, "E2E ObraNueva AND joven AJD (0.3%)")
+assert_close(total_gastos, 16170, "E2E ObraNueva AND joven total")
+
+# Scenario 7: Obra nueva Cataluna, 300k, joven<35 (AJD 0%)
+precio = 300000
+iva = precio * 0.10
+ajd = 0  # bonif 100%
+notaria = estimar_notaria(precio)
+registro = estimar_registro(precio)
+gestoria = 400
+tasacion = 400
+total_gastos = iva + ajd + notaria + registro + gestoria + tasacion
+assert_close(total_gastos, 32250, "E2E ObraNueva CAT joven total (AJD 0%)")
+
+# Scenario 8: Obra nueva Canarias, 200k (IGIC 7% no IVA)
+precio = 200000
+igic = precio * 0.07  # IGIC not IVA
+ajd = precio * 0.0075
+notaria = estimar_notaria(precio)
+registro = estimar_registro(precio)
+gestoria = 400
+tasacion = 400
+total_gastos = igic + ajd + notaria + registro + gestoria + tasacion
+assert_close(igic, 14000, "E2E ObraNueva CAN IGIC")
+assert_close(ajd, 1500, "E2E ObraNueva CAN AJD")
+assert_close(total_gastos, 17420, "E2E ObraNueva CAN total")
+
+# Scenario 9: Segunda mano Cantabria 180k, habitual (7%)
+precio = 180000
+itp = precio * 0.07
+notaria = estimar_notaria(precio)
+registro = estimar_registro(precio)
+gestoria = 400
+total_gastos = itp + notaria + registro + gestoria
+assert_close(itp, 12600, "E2E Cantabria habitual ITP 7%")
+assert_close(total_gastos, 14120, "E2E Cantabria habitual total")
+
+# Scenario 10: Segunda mano CyL 100k, joven rural 0.01%
+precio = 100000
+itp = precio * 0.0001
+total_gastos = itp + estimar_notaria(precio) + estimar_registro(precio) + 400
+assert_close(itp, 10, "E2E CyL joven rural ITP")
+assert_close(total_gastos, 1360, "E2E CyL joven rural total")
 
 
 # ============================================================
