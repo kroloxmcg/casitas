@@ -78,6 +78,13 @@
     font-weight: 500;
   }
 
+  .card-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: -0.5rem 0 1rem 0;
+    line-height: 1.5;
+  }
+
   .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -99,6 +106,14 @@
     font-weight: 500;
   }
 
+  .hint {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    line-height: 1.4;
+  }
+
   input[type="number"], select {
     width: 100%;
     background: var(--surface2);
@@ -116,6 +131,11 @@
   }
 
   input[type="number"]::-webkit-inner-spin-button { opacity: 1; }
+
+  input.auto-calculated {
+    border-color: var(--accent);
+    background: rgba(108, 140, 255, 0.08);
+  }
 
   .toggle-group {
     display: flex;
@@ -144,7 +164,7 @@
 
   .checkbox-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.5rem;
     margin-bottom: 0.6rem;
     cursor: pointer;
@@ -156,6 +176,15 @@
     height: 18px;
     accent-color: var(--accent);
     cursor: pointer;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .checkbox-text .checkbox-hint {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.15rem;
   }
 
   .switch-row {
@@ -222,7 +251,7 @@
   }
 
   .mortgage-section.open {
-    max-height: 600px;
+    max-height: 800px;
     opacity: 1;
   }
 
@@ -395,11 +424,12 @@
     <div class="field">
       <label for="precio">Precio de compra (&euro;)</label>
       <input type="number" id="precio" value="250000" min="0" step="1000">
+      <span class="hint">El precio que pide el vendedor o el que habeis pactado.</span>
     </div>
     <div class="field">
-      <label for="valorRef">Valor de referencia catastral (&euro;) &mdash; <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--accent);font-size:0.85rem">consultar</a></label>
+      <label for="valorRef">Valor de referencia catastral (&euro;) &mdash; <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--accent);font-size:0.85rem">consultar aqui</a></label>
       <input type="number" id="valorRef" value="0" min="0" step="1000">
-      <span style="font-size:0.78rem;color:var(--text-muted)">Pon 0 si no lo conoces (se usara el precio de compra)</span>
+      <span class="hint">Es un valor que fija Hacienda cada ano para cada piso. Si es mayor que el precio de compra, pagaras impuestos sobre este valor en vez del precio real. Necesitas certificado digital o Cl@ve para consultarlo. Pon 0 si no lo tienes aun.</span>
     </div>
     <div class="field">
       <label>Tipo de vivienda</label>
@@ -407,37 +437,49 @@
         <button id="btnSegundaMano" class="active" onclick="setTipo('segunda')">Segunda mano</button>
         <button id="btnObraNueva" onclick="setTipo('nueva')">Obra nueva</button>
       </div>
+      <span class="hint">Segunda mano = se la compras a otro particular o propietario. Obra nueva = se la compras directamente al promotor/constructora y nadie ha vivido ahi antes.</span>
     </div>
   </div>
 
   <!-- BONIFICACIONES -->
   <div class="card" id="cardBonificaciones">
     <div class="card-title">Bonificaciones ITP <span class="badge">Segunda mano</span></div>
+    <div class="card-desc">El ITP es el impuesto principal que pagas al comprar de segunda mano (6% del precio). Pero hay descuentos si cumples estos requisitos:</div>
     <label class="checkbox-row">
       <input type="checkbox" id="chkViviendaHabitual" checked onchange="calcular()">
-      Vivienda habitual y precio &le; 250.000 &euro; (tipo efectivo 5,4%)
+      <span class="checkbox-text">
+        Vivienda habitual y precio &le; 250.000 &euro;
+        <span class="checkbox-hint">Si vas a vivir ahi (no es inversion) y el precio no pasa de 250.000 &euro;, te descuentan un 10% del impuesto. El tipo efectivo baja del 6% al 5,4%.</span>
+      </span>
     </label>
     <label class="checkbox-row">
       <input type="checkbox" id="chkFamiliaNumerosa" onchange="calcular()">
-      Familia numerosa (tipo reducido 4%)
+      <span class="checkbox-text">
+        Familia numerosa
+        <span class="checkbox-hint">Si tienes titulo de familia numerosa, el tipo baja al 4% (en vez del 6%).</span>
+      </span>
     </label>
   </div>
 
   <!-- GASTOS FIJOS -->
   <div class="card">
     <div class="card-title">Gastos de formalizacion</div>
+    <div class="card-desc">Son los profesionales que intervienen para hacer legal la compra. Sus tarifas estan reguladas por ley y dependen del precio del piso. Se calculan automaticamente, pero puedes ajustarlos si tienes un presupuesto concreto.</div>
     <div class="grid-2">
       <div class="field">
         <label for="notaria">Notaria (&euro;)</label>
-        <input type="number" id="notaria" value="800" min="0" step="50">
+        <input type="number" id="notaria" value="800" min="0" step="50" class="auto-calculated">
+        <span class="hint">El notario da fe publica de la compraventa y redacta la escritura. Su tarifa esta regulada por ley y depende del precio del piso. Se calcula automaticamente.</span>
       </div>
       <div class="field">
         <label for="registro">Registro de la Propiedad (&euro;)</label>
-        <input type="number" id="registro" value="500" min="0" step="50">
+        <input type="number" id="registro" value="500" min="0" step="50" class="auto-calculated">
+        <span class="hint">El Registro inscribe la vivienda a tu nombre. Sin esto, legalmente no eres el propietario frente a terceros. Tarifa regulada. Se calcula automaticamente.</span>
       </div>
       <div class="field">
         <label for="gestoria">Gestoria (&euro;)</label>
         <input type="number" id="gestoria" value="400" min="0" step="50">
+        <span class="hint">Un gestor tramita los papeles por ti (liquidar impuestos, llevar documentos al registro, etc.). Es opcional pero muy recomendable, especialmente si pides hipoteca. Precio libre: 300-600 &euro; es lo habitual.</span>
       </div>
     </div>
   </div>
@@ -454,30 +496,37 @@
 
     <div class="mortgage-section" id="mortgageSection">
       <div style="margin-top:1rem">
+        <div class="card-desc">Si no pagas el piso entero de golpe, necesitas una hipoteca (prestamo del banco). Desde 2019, el banco paga la mayoria de los gastos de la hipoteca (notaria, registro, AJD). Tu solo pagas la tasacion y, si la hay, la comision de apertura.</div>
         <div class="grid-2">
           <div class="field">
             <label for="hipotecaPct">Porcentaje financiado (%)</label>
             <input type="number" id="hipotecaPct" value="80" min="0" max="100" step="5">
+            <span class="hint">Cuanto te presta el banco del precio total. Lo normal es el 80% (el banco te da 8 de cada 10 euros y tu pones los 2 restantes de tu bolsillo). Algunos bancos dan hasta el 90% pero con peores condiciones.</span>
           </div>
           <div class="field">
-            <label for="hipotecaInteres">Interes anual (%)</label>
+            <label for="hipotecaInteres">Interes anual fijo (%)</label>
             <input type="number" id="hipotecaInteres" value="2.5" min="0" max="15" step="0.1">
+            <span class="hint">Lo que el banco te cobra cada ano por prestarte el dinero. En 2025-2026, las hipotecas fijas estan entre el 2% y el 3,5%. Puedes comparar en comparadores como iAhorro o HelpMyCash.</span>
           </div>
           <div class="field">
             <label for="hipotecaPlazo">Plazo (anos)</label>
             <input type="number" id="hipotecaPlazo" value="25" min="1" max="40" step="1">
+            <span class="hint">En cuantos anos devuelves el prestamo. Lo tipico es 25-30 anos. Mas anos = cuota mas baja pero pagas mas intereses en total.</span>
           </div>
           <div class="field">
             <label for="comisionApertura">Comision de apertura (%)</label>
             <input type="number" id="comisionApertura" value="0" min="0" max="3" step="0.1">
+            <span class="hint">Un cobro unico que te hace el banco al darte la hipoteca. Muchos bancos ya la han eliminado (0%). Si te la cobran, suele ser un 0,5%-1% del capital prestado.</span>
           </div>
           <div class="field">
             <label for="tasacion">Tasacion (&euro;)</label>
             <input type="number" id="tasacion" value="400" min="0" step="50">
+            <span class="hint">Un tasador profesional valora el piso para que el banco sepa cuanto vale realmente. Cuesta entre 300 y 600 &euro;. Solo es necesaria si pides hipoteca.</span>
           </div>
           <div class="field">
             <label for="seguroHogar">Seguro de hogar (&euro;/ano)</label>
             <input type="number" id="seguroHogar" value="250" min="0" step="25">
+            <span class="hint">Obligatorio si tienes hipoteca. Cubre danos al piso (incendio, agua, robo...). Cuesta 150-400 &euro;/ano segun coberturas. El banco no puede obligarte a contratarlo con ellos.</span>
           </div>
         </div>
       </div>
@@ -491,7 +540,7 @@
   </div>
 
   <div class="info-tip">
-    <strong>Recuerda:</strong> El ITP se calcula sobre el mayor valor entre el precio de compra y el valor de referencia catastral. Consultalo gratis en la <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--orange)">Sede Electronica del Catastro</a> antes de negociar el precio.
+    <strong>Recuerda:</strong> El ITP se calcula sobre el mayor valor entre el precio de compra y el valor de referencia catastral. Consultalo gratis en la <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--orange)">Sede Electronica del Catastro</a> (necesitas certificado digital o Cl@ve) antes de negociar el precio.
   </div>
 
   <footer>
@@ -502,6 +551,33 @@
 
 <script>
 let tipo = 'segunda';
+let notariaManual = false;
+let registroManual = false;
+
+function estimarNotaria(precio) {
+  if (precio <= 0) return 0;
+  if (precio <= 60000) return 450;
+  if (precio <= 150000) return 600;
+  if (precio <= 200000) return 700;
+  if (precio <= 250000) return 800;
+  if (precio <= 350000) return 900;
+  if (precio <= 500000) return 1050;
+  return 1200;
+}
+
+function estimarRegistro(precio) {
+  if (precio <= 0) return 0;
+  if (precio <= 60000) return 250;
+  if (precio <= 150000) return 350;
+  if (precio <= 200000) return 420;
+  if (precio <= 250000) return 480;
+  if (precio <= 350000) return 550;
+  if (precio <= 500000) return 620;
+  return 700;
+}
+
+document.getElementById('notaria').addEventListener('focus', function() { notariaManual = true; this.classList.remove('auto-calculated'); });
+document.getElementById('registro').addEventListener('focus', function() { registroManual = true; this.classList.remove('auto-calculated'); });
 
 function setTipo(t) {
   tipo = t;
@@ -514,7 +590,6 @@ function setTipo(t) {
 function toggleMortgage() {
   const chk = document.getElementById('chkHipoteca');
   const section = document.getElementById('mortgageSection');
-  // If called from the row click, toggle the checkbox
   if (!event || event.currentTarget !== chk) {
     chk.checked = !chk.checked;
   }
@@ -530,6 +605,13 @@ function calcular() {
   const precio = parseFloat(document.getElementById('precio').value) || 0;
   const valorRef = parseFloat(document.getElementById('valorRef').value) || 0;
   const baseImponible = Math.max(precio, valorRef);
+
+  if (!notariaManual) {
+    document.getElementById('notaria').value = estimarNotaria(precio);
+  }
+  if (!registroManual) {
+    document.getElementById('registro').value = estimarRegistro(precio);
+  }
 
   const notaria = parseFloat(document.getElementById('notaria').value) || 0;
   const registro = parseFloat(document.getElementById('registro').value) || 0;
@@ -596,7 +678,6 @@ function calcular() {
     comisionAp = capitalHipoteca * comisionPct / 100;
     gastosHipoteca = tasacion + comisionAp;
 
-    // Cuota mensual (formula francesa)
     if (interes > 0 && plazo > 0 && capitalHipoteca > 0) {
       const r = interes / 100 / 12;
       const n = plazo * 12;
@@ -613,7 +694,6 @@ function calcular() {
   const entradaNecesaria = incluyeHipoteca ? (precio - capitalHipoteca) : precio;
   const dineroNecesario = entradaNecesaria + totalGastos;
 
-  // Build HTML
   let html = '';
 
   // Impuestos
@@ -649,10 +729,10 @@ function calcular() {
     html += `<div class="result-row subtotal"><span class="label">Subtotal hipoteca (gastos iniciales)</span><span class="value">${fmt(gastosHipoteca)}</span></div>`;
     html += `</div>`;
 
-    // Cuotas
     html += `<div class="monthly-box">`;
     html += `<div class="monthly-row"><span class="label">Cuota mensual estimada</span><span class="value" style="color:var(--accent-light);font-size:1.15rem">${fmt(cuotaMensual)}</span></div>`;
     html += `<div class="monthly-row"><span class="label">Total intereses (${plazo} anos)</span><span class="value" style="color:var(--orange)">${fmt(totalIntereses)}</span></div>`;
+    html += `<div class="monthly-row"><span class="label">Total pagado al banco (capital + intereses)</span><span class="value" style="color:var(--red)">${fmt(capitalHipoteca + totalIntereses)}</span></div>`;
     if (seguroHogar > 0) {
       html += `<div class="monthly-row"><span class="label">Seguro de hogar</span><span class="value">${fmt(seguroHogar)}/ano</span></div>`;
     }
@@ -670,7 +750,7 @@ function calcular() {
   if (incluyeHipoteca) {
     html += `<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>`;
     html += `<div class="total-row"><span class="label">Dinero necesario en mano</span><span class="value" style="color:var(--red);font-size:1.2rem">${fmt(dineroNecesario)}</span></div>`;
-    html += `<div class="pct-extra">Entrada (${(100 - hipotecaPct)}%) + gastos</div>`;
+    html += `<div class="pct-extra">Entrada (${(100 - hipotecaPct)}% = ${fmt(entradaNecesaria)}) + gastos (${fmt(totalGastos)})</div>`;
   }
   html += `</div>`;
 
@@ -704,12 +784,10 @@ function calcular() {
   document.getElementById('resultContent').innerHTML = html;
 }
 
-// Attach listeners to all inputs
 document.querySelectorAll('input[type="number"]').forEach(input => {
   input.addEventListener('input', calcular);
 });
 
-// Initial calc
 calcular();
 </script>
 

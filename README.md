@@ -2,9 +2,11 @@
 
 Calculadora interactiva para saber el **precio real** que vas a pagar al comprar una vivienda en la Comunidad de Madrid, incluyendo todos los impuestos, gastos de formalización y costes de hipoteca.
 
+Pensada para gente que compra por primera vez y no sabe qué gastos se va a encontrar. Cada campo tiene una explicación en lenguaje sencillo.
+
 ## Usar
 
-Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni dependencias.
+Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni dependencias. Todos los cálculos se actualizan en tiempo real.
 
 ## Qué calcula
 
@@ -15,24 +17,35 @@ Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni 
 - **Obra nueva**: IVA 10% + AJD 0,75%
 
 ### Gastos de formalización
-- Notaría (~600–1.000 €)
-- Registro de la Propiedad (~400–650 €)
-- Gestoría (~300–600 €)
+Se calculan automáticamente según el precio del piso (tarifas reguladas por ley). Se pueden ajustar manualmente si tienes un presupuesto concreto.
+
+- **Notaría** (~600–1.200 €) — da fe pública de la compraventa
+- **Registro de la Propiedad** (~250–700 €) — inscribe el piso a tu nombre
+- **Gestoría** (~300–600 €) — tramita papeles e impuestos por ti (opcional pero recomendable)
 
 ### Hipoteca (opcional)
-- Capital financiado (% configurable)
+Activable con un toggle. Incluye:
+
+- Capital financiado (% configurable, lo normal es 80%)
 - Cuota mensual (sistema francés)
 - Total de intereses a lo largo del plazo
-- Comisión de apertura
-- Tasación
-- Seguro de hogar anual
+- Total pagado al banco (capital + intereses)
+- Comisión de apertura (muchos bancos ya la han eliminado)
+- Tasación (300–600 €)
+- Seguro de hogar anual (obligatorio con hipoteca)
 
 ### Resultado
 - Desglose completo de cada gasto
 - Precio final (compra + gastos)
 - Porcentaje extra sobre el precio de compra
-- Dinero necesario en mano (entrada + gastos)
+- Dinero necesario en mano (entrada + gastos, desglosado)
 - Barra visual de distribución de costes
+
+## Valor de referencia catastral
+
+El ITP no se calcula solo sobre el precio de compra, sino sobre el **mayor valor entre el precio y el valor de referencia catastral**. Este valor lo fija Hacienda cada año para cada inmueble.
+
+Para consultarlo: [Sede Electrónica del Catastro](https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx) (necesitas certificado digital o Cl@ve).
 
 ## Fuentes
 
