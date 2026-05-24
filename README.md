@@ -63,15 +63,36 @@ Activable con un toggle. Incluye:
 - Tasación (300–600 €)
 - Seguro de hogar anual (obligatorio con hipoteca)
 
-### Aval ICO primera vivienda (programa temporal)
-Checkbox dentro de la sección de hipoteca. Al activarlo:
+### Aval ICO primera vivienda (programa temporal hasta dic. 2027)
 
-- Sube el porcentaje financiado al 100%
-- Muestra todos los requisitos (edad, ingresos, precio máximo, patrimonio, residencia)
-- Muestra los bancos adheridos (67 entidades)
-- Aviso de que es un **programa temporal hasta diciembre 2027**
+El Estado avala el 20% que los bancos normalmente no financian, permitiendo comprar con hipoteca al 100% **sin necesidad de entrada**. Solo necesitas tener ahorrado el ~10-12% del precio para gastos e impuestos.
 
-Requisitos principales: menor de 35 años, primera vivienda, precio ≤ 325.000 €, ingresos ≤ 37.800 €/año, patrimonio ≤ 100.000 €, residencia en España los últimos 2 años.
+No es una ayuda ni una subvención: si dejas de pagar, el Estado cubre al banco pero luego te reclama la deuda con intereses.
+
+Checkbox dentro de la sección de hipoteca. Al activarlo sube la financiación al 100% y muestra los requisitos.
+
+**Requisitos:**
+
+| Requisito | Detalle |
+|---|---|
+| Edad | < 35 años (ambos compradores). Sin límite si tienes hijos menores |
+| Vivienda | Primera vivienda (nunca haber sido propietario, ni herencia) |
+| Precio máximo | 325.000 € |
+| Ingresos | ≤ 37.800 €/año brutos por persona |
+| Patrimonio | ≤ 100.000 € |
+| Residencia | 2 años seguidos viviendo en España |
+| Obligación | Vivir en la vivienda mínimo 10 años |
+| Ahorros necesarios | ~10-12% del precio para gastos (el aval cubre la entrada, no los gastos) |
+
+**Ejemplo práctico** — piso de 200.000 €, comprador de 30 años con 28.000 €/año:
+
+| | Sin ICO | Con ICO |
+|---|---|---|
+| Entrada | 40.000 € (20%) | 0 € |
+| Gastos e impuestos | ~12.500 € | ~12.500 € |
+| **Total en mano** | **52.500 €** | **12.500 €** |
+
+**Bancos adheridos (67):** BBVA, CaixaBank, Santander, Sabadell, Bankinter, Unicaja, Abanca, Kutxabank, Ibercaja, Cajamar y 57 cajas rurales más. Se tramita directamente en el banco, no hay que ir al ICO.
 
 ### Vivienda habitual — obligaciones
 Sección informativa que explica:
