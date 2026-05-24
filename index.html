@@ -1524,6 +1524,8 @@ function calcular() {
             const pctEfectivo = baseImponible > 0 ? (result / baseImponible * 100).toFixed(1) : '0';
             impuestoPctLabel = pctEfectivo + '%';
             bonApplied = true;
+          } else {
+            showToast('Has marcado "' + b.label + '" pero el precio de tu vivienda (' + fmt(precio) + ') supera el limite. Se aplica el <strong>tipo general (' + (typeof data.itpGeneral === 'number' ? data.itpGeneral + '%' : data.itpGeneral) + ')</strong> en vez del reducido.');
           }
           break;
         }
@@ -1549,6 +1551,8 @@ function calcular() {
             ajd = result;
             ajdPct = precio > 0 ? (result / precio * 100) : 0;
             impuestoDetalle = '(' + b.label + ')';
+          } else {
+            showToast('Has marcado "' + b.label + '" pero el precio de tu vivienda (' + fmt(precio) + ') supera el limite. Se aplica el <strong>AJD general (' + data.ajd + '%)</strong> en vez del reducido.');
           }
           break;
         }
@@ -2219,8 +2223,14 @@ function calcularSituacion() {
     var boxClass = 'green';
     var verdict = 'Te lo puedes permitir';
     var verdictColor = 'var(--green)';
-    if (ratio > 40) { boxClass = 'red'; verdict = 'No recomendable'; verdictColor = 'var(--red)'; }
-    else if (ratio > 35) { boxClass = 'orange'; verdict = 'Justo — riesgo'; verdictColor = 'var(--orange)'; }
+    if (ratio > 40) {
+      boxClass = 'red'; verdict = 'No recomendable'; verdictColor = 'var(--red)';
+      showToast('La cuota de la hipoteca (' + fmt(cuotaActual) + ') supone el <strong>' + ratio.toFixed(1) + '%</strong> de tu neto mensual. Por encima del 40% el banco probablemente <strong>no te apruebe</strong> la hipoteca.');
+    }
+    else if (ratio > 35) {
+      boxClass = 'orange'; verdict = 'Justo — riesgo'; verdictColor = 'var(--orange)';
+      showToast('La cuota de la hipoteca (' + fmt(cuotaActual) + ') supone el <strong>' + ratio.toFixed(1) + '%</strong> de tu neto mensual. Entre el 35% y 40% es <strong>zona de riesgo</strong>. El banco podria ponerlo dificil.');
+    }
 
     ah += '<div class="afford-box ' + boxClass + '">';
     ah += '<div class="afford-verdict" style="color:' + verdictColor + '">' + verdict + '</div>';
