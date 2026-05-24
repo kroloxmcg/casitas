@@ -1684,6 +1684,7 @@ function cargarDatos(obj) {
   document.getElementById('sueldo2').value = d.sueldo2 || 25000;
 
   calcular();
+  calcularSituacion();
 }
 
 function slugify(str) {
@@ -1794,6 +1795,16 @@ function renderCompare() {
     { label: 'Dinero en mano', fn: function(e) { return fmt(e.resultados.dineroEnMano); }, highlight: true },
     { label: 'Aval ICO', fn: function(e) { return e.datos.ico ? 'Si' : 'No'; } },
     { label: 'Compradores', fn: function(e) { return e.datos.numCompradores === 2 ? '2 personas' : '1 persona'; } },
+    { label: 'Sueldo bruto (anual)', fn: function(e) {
+      var s = fmt(e.datos.sueldo1);
+      if (e.datos.numCompradores === 2) s += ' + ' + fmt(e.datos.sueldo2);
+      return s;
+    } },
+    { label: 'Neto mensual conjunto', fn: function(e) {
+      var n1 = calcularNetoAnual(e.datos.sueldo1);
+      var n2 = e.datos.numCompradores === 2 ? calcularNetoAnual(e.datos.sueldo2) : 0;
+      return fmt((n1 + n2) / 12);
+    } },
     { label: 'Ratio endeudamiento', fn: function(e) { return e.resultados.ratioEndeudamiento ? (e.resultados.ratioEndeudamiento + '%') : '-'; } }
   ];
 
