@@ -564,6 +564,96 @@
     color: var(--text-muted);
   }
 
+  .action-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.25rem;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .btn:active { opacity: 0.8; }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .compare-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-top: 1rem;
+  }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 500px;
+  }
+
+  .compare-table th, .compare-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .compare-table th {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    position: sticky;
+    left: 0;
+    background: var(--surface);
+  }
+
+  .compare-table td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .compare-table tr:last-child td,
+  .compare-table tr:last-child th {
+    border-bottom: none;
+  }
+
+  .compare-table .col-name {
+    color: var(--accent-light);
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+  }
+
+  .compare-table .col-highlight {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  .compare-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
   footer {
     text-align: center;
     color: var(--text-muted);
@@ -574,10 +664,14 @@
   }
 
   @media (max-width: 600px) {
-    .tabs button { padding: 0.6rem 0.5rem; font-size: 0.82rem; }
+    .tabs button { padding: 0.6rem 0.25rem; font-size: 0.75rem; }
     .tabs { margin-bottom: 1rem; }
     .afford-verdict { font-size: 1.1rem; }
     .afford-detail { font-size: 0.78rem; }
+    .action-buttons { flex-direction: column; gap: 0.5rem; }
+    .btn { font-size: 0.82rem; }
+    .compare-table { font-size: 0.78rem; }
+    .compare-table th, .compare-table td { padding: 0.4rem 0.5rem; }
   }
 </style>
 </head>
@@ -593,6 +687,7 @@
   <div class="tabs">
     <button type="button" id="tabBtnCalc" class="active">Calculadora</button>
     <button type="button" id="tabBtnSitu">Mi situacion</button>
+    <button type="button" id="tabBtnComp">Comparar</button>
   </div>
 
   <!-- TAB: CALCULADORA -->
@@ -796,6 +891,12 @@
     <strong>Recuerda:</strong> El ITP se calcula sobre el mayor valor entre el precio de compra y el valor de referencia catastral. Consultalo gratis en la <a href="https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx" target="_blank" style="color:var(--orange)">Sede Electronica del Catastro</a> (necesitas certificado digital o Cl@ve) antes de negociar el precio.
   </div>
 
+  <div class="action-buttons">
+    <button type="button" class="btn btn-primary" id="btnGuardar">Guardar escenario</button>
+    <button type="button" class="btn btn-secondary" id="btnCargar">Cargar escenario</button>
+  </div>
+  <input type="file" id="fileCargar" accept=".json" style="display:none">
+
   </div><!-- /tabCalculadora -->
 
   <!-- TAB: MI SITUACION -->
@@ -839,6 +940,22 @@
     </div>
 
   </div><!-- /tabSituacion -->
+
+  <!-- TAB: COMPARAR -->
+  <div id="tabComparar" class="tab-panel">
+    <div class="card">
+      <div class="card-title">Comparar escenarios</div>
+      <div class="card-desc">Sube los archivos .json de los escenarios que quieres comparar. Puedes pulsar en el nombre de un escenario para cargarlo en la calculadora y modificarlo.</div>
+      <div class="action-buttons" style="margin-top:0">
+        <button type="button" class="btn btn-primary" id="btnAddCompare">Anadir escenario (.json)</button>
+        <button type="button" class="btn btn-secondary" id="btnClearCompare">Limpiar todo</button>
+      </div>
+      <input type="file" id="fileCompare" accept=".json" multiple style="display:none">
+    </div>
+    <div id="compareContent">
+      <div class="compare-empty">Aun no has anadido ningun escenario. Pulsa "Anadir escenario" para subir archivos .json guardados.</div>
+    </div>
+  </div><!-- /tabComparar -->
 
   <footer>
     Calculadora orientativa &mdash; Espana 2025/2026<br>
@@ -1440,13 +1557,279 @@ document.getElementById('chkICO').addEventListener('change', function() {
 // Tabs
 document.getElementById('tabBtnCalc').addEventListener('click', function() { switchTab('calc'); });
 document.getElementById('tabBtnSitu').addEventListener('click', function() { switchTab('situ'); });
+document.getElementById('tabBtnComp').addEventListener('click', function() { switchTab('comp'); });
 
 function switchTab(tab) {
   document.getElementById('tabBtnCalc').classList.toggle('active', tab === 'calc');
   document.getElementById('tabBtnSitu').classList.toggle('active', tab === 'situ');
+  document.getElementById('tabBtnComp').classList.toggle('active', tab === 'comp');
   document.getElementById('tabCalculadora').classList.toggle('active', tab === 'calc');
   document.getElementById('tabSituacion').classList.toggle('active', tab === 'situ');
+  document.getElementById('tabComparar').classList.toggle('active', tab === 'comp');
   if (tab === 'situ') calcularSituacion();
+  if (tab === 'comp') renderCompare();
+}
+
+// --- GUARDAR / CARGAR ---
+
+function recogerDatos() {
+  calcular();
+  var bons = [];
+  var data = getCCAAData();
+  if (data.bonificaciones) {
+    data.bonificaciones.forEach(function(b) {
+      var chk = document.getElementById('bon_' + b.id);
+      if (chk && chk.checked) bons.push(b.id);
+    });
+  }
+
+  var bruto1 = parseFloat(document.getElementById('sueldo1').value) || 0;
+  var bruto2 = parseFloat(document.getElementById('sueldo2').value) || 0;
+  var neto1 = calcularNetoAnual(bruto1);
+  var neto2 = numCompradores === 2 ? calcularNetoAnual(bruto2) : 0;
+  var netoMensual = (neto1 + neto2) / 12;
+  var ratioEnd = netoMensual > 0 ? (lastCalc.cuotaMensual / netoMensual * 100) : 0;
+
+  return {
+    nombre: '',
+    fecha: new Date().toISOString().slice(0, 10),
+    datos: {
+      ccaa: document.getElementById('ccaa').value,
+      precio: parseFloat(document.getElementById('precio').value) || 0,
+      valorRef: parseFloat(document.getElementById('valorRef').value) || 0,
+      tipo: tipo,
+      bonificaciones: bons,
+      notaria: parseFloat(document.getElementById('notaria').value) || 0,
+      registro: parseFloat(document.getElementById('registro').value) || 0,
+      gestoria: parseFloat(document.getElementById('gestoria').value) || 0,
+      notariaManual: notariaManual,
+      registroManual: registroManual,
+      hipoteca: document.getElementById('chkHipoteca').checked,
+      hipotecaPct: parseFloat(document.getElementById('hipotecaPct').value) || 0,
+      interes: parseFloat(document.getElementById('hipotecaInteres').value) || 0,
+      plazo: parseInt(document.getElementById('hipotecaPlazo').value) || 0,
+      comisionApertura: parseFloat(document.getElementById('comisionApertura').value) || 0,
+      tasacion: parseFloat(document.getElementById('tasacion').value) || 0,
+      seguroHogar: parseFloat(document.getElementById('seguroHogar').value) || 0,
+      ico: document.getElementById('chkICO').checked,
+      numCompradores: numCompradores,
+      sueldo1: bruto1,
+      sueldo2: bruto2
+    },
+    resultados: {
+      precioFinal: lastCalc.precio + lastCalc.totalGastos,
+      totalGastos: lastCalc.totalGastos,
+      totalImpuestos: lastCalc.totalImpuestos,
+      gastosFormal: lastCalc.gastosFormal,
+      cuotaMensual: lastCalc.cuotaMensual,
+      dineroEnMano: lastCalc.dineroNecesario,
+      capitalHipoteca: lastCalc.capitalHipoteca,
+      ratioEndeudamiento: Math.round(ratioEnd * 10) / 10
+    }
+  };
+}
+
+function cargarDatos(obj) {
+  var d = obj.datos;
+  document.getElementById('ccaa').value = d.ccaa;
+  renderCCAAInfo();
+  document.getElementById('precio').value = d.precio;
+  document.getElementById('valorRef').value = d.valorRef;
+
+  notariaManual = d.notariaManual || false;
+  registroManual = d.registroManual || false;
+  if (notariaManual) {
+    document.getElementById('notaria').value = d.notaria;
+    document.getElementById('notaria').classList.remove('auto-calculated');
+  }
+  if (registroManual) {
+    document.getElementById('registro').value = d.registro;
+    document.getElementById('registro').classList.remove('auto-calculated');
+  }
+  document.getElementById('gestoria').value = d.gestoria;
+
+  setTipo(d.tipo || 'segunda');
+
+  // Bonificaciones
+  renderBonificaciones();
+  if (d.bonificaciones) {
+    d.bonificaciones.forEach(function(bid) {
+      var chk = document.getElementById('bon_' + bid);
+      if (chk) chk.checked = true;
+    });
+  }
+
+  // Hipoteca
+  var chkHip = document.getElementById('chkHipoteca');
+  chkHip.checked = d.hipoteca || false;
+  document.getElementById('mortgageSection').classList.toggle('open', chkHip.checked);
+  document.getElementById('hipotecaPct').value = d.hipotecaPct || 80;
+  document.getElementById('hipotecaInteres').value = d.interes || 2.5;
+  document.getElementById('hipotecaPlazo').value = d.plazo || 25;
+  document.getElementById('comisionApertura').value = d.comisionApertura || 0;
+  document.getElementById('tasacion').value = d.tasacion || 400;
+  document.getElementById('seguroHogar').value = d.seguroHogar || 250;
+
+  // ICO
+  var chkICO = document.getElementById('chkICO');
+  chkICO.checked = d.ico || false;
+  document.getElementById('icoInfo').style.display = chkICO.checked ? 'block' : 'none';
+
+  // Compradores
+  numCompradores = d.numCompradores || 1;
+  document.getElementById('btn1comp').classList.toggle('active', numCompradores === 1);
+  document.getElementById('btn2comp').classList.toggle('active', numCompradores === 2);
+  document.getElementById('campo2comprador').style.display = numCompradores === 2 ? 'block' : 'none';
+  document.getElementById('sueldo1').value = d.sueldo1 || 25000;
+  document.getElementById('sueldo2').value = d.sueldo2 || 25000;
+
+  calcular();
+}
+
+function slugify(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+document.getElementById('btnGuardar').addEventListener('click', function() {
+  var nombre = prompt('Nombre del escenario (ej: "Piso Deva 4"):');
+  if (!nombre) return;
+  var obj = recogerDatos();
+  obj.nombre = nombre;
+  var json = JSON.stringify(obj, null, 2);
+  var blob = new Blob([json], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'casitas-' + slugify(nombre) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('btnCargar').addEventListener('click', function() {
+  document.getElementById('fileCargar').click();
+});
+
+document.getElementById('fileCargar').addEventListener('change', function(e) {
+  var file = e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var obj = JSON.parse(ev.target.result);
+      cargarDatos(obj);
+      switchTab('calc');
+    } catch(err) {
+      alert('Error al leer el archivo. Asegurate de que es un .json valido.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+// --- COMPARAR ---
+
+var escenarios = [];
+
+document.getElementById('btnAddCompare').addEventListener('click', function() {
+  document.getElementById('fileCompare').click();
+});
+
+document.getElementById('fileCompare').addEventListener('change', function(e) {
+  var files = e.target.files;
+  var pending = files.length;
+  for (var i = 0; i < files.length; i++) {
+    (function(f) {
+      var reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          var obj = JSON.parse(ev.target.result);
+          escenarios.push(obj);
+        } catch(err) {}
+        pending--;
+        if (pending === 0) renderCompare();
+      };
+      reader.readAsText(f);
+    })(files[i]);
+  }
+  e.target.value = '';
+});
+
+document.getElementById('btnClearCompare').addEventListener('click', function() {
+  escenarios = [];
+  renderCompare();
+});
+
+function renderCompare() {
+  var container = document.getElementById('compareContent');
+  if (escenarios.length === 0) {
+    container.innerHTML = '<div class="compare-empty">Aun no has anadido ningun escenario. Pulsa "Anadir escenario" para subir archivos .json guardados.</div>';
+    return;
+  }
+
+  var ccaaNames = {};
+  for (var k in CCAA_DATA) ccaaNames[k] = CCAA_DATA[k].nombre;
+
+  var html = '<div class="compare-table-wrap"><table class="compare-table">';
+
+  // Header
+  html += '<tr><th></th>';
+  escenarios.forEach(function(e, idx) {
+    html += '<td class="col-name" data-idx="' + idx + '">' + (e.nombre || 'Sin nombre') + '</td>';
+  });
+  html += '</tr>';
+
+  var rows = [
+    { label: 'Fecha', fn: function(e) { return e.fecha || '-'; } },
+    { label: 'Comunidad', fn: function(e) { return ccaaNames[e.datos.ccaa] || e.datos.ccaa; } },
+    { label: 'Tipo', fn: function(e) { return e.datos.tipo === 'nueva' ? 'Obra nueva' : 'Segunda mano'; } },
+    { label: 'Precio compra', fn: function(e) { return fmt(e.datos.precio); } },
+    { label: 'Impuestos', fn: function(e) { return fmt(e.resultados.totalImpuestos); } },
+    { label: 'Gastos formalizacion', fn: function(e) { return fmt(e.resultados.gastosFormal); } },
+    { label: 'Total gastos', fn: function(e) { return fmt(e.resultados.totalGastos); } },
+    { label: 'PRECIO FINAL', fn: function(e) { return '<strong>' + fmt(e.resultados.precioFinal) + '</strong>'; }, highlight: true },
+    { label: 'Hipoteca', fn: function(e) { return e.datos.hipoteca ? (e.datos.hipotecaPct + '% a ' + e.datos.interes + '% - ' + e.datos.plazo + ' anos') : 'No'; } },
+    { label: 'Cuota mensual', fn: function(e) { return e.datos.hipoteca ? fmt(e.resultados.cuotaMensual) : '-'; } },
+    { label: 'Dinero en mano', fn: function(e) { return fmt(e.resultados.dineroEnMano); }, highlight: true },
+    { label: 'Aval ICO', fn: function(e) { return e.datos.ico ? 'Si' : 'No'; } },
+    { label: 'Compradores', fn: function(e) { return e.datos.numCompradores === 2 ? '2 personas' : '1 persona'; } },
+    { label: 'Ratio endeudamiento', fn: function(e) { return e.resultados.ratioEndeudamiento ? (e.resultados.ratioEndeudamiento + '%') : '-'; } }
+  ];
+
+  rows.forEach(function(row) {
+    html += '<tr><th>' + row.label + '</th>';
+    escenarios.forEach(function(e) {
+      var cls = row.highlight ? ' class="col-highlight"' : '';
+      html += '<td' + cls + '>' + row.fn(e) + '</td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</table></div>';
+
+  // Delete buttons
+  html += '<div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.5rem">';
+  escenarios.forEach(function(e, idx) {
+    html += '<button type="button" class="btn btn-secondary" style="flex:none;font-size:0.78rem;padding:0.4rem 0.75rem" onclick="removeEscenario(' + idx + ')">Quitar: ' + (e.nombre || 'Sin nombre') + '</button>';
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+
+  // Click on name to load
+  container.querySelectorAll('.col-name').forEach(function(td) {
+    td.addEventListener('click', function() {
+      var idx = parseInt(this.getAttribute('data-idx'));
+      cargarDatos(escenarios[idx]);
+      switchTab('calc');
+    });
+  });
+}
+
+function removeEscenario(idx) {
+  escenarios.splice(idx, 1);
+  renderCompare();
 }
 
 // Compradores toggle

@@ -12,8 +12,9 @@ Pensada para gente que compra por primera vez y no sabe qué gastos se va a enco
 
 Todos los cálculos se actualizan en tiempo real. La app tiene dos pestañas:
 
-- **Calculadora**: gastos, impuestos, hipoteca, ICO, vivienda habitual
+- **Calculadora**: gastos, impuestos, hipoteca, ICO, vivienda habitual + guardar/cargar escenarios
 - **Mi situación**: comprar solo o en pareja, sueldos, si te lo puedes permitir
+- **Comparar**: subir varios escenarios guardados y verlos lado a lado en tabla
 
 ## Comunidades autónomas soportadas
 
@@ -117,6 +118,22 @@ Permite simular si te puedes permitir el piso:
   - Rojo (> 40%): no recomendable
 - **Precio máximo recomendado** según tus ingresos y los parámetros de hipoteca
 - **Dinero necesario en mano** (entrada + gastos)
+
+### Guardar y cargar escenarios
+Botones en la pestaña Calculadora:
+
+- **Guardar escenario**: descarga un archivo `.json` con todos los datos y resultados. Le pones un nombre (ej: "Piso Deva 4") y se descarga como `casitas-piso-deva-4.json`
+- **Cargar escenario**: sube un `.json` guardado y rellena automáticamente todos los campos. Puedes modificar valores y volver a guardar
+
+Los archivos se pueden compartir por WhatsApp, email, Drive... Cualquiera puede cargarlos en la calculadora.
+
+### Comparar escenarios (pestaña)
+Sube varios archivos `.json` de escenarios guardados y compáralos lado a lado en una tabla:
+
+- Precio, impuestos, gastos, precio final
+- Cuota mensual, dinero en mano
+- Hipoteca, ICO, ratio de endeudamiento
+- Pulsa en el nombre de un escenario para cargarlo en la calculadora y modificarlo
 
 ### Resultado
 - Desglose completo de cada gasto
