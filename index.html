@@ -1102,6 +1102,19 @@ let tipo = 'segunda';
 let notariaManual = false;
 let registroManual = false;
 
+var lastCalc = {
+  cuotaMensual: 0,
+  totalGastos: 0,
+  entradaNecesaria: 0,
+  dineroNecesario: 0,
+  totalImpuestos: 0,
+  gastosFormal: 0,
+  gastosHipoteca: 0,
+  precio: 0,
+  hipotecaPct: 0,
+  capitalHipoteca: 0
+};
+
 function estimarNotaria(precio) {
   if (precio <= 0) return 0;
   if (precio <= 60000) return 450;
@@ -1391,6 +1404,17 @@ function calcular() {
   html += '</div>';
 
   document.getElementById('resultContent').innerHTML = html;
+
+  lastCalc.cuotaMensual = cuotaMensual;
+  lastCalc.totalGastos = totalGastos;
+  lastCalc.entradaNecesaria = entradaNecesaria;
+  lastCalc.dineroNecesario = dineroNecesario;
+  lastCalc.totalImpuestos = totalImpuestos;
+  lastCalc.gastosFormal = gastosFormal;
+  lastCalc.gastosHipoteca = gastosHipoteca;
+  lastCalc.precio = precio;
+  lastCalc.hipotecaPct = hipotecaPct;
+  lastCalc.capitalHipoteca = capitalHipoteca;
 }
 
 document.querySelectorAll('input[type="number"]').forEach(function(input) {
@@ -1493,30 +1517,15 @@ function calcularSituacion() {
   }
   document.getElementById('sueldoResult').innerHTML = sh;
 
-  // Affordability
+  // Affordability - use real data from calcular()
+  calcular();
   var cuotaMax35 = netoMensual * 0.35;
-  var cuotaMax40 = netoMensual * 0.40;
 
   var incluyeHipoteca = document.getElementById('chkHipoteca').checked;
-  var cuotaActual = 0;
-  if (incluyeHipoteca) {
-    var precio = parseFloat(document.getElementById('precio').value) || 0;
-    var hipPct = parseFloat(document.getElementById('hipotecaPct').value) || 0;
-    var interes = parseFloat(document.getElementById('hipotecaInteres').value) || 0;
-    var plazo = parseInt(document.getElementById('hipotecaPlazo').value) || 0;
-    var capital = precio * hipPct / 100;
-    if (interes > 0 && plazo > 0 && capital > 0) {
-      var r = interes / 100 / 12;
-      var n = plazo * 12;
-      cuotaActual = capital * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-    } else if (plazo > 0 && capital > 0) {
-      cuotaActual = capital / (plazo * 12);
-    }
-  }
-
+  var cuotaActual = lastCalc.cuotaMensual;
   var ratio = netoMensual > 0 ? (cuotaActual / netoMensual * 100) : 0;
 
-  // Precio maximo recomendado (35% neto mensual con mismos parametros de hipoteca)
+  // Precio maximo recomendado
   var precioMaxRec = 0;
   if (incluyeHipoteca) {
     var interes2 = parseFloat(document.getElementById('hipotecaInteres').value) || 0;
@@ -1569,21 +1578,23 @@ function calcularSituacion() {
     if (precioMaxRec > 0) {
       ah += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
       ah += '<div class="result-row"><span class="label">Precio maximo de vivienda recomendado</span><span class="value" style="color:var(--accent-light)">' + fmt(precioMaxRec) + '</span></div>';
-      ah += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem">Con los mismos parametros de hipoteca (' + (parseFloat(document.getElementById('hipotecaPct').value) || 80) + '%, ' + (parseFloat(document.getElementById('hipotecaInteres').value) || 2.5) + '% interes, ' + (parseInt(document.getElementById('hipotecaPlazo').value) || 25) + ' anos)</div>';
+      ah += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem">Con los mismos parametros de hipoteca (' + lastCalc.hipotecaPct + '%, ' + (parseFloat(document.getElementById('hipotecaInteres').value) || 2.5) + '% interes, ' + (parseInt(document.getElementById('hipotecaPlazo').value) || 25) + ' anos)</div>';
     }
 
-    // Dinero en mano
-    var precio3 = parseFloat(document.getElementById('precio').value) || 0;
-    var hipPct3 = parseFloat(document.getElementById('hipotecaPct').value) || 0;
-    var capital3 = precio3 * hipPct3 / 100;
-    var entrada3 = precio3 - capital3;
-    // recalculate totalGastos from main calc
-    calcular();
-    var gastosEst = precio3 * 0.11;
-    var dineroMano = entrada3 + gastosEst;
+    // Dinero en mano - DESGLOSE REAL de la calculadora
+    ah += '<div style="border-top:1px solid var(--border);margin:0.75rem 0"></div>';
+    ah += '<div class="result-section"><h3>Dinero necesario en mano (desglose real)</h3>';
+    ah += '<div class="result-row"><span class="label">Entrada (' + (100 - lastCalc.hipotecaPct) + '% del precio)</span><span class="value">' + fmt(lastCalc.entradaNecesaria) + '</span></div>';
+    ah += '<div class="result-row"><span class="label">Impuestos</span><span class="value">' + fmt(lastCalc.totalImpuestos) + '</span></div>';
+    ah += '<div class="result-row"><span class="label">Formalizacion (notaria + registro + gestoria)</span><span class="value">' + fmt(lastCalc.gastosFormal) + '</span></div>';
+    if (lastCalc.gastosHipoteca > 0) {
+      ah += '<div class="result-row"><span class="label">Gastos hipoteca (tasacion + comision)</span><span class="value">' + fmt(lastCalc.gastosHipoteca) + '</span></div>';
+    }
+    ah += '<div class="result-row subtotal"><span class="label">Total gastos e impuestos</span><span class="value">' + fmt(lastCalc.totalGastos) + '</span></div>';
     ah += '<div style="border-top:1px solid var(--border);margin:0.5rem 0"></div>';
-    ah += '<div class="result-row"><span class="label">Dinero necesario en mano (est.)</span><span class="value" style="color:var(--red)">' + fmt(dineroMano) + '</span></div>';
-    ah += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.2rem">Entrada (' + fmt(entrada3) + ') + gastos estimados ~11% (' + fmt(gastosEst) + '). El desglose exacto esta en la pestana Calculadora.</div>';
+    ah += '<div class="total-row"><span class="label">TOTAL EN MANO</span><span class="value" style="color:var(--red)">' + fmt(lastCalc.dineroNecesario) + '</span></div>';
+    ah += '<div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem">= Entrada ' + fmt(lastCalc.entradaNecesaria) + ' + gastos ' + fmt(lastCalc.totalGastos) + '</div>';
+    ah += '</div>';
     ah += '</div>';
   }
 
