@@ -975,7 +975,8 @@ const CCAA_DATA = {
     bonificaciones: [
       { id: 'habitual150', label: 'Vivienda habitual < 150.000 €', hint: 'El tipo baja del 7% al 6% si la vivienda va a ser tu residencia y su valor no supera los 150.000 €.', apply: function(base, precio) { return precio <= 150000 ? base * 0.06 : null; } },
       { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 150.000 €)', hint: 'El tipo baja al 3,5% si eres menor de 35 anos, es tu vivienda habitual y el valor no supera 150.000 €.', apply: function(base, precio) { return precio <= 150000 ? base * 0.035 : null; } },
-      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'El tipo baja al 3,5% para familias numerosas en vivienda habitual, sin limite de precio.', apply: function(base) { return base * 0.035; } }
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'El tipo baja al 3,5% para familias numerosas en vivienda habitual, sin limite de precio.', apply: function(base) { return base * 0.035; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33% (vivienda habitual < 250.000 €)', hint: 'Tipo del 3,5% si el comprador o alguien de su nucleo familiar tiene discapacidad reconocida >= 33% y la vivienda no supera 250.000 €.', apply: function(base, precio) { return precio <= 250000 ? base * 0.035 : null; } }
     ]
   },
   aragon: {
@@ -992,7 +993,8 @@ const CCAA_DATA = {
     ivaNueva: 10,
     info: 'ITP progresivo por tramos: 8% hasta 400k, sube hasta 10% a partir de 750k.',
     bonificaciones: [
-      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3% para familias numerosas. Uno de los mas bajos de Espana.', apply: function(base) { return base * 0.03; } }
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3% para familias numerosas. Uno de los mas bajos de Espana.', apply: function(base) { return base * 0.03; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33% (vivienda habitual)', hint: 'Bonificacion del 100% del ITP para personas con discapacidad >= 33% en vivienda habitual (cumpliendo requisitos de renta).', apply: function(base) { return 0; } }
     ]
   },
   asturias: {
@@ -1038,7 +1040,8 @@ const CCAA_DATA = {
     bonificaciones: [
       { id: 'habitual', label: 'Vivienda habitual < 150.000 €', hint: 'Tipo reducido del 5%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.05 : null; } },
       { id: 'joven', label: 'Menor de 35 anos', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
-      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4% (1% para familia numerosa especial, monoparental o discapacidad >= 65%).', apply: function(base) { return base * 0.04; } }
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4% (1% para familia numerosa especial).', apply: function(base) { return base * 0.04; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65%', hint: 'Tipo del 1% para personas con discapacidad >= 65%, con limites de renta (24.000 € individual / 42.000 € conjunta).', apply: function(base) { return base * 0.01; } }
     ]
   },
   cantabria: {
@@ -1051,7 +1054,8 @@ const CCAA_DATA = {
     bonificaciones: [
       { id: 'joven', label: 'Menor de 30 anos (vivienda habitual < 300.000 €)', hint: 'Tipo del 5% para jovenes < 30 anos si la vivienda es habitual y no supera 300.000 €.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
       { id: 'familia', label: 'Familia numerosa (vivienda habitual < 300.000 €)', hint: 'Tipo del 5% para familias numerosas con vivienda habitual < 300.000 €.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
-      { id: 'discapacidad', label: 'Discapacidad >= 33% (vivienda habitual < 300.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } }
+      { id: 'discapacidad33', label: 'Discapacidad 33%-64% (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% para discapacidad entre 33% y 64%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
+      { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual < 300.000 €)', hint: 'Tipo del 3% para discapacidad >= 65%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.03 : null; } }
     ]
   },
   castilla_mancha: {
@@ -1063,7 +1067,8 @@ const CCAA_DATA = {
     info: 'ITP general del 9%.',
     bonificaciones: [
       { id: 'habitual', label: 'Primera vivienda habitual < 180.000 € (financiada al 50%+ con hipoteca)', hint: 'Tipo reducido del 6%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.06 : null; } },
-      { id: 'joven', label: 'Menor de 36 anos / familia numerosa (primera vivienda < 180.000 €)', hint: 'Tipo reducido del 5%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } }
+      { id: 'joven', label: 'Menor de 36 anos / familia numerosa (primera vivienda < 180.000 €)', hint: 'Tipo reducido del 5%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65% (primera vivienda < 180.000 €)', hint: 'Tipo reducido del 5% para discapacidad >= 65%.', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } }
     ]
   },
   castilla_leon: {
@@ -1076,7 +1081,8 @@ const CCAA_DATA = {
     bonificaciones: [
       { id: 'joven', label: 'Menor de 36 anos (primera vivienda)', hint: 'Tipo reducido del 4% con renta familiar < 31.500 €.', apply: function(base) { return base * 0.04; } },
       { id: 'joven_rural', label: 'Menor de 36 anos en municipio < 10.000 hab.', hint: 'Tipo practicamente nulo (0,01%).', apply: function(base) { return base * 0.0001; } },
-      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } }
+      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo reducido del 4% para discapacidad >= 65%.', apply: function(base) { return base * 0.04; } }
     ]
   },
   cataluna: {
@@ -1114,7 +1120,9 @@ const CCAA_DATA = {
     bonificaciones: [
       { id: 'joven', label: 'Menor de 35 anos (vivienda habitual)', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
       { id: 'familia', label: 'Familia numerosa', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
-      { id: 'vpo', label: 'VPO', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } }
+      { id: 'vpo', label: 'VPO', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } },
+      { id: 'discapacidad33', label: 'Discapacidad >= 33% (vivienda habitual < 300.000 €)', hint: 'Tipo reducido del 5%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.05 : null; } },
+      { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo reducido del 4%.', apply: function(base) { return base * 0.04; } }
     ]
   },
   galicia: {
@@ -1126,7 +1134,8 @@ const CCAA_DATA = {
     info: 'ITP general del 10%.',
     bonificaciones: [
       { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 150.000 €)', hint: 'Tipo reducido del 3%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.03 : null; } },
-      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3%.', apply: function(base) { return base * 0.03; } }
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo reducido del 3%.', apply: function(base) { return base * 0.03; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo reducido del 3%.', apply: function(base) { return base * 0.03; } }
     ]
   },
   madrid: {
@@ -1210,7 +1219,8 @@ const CCAA_DATA = {
     ivaNueva: 10,
     info: 'ITP del 10% (11% a partir de 1M €). AJD del 2%, el mas alto de Espana. Nota: a partir de julio 2026 el ITP bajara al 9%.',
     bonificaciones: [
-      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual)', hint: 'Tipo reducido del 8%, con condiciones de renta.', apply: function(base) { return base * 0.08; } }
+      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual)', hint: 'Tipo reducido del 8%, con condiciones de renta.', apply: function(base) { return base * 0.08; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Reduccion del ITP para discapacidad >= 65% fisica/sensorial o >= 33% psiquica. Se aplica sobre la proporcion del inmueble adquirida por el beneficiario.', apply: function(base) { return base * 0.04; } }
     ]
   }
 };
