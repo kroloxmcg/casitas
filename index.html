@@ -1178,10 +1178,12 @@ const CCAA_DATA = {
       return 0.75;
     },
     ivaNueva: 10,
-    info: 'ITP 6%, uno de los mas bajos de Espana. AJD progresivo: 0,4% hasta 120k, 0,5% hasta 180k, 0,75% > 180k.',
+    info: 'ITP 6%. Bonificacion 10% vivienda habitual <= 250k (efectivo 5,4%), 4% familias numerosas, 3,5% discapacidad/jovenes <= 130k, 0% jovenes en municipios despoblados.',
     bonificaciones: [
-      { id: 'habitual', label: 'Vivienda habitual <= 250.000 €', hint: 'Bonificacion del 10% en la cuota. Tipo efectivo 5,4%.', apply: function(base, precio) { return precio <= 250000 ? base * 0.054 : null; } },
-      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } }
+      { id: 'habitual', label: 'Vivienda habitual <= 250.000 €', hint: 'Bonificacion del 10% en la cuota. Tipo efectivo 5,4%. Se puede fraccionar el pago en 3 anualidades.', apply: function(base, precio) { return precio <= 250000 ? base * 0.054 : null; } },
+      { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo del 4%. Sin limite de precio. Debe vender vivienda anterior en 2 anos.', apply: function(base) { return base * 0.04; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 33% (vivienda habitual <= 130.000 €)', hint: 'Tipo del 3,5%.', apply: function(base, precio) { return precio <= 130000 ? base * 0.035 : null; } },
+      { id: 'joven_rural', label: 'Menor de 35 anos en municipio < 2.500 hab. (<= 250.000 €)', hint: 'Bonificacion del 100% (0 € de ITP). Solo en municipios madrilenos en riesgo de despoblacion.', apply: function(base, precio) { return precio <= 250000 ? 0 : null; } }
     ]
   },
   melilla: {
