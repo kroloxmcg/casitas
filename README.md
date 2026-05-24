@@ -40,4 +40,4 @@ Abre `index.html` en cualquier navegador. No necesita servidor, instalación ni 
 - [Impuestos compra vivienda Madrid 2026 — Mabelan](https://mabelan.es/que-debo-pagar-a-la-hora-de-comprar-una-vivienda/)
 - [ITP por comunidades — Idealista](https://www.idealista.com/news/inmobiliario/vivienda/2024/09/18/819047-itp-por-comunidades-2024-conoce-los-tipos-aplicables)
 - [Gastos hipoteca — Comunidad de Madrid](https://www.comunidad.madrid/servicios/consumo/gastos-constitucion-hipoteca-puede-reclamar)
-- [Valor de referencia catastral — Sede Electrónica del Catastro](https://www1.sedecatastro.gob.es/Accesos/SECAccvrc.aspx)
+- [Valor de referencia catastral — Sede Electrónica del Catastro](https://www.sedecatastro.gob.es/Accesos/SECAccvr.aspx)
