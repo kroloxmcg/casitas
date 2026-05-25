@@ -1225,19 +1225,19 @@ const CCAA_DATA = {
       if (base <= 300000) return base * 0.09;
       return 300000 * 0.09 + (base - 300000) * 0.10;
     },
-    ajd: 1.5,
+    ajd: 1.0,
     ivaNueva: 10,
-    info: 'ITP progresivo: 9% hasta 300k, 10% > 300k. Tipo 7% vivienda habitual < 300k. Tipos 3-4% colectivos protegidos (Ley 3/2024).',
+    info: 'ITP progresivo: 9% hasta 300k, 10% > 300k. Tipo 7% vivienda habitual < 300k. Tipos 3-4% colectivos protegidos (Ley 5/2026). AJD 1%.',
     bonificaciones: [
       { id: 'habitual', label: 'Vivienda habitual < 300.000 €', hint: 'Tipo del 7%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.07 : null; } },
-      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 3/2024).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
-      { id: 'familia', label: 'Familia numerosa / monoparental (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 3/2024).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
+      { id: 'joven', label: 'Menor de 40 anos (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 5/2026).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
+      { id: 'familia', label: 'Familia numerosa / monoparental (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 5/2026).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
       { id: 'discapacidad33', label: 'Discapacidad 33%-64% (vivienda habitual < 300.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
       { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual < 300.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.03 : null; } },
-      { id: 'vpo', label: 'VPO (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 3/2024).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } }
+      { id: 'vpo', label: 'VPO (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 5/2026).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } }
     ],
     ajdBonificaciones: [
-      { id: 'ajd_joven', label: 'Menor de 36 anos / familia numerosa / VPO / discapacidad >= 33%', hint: 'AJD baja del 1,5% al 0,1% (Ley 3/2024).', apply: function(base) { return base * 0.001; } }
+      { id: 'ajd_joven', label: 'Menor de 40 anos / familia numerosa / VPO / discapacidad 33%-64%', hint: 'AJD baja del 1% al 0,1% (Ley 5/2026).', apply: function(base) { return base * 0.001; } }
     ]
   },
   castilla_mancha: {
@@ -1280,18 +1280,20 @@ const CCAA_DATA = {
   },
   cataluna: {
     nombre: 'Cataluna',
-    itpGeneral: 10,
+    itpGeneral: '10-13%',
     itpCalc: function(base) {
-      if (base <= 1000000) return base * 0.10;
-      return 1000000 * 0.10 + (base - 1000000) * 0.11;
+      if (base <= 600000) return base * 0.10;
+      if (base <= 900000) return 600000 * 0.10 + (base - 600000) * 0.11;
+      if (base <= 1500000) return 600000 * 0.10 + 300000 * 0.11 + (base - 900000) * 0.12;
+      return 600000 * 0.10 + 300000 * 0.11 + 600000 * 0.12 + (base - 1500000) * 0.13;
     },
     ajd: 1.5,
     ivaNueva: 10,
-    info: 'ITP 10% (11% > 1M €). Tipo 5% para jovenes <= 35, familias y discapacidad (DL 5/2025).',
+    info: 'ITP progresivo: 10% hasta 600k, 11% hasta 900k, 12% hasta 1,5M, 13% > 1,5M (DL 5/2025). Tipo 5% colectivos protegidos (vivienda < 180k).',
     bonificaciones: [
-      { id: 'joven', label: 'Hasta 35 anos (IRPF < 36.000 €)', hint: 'Tipo del 5% (DL 5/2025, antes < 32 anos).', apply: function(base) { return base * 0.05; } },
-      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo del 5%. IRPF < 36.000 € (+12.000 €/hijo extra).', apply: function(base) { return base * 0.05; } },
-      { id: 'discapacidad', label: 'Discapacidad fisica >= 65% o psiquica >= 33%', hint: 'Tipo del 5%. IRPF < 36.000 €.', apply: function(base) { return base * 0.05; } }
+      { id: 'joven', label: 'Hasta 35 anos (vivienda habitual < 180.000 €)', hint: 'Tipo del 5% (DL 5/2025). IRPF < 36.000 €.', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } },
+      { id: 'familia', label: 'Familia numerosa / monoparental (vivienda habitual < 180.000 €)', hint: 'Tipo del 5%. IRPF < 36.000 € (+12.000 €/hijo extra).', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } },
+      { id: 'discapacidad', label: 'Discapacidad fisica >= 65% o psiquica >= 33% (vivienda habitual < 180.000 €)', hint: 'Tipo del 5%. IRPF < 36.000 €.', apply: function(base, precio) { return precio <= 180000 ? base * 0.05 : null; } }
     ],
     ajdBonificaciones: [
       { id: 'ajd_joven', label: 'Menor de 35 anos (vivienda habitual, IRPF < 36.000 €)', hint: 'AJD bonificacion 100% (0%).', apply: function(base) { return 0; } },
@@ -1515,13 +1517,13 @@ const BONIFICACION_REQUISITOS = {
   canarias_ajd_discapacidad: ['Certificado de discapacidad >= 33% o vivienda en zona de despoblacion'],
   // Cantabria ITP
   cantabria_habitual: ['Vivienda habitual', 'Precio < 300.000 €', 'Empadronarse en 12 meses, residir minimo 3 anos'],
-  cantabria_joven: ['Edad < 36 anos', 'Vivienda habitual', 'Precio < 300.000 €', 'Empadronarse en 12 meses, residir minimo 3 anos'],
+  cantabria_joven: ['Edad < 40 anos (Ley 5/2026)', 'Vivienda habitual', 'Precio < 300.000 €', 'Empadronarse en 12 meses, residir minimo 3 anos'],
   cantabria_familia: ['Titulo de familia numerosa o monoparental', 'Vivienda habitual', 'Precio < 300.000 €', 'Empadronarse en 12 meses, residir minimo 3 anos'],
   cantabria_discapacidad33: ['Certificado de discapacidad 33%-64%', 'Vivienda habitual', 'Precio < 300.000 €', 'Empadronarse en 12 meses, residir minimo 3 anos'],
   cantabria_discapacidad65: ['Certificado de discapacidad >= 65%', 'Vivienda habitual', 'Precio < 300.000 €', 'Empadronarse en 12 meses, residir minimo 3 anos'],
   cantabria_vpo: ['Calificacion de VPO vigente', 'Vivienda habitual', 'Precio < 300.000 €'],
   // Cantabria AJD
-  cantabria_ajd_joven: ['Edad < 36 anos, o familia numerosa/monoparental, o VPO, o discapacidad 33%-64%', 'Vivienda habitual', 'Precio < 300.000 €'],
+  cantabria_ajd_joven: ['Edad < 40 anos, o familia numerosa/monoparental, o VPO, o discapacidad 33%-64%', 'Vivienda habitual', 'Precio < 300.000 €'],
   // Castilla-La Mancha ITP
   castilla_mancha_habitual: ['Primera vivienda habitual (no haber tenido otra en propiedad)', 'Precio < 240.000 €', 'Financiacion > 50% con hipoteca'],
   castilla_mancha_joven: ['Edad < 36 anos', 'Primera vivienda habitual', 'Precio < 240.000 €', 'Financiacion > 50% con hipoteca'],
@@ -1538,9 +1540,9 @@ const BONIFICACION_REQUISITOS = {
   castilla_leon_ajd_joven: ['Edad < 36 anos, o familia numerosa, o discapacidad >= 65%, o vivienda protegida', 'Vivienda habitual', 'Cumplir limites de renta de cada colectivo'],
   castilla_leon_ajd_rural: ['Edad < 36 anos (todos los adquirentes)', 'Primera vivienda habitual', 'Municipio < 10.000 hab. (o < 3.000 si < 30 km de capital)', 'Precio < 150.000 €', 'Renta < 31.500 €'],
   // Cataluna ITP
-  cataluna_joven: ['Edad <= 35 anos (desde DL 5/2025)', 'Vivienda habitual (residir 3 anos minimo)', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 €'],
-  cataluna_familia: ['Titulo de familia numerosa (Ley 40/2003) o monoparental (Ley 18/2003)', 'Vivienda habitual (residir 3 anos minimo)', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 € (+12.000 €/hijo extra)'],
-  cataluna_discapacidad: ['Discapacidad fisica >= 65% o psiquica >= 33%', 'Vivienda habitual (residir 3 anos minimo)', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 €'],
+  cataluna_joven: ['Edad <= 35 anos (desde DL 5/2025)', 'Vivienda habitual (residir 3 anos minimo)', 'Precio <= 180.000 €', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 €'],
+  cataluna_familia: ['Titulo de familia numerosa (Ley 40/2003) o monoparental (Ley 18/2003)', 'Vivienda habitual (residir 3 anos minimo)', 'Precio <= 180.000 €', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 € (+12.000 €/hijo extra)'],
+  cataluna_discapacidad: ['Discapacidad fisica >= 65% o psiquica >= 33%', 'Vivienda habitual (residir 3 anos minimo)', 'Precio <= 180.000 €', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 €'],
   // Cataluna AJD
   cataluna_ajd_joven: ['Edad <= 35 anos', 'Vivienda habitual', 'IRPF: BI general + ahorro - minimo personal/familiar < 36.000 €'],
   cataluna_ajd_familia: ['Titulo de familia numerosa'],
