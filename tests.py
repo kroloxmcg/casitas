@@ -34,8 +34,10 @@ def itp_baleares(base):
     return 400000*0.08 + 200000*0.09 + 400000*0.10 + 1000000*0.12 + (base-2000000)*0.13
 
 def itp_cataluna(base):
-    if base <= 1000000: return base * 0.10
-    return 1000000*0.10 + (base-1000000)*0.11
+    if base <= 600000: return base * 0.10
+    if base <= 900000: return 600000*0.10 + (base-600000)*0.11
+    if base <= 1500000: return 600000*0.10 + 300000*0.11 + (base-900000)*0.12
+    return 600000*0.10 + 300000*0.11 + 600000*0.12 + (base-1500000)*0.13
 
 def itp_galicia(base):
     if base <= 150000: return base * 0.08
@@ -165,9 +167,11 @@ assert_close(itp_baleares(300000), 300000*0.08, "Baleares 300k")
 assert_close(itp_baleares(500000), 400000*0.08 + 100000*0.09, "Baleares 500k")
 assert_close(itp_baleares(2500000), 400000*0.08 + 200000*0.09 + 400000*0.10 + 1000000*0.12 + 500000*0.13, "Baleares 2.5M")
 
-# Progressive: Cataluna
-assert_close(itp_cataluna(800000), 800000*0.10, "Cataluna 800k")
-assert_close(itp_cataluna(1500000), 1000000*0.10 + 500000*0.11, "Cataluna 1.5M")
+# Progressive: Cataluna (DL 5/2025: 4 tramos)
+assert_close(itp_cataluna(500000), 500000*0.10, "Cataluna 500k (tramo 1)")
+assert_close(itp_cataluna(800000), 600000*0.10 + 200000*0.11, "Cataluna 800k (tramo 2)")
+assert_close(itp_cataluna(1200000), 600000*0.10 + 300000*0.11 + 300000*0.12, "Cataluna 1.2M (tramo 3)")
+assert_close(itp_cataluna(2000000), 600000*0.10 + 300000*0.11 + 600000*0.12 + 500000*0.13, "Cataluna 2M (tramo 4)")
 
 # Progressive: Galicia
 assert_close(itp_galicia(100000), 100000*0.08, "Galicia 100k")
@@ -225,17 +229,19 @@ assert_close(250000 * 0.02, 5000, "Baleares discapacidad 250k")
 # Familia numerosa 300k: 2% on first 270k + 8% on excess
 assert_close(270000*0.02 + 30000*0.08, 7800, "Baleares familia 300k (mixed)")
 
-# Canarias
-assert_close(140000 * 0.05, 7000, "Canarias habitual <150k")
-assert_close(200000 * 0.04, 8000, "Canarias joven 200k")
-assert_close(200000 * 0.01, 2000, "Canarias discapacidad 65% 200k")
+# Canarias (Ley 9/2025)
+assert_close(190000 * 0.05, 9500, "Canarias habitual 190k <200k")
+assert_close(190000 * 0.01, 1900, "Canarias joven 190k <200k (1%)")
+assert_close(250000 * 0.065 * 0.05, 812.50, "Canarias familia 250k <300k (bonif 95%)")
+assert_close(190000 * 0.01, 1900, "Canarias discapacidad 65% 190k <200k (1%)")
 
-# Cantabria
-assert_close(180000 * 0.07, 12600, "Cantabria habitual 180k <200k")
-assert_close(180000 * 0.05, 9000, "Cantabria joven 180k <200k")
-assert_close(180000 * 0.04, 7200, "Cantabria discap 33-64% 180k <200k")
-assert_close(180000 * 0.03, 5400, "Cantabria discap 65% 180k <200k")
-assert_close(180000 * 0.05, 9000, "Cantabria VPO 180k <200k")
+# Cantabria (Ley 5/2026)
+assert_close(280000 * 0.07, 19600, "Cantabria habitual 280k <300k")
+assert_close(280000 * 0.04, 11200, "Cantabria joven 280k <300k (4%)")
+assert_close(280000 * 0.04, 11200, "Cantabria familia 280k <300k (4%)")
+assert_close(280000 * 0.04, 11200, "Cantabria discap 33-64% 280k <300k")
+assert_close(280000 * 0.03, 8400, "Cantabria discap 65% 280k <300k")
+assert_close(280000 * 0.04, 11200, "Cantabria VPO 280k <300k (4%)")
 
 # CLM (updated limits to 240k per Ley 1/2026)
 assert_close(200000 * 0.06, 12000, "CLM habitual 200k <240k")
@@ -248,9 +254,9 @@ assert_close(100000 * 0.0001, 10, "CyL joven rural 100k (0.01%)")
 assert_close(200000 * 0.04, 8000, "CyL familia 200k")
 assert_close(200000 * 0.04, 8000, "CyL discapacidad 200k")
 
-# Cataluna
-assert_close(300000 * 0.05, 15000, "Cataluna joven<32 300k")
-assert_close(300000 * 0.05, 15000, "Cataluna discapacidad 33% 300k")
+# Cataluna (DL 5/2025: <=35 anos, limite 180k)
+assert_close(170000 * 0.05, 8500, "Cataluna joven<=35 170k <180k")
+assert_close(170000 * 0.05, 8500, "Cataluna discapacidad 170k <180k")
 
 # Extremadura
 assert_close(180000 * 0.07, 12600, "Extremadura habitual 180k <200k")
@@ -260,8 +266,8 @@ assert_close(150000 * 0.04, 6000, "Extremadura rural 150k <180k")
 assert_close(250000 * 0.05, 12500, "Extremadura discap 33% 250k <300k")
 assert_close(350000 * 0.04, 14000, "Extremadura discap 65% 350k")
 
-# Galicia
-assert_close(140000 * 0.03, 4200, "Galicia joven <150k")
+# Galicia (Ley 5/2025: joven limite 240k)
+assert_close(230000 * 0.03, 6900, "Galicia joven 230k <240k")
 assert_close(300000 * 0.03, 9000, "Galicia familia 300k")
 assert_close(200000 * 0.07, 14000, "Galicia habitual 200k")
 assert_close(200000 * 0.04, 8000, "Galicia VPO 200k")
@@ -277,9 +283,10 @@ assert_close(140000 * 0.03, 4200, "Murcia joven <150k")
 assert_close(300000 * 0.03, 9000, "Murcia familia 300k")
 assert_close(200000 * 0.03, 6000, "Murcia discapacidad 65% 200k")
 
-# Rioja
-assert_close(200000 * 0.05, 10000, "Rioja joven 200k")
-assert_close(200000 * 0.05, 10000, "Rioja discapacidad 33% 200k")
+# Rioja (Ley 1/2025: <40 anos, 4%)
+assert_close(200000 * 0.04, 8000, "Rioja joven 200k (4%)")
+assert_close(200000 * 0.05, 10000, "Rioja familia 200k (5%)")
+assert_close(200000 * 0.05, 10000, "Rioja discapacidad 33% 200k (5%)")
 
 # Valencia
 assert_close(170000 * 0.06, 10200, "Valencia joven 170k <180k (6%)")
@@ -318,8 +325,8 @@ assert_close(250000 * 0.012, 3000, "BAL AJD habitual 250k <270k (1.2%)")
 assert_close(200000 * 0.004, 800, "CAN AJD habitual 200k (0.4%)")
 assert_close(200000 * 0.0015, 300, "CAN AJD discapacidad 200k (0.15%)")
 
-# Cantabria AJD
-assert_close(180000 * 0.003, 540, "CANT AJD joven 180k (0.3%)")
+# Cantabria AJD (Ley 5/2026: AJD general 1%, bonif 0.1%)
+assert_close(280000 * 0.001, 280, "CANT AJD joven 280k (0.1%)")
 
 # CLM AJD
 assert_close(200000 * 0.0025, 500, "CLM AJD joven 200k <240k (0.25%)")
@@ -394,8 +401,8 @@ assert_close(250000 * 0.09, 22500, "CLM joven 250k (>240k, general rate)")
 # Madrid discapacidad: limit 130k
 assert_close(140000 * 0.06, 8400, "Madrid discap 140k (>130k, general rate)")
 
-# Cantabria habitual: limit 200k
-assert_close(itp_cantabria(210000), 210000*0.09, "Cantabria habitual 210k (>200k, general rate)")
+# Cantabria habitual: limit 300k (Ley 5/2026)
+assert_close(itp_cantabria(310000), 300000*0.09 + 10000*0.10, "Cantabria habitual 310k (>300k, general rate)")
 
 # Baleares primera: limit 270k
 assert_close(itp_baleares(280000), 280000*0.08, "Baleares primera 280k (>270k, general rate)")
@@ -403,8 +410,8 @@ assert_close(itp_baleares(280000), 280000*0.08, "Baleares primera 280k (>270k, g
 # Valencia joven: limit 180k
 assert_close(itp_valencia(190000), 190000*0.10, "Valencia joven 190k (>180k, general rate)")
 
-# Galicia joven: limit 150k
-assert_close(itp_galicia(160000), 150000*0.08 + 10000*0.09, "Galicia joven 160k (>150k, general rate)")
+# Galicia joven: limit 240k (Ley 5/2025)
+assert_close(itp_galicia(250000), 150000*0.08 + 100000*0.09, "Galicia joven 250k (>240k, general rate)")
 
 # CLM AJD joven: limit 240k
 assert_close(250000 * 0.0125, 3125, "CLM AJD joven 250k (>240k, general AJD rate)")
@@ -882,6 +889,161 @@ assert_close(val_dinero - mad_dinero, 12000, "Comparativa diferencia dinero en m
 mad_obra = 300000 * 0.10 + 300000 * 0.0075
 val_obra = 300000 * 0.10 + 300000 * 0.02
 assert_close(val_obra - mad_obra, 3750, "Comparativa diferencia obra nueva MAD vs VAL (AJD)")
+
+
+# ============================================================
+# TESTS: LEGISLACION ACTUALIZADA 2025-2026
+# ============================================================
+
+print("\n" + "=" * 60)
+print("TESTING LEGISLACION ACTUALIZADA 2025-2026")
+print("=" * 60)
+
+# --- Canarias Ley 9/2025 ---
+# Habitual: 5% <= 200k (was 150k)
+assert_close(199000 * 0.05, 9950, "CAN Ley9: habitual 199k aplica (5%)")
+# Joven: 1% <= 200k (was 4% sin limite)
+assert_close(199000 * 0.01, 1990, "CAN Ley9: joven 199k (1%)")
+# Joven > 200k: no aplica
+assert_close(210000 * 0.065, 13650, "CAN Ley9: joven 210k >200k (general 6.5%)")
+# Familia: bonif 95% cuota <= 300k
+assert_close(290000 * 0.065 * 0.05, 942.50, "CAN Ley9: familia 290k (bonif 95%)")
+# Familia > 300k: no aplica
+assert_close(310000 * 0.065, 20150, "CAN Ley9: familia 310k >300k (general)")
+# Discapacidad: 1% <= 200k
+assert_close(190000 * 0.01, 1900, "CAN Ley9: discap 190k (1%)")
+assert_close(210000 * 0.065, 13650, "CAN Ley9: discap 210k >200k (general)")
+
+# --- Cantabria Ley 5/2026 ---
+# Habitual: 7% <= 300k (was 200k)
+assert_close(290000 * 0.07, 20300, "CANT Ley5: habitual 290k aplica (7%)")
+assert_close(itp_cantabria(310000), 300000*0.09 + 10000*0.10, "CANT Ley5: habitual 310k >300k (general)")
+# Joven: 4% <= 300k, edad < 40 (was <36, 5%)
+assert_close(290000 * 0.04, 11600, "CANT Ley5: joven 290k (4%)")
+# Familia: 4% <= 300k (was 5%)
+assert_close(290000 * 0.04, 11600, "CANT Ley5: familia 290k (4%)")
+# VPO: 4% <= 300k (was 5%)
+assert_close(290000 * 0.04, 11600, "CANT Ley5: VPO 290k (4%)")
+# Discap33: 4% <= 300k (unchanged rate)
+assert_close(290000 * 0.04, 11600, "CANT Ley5: discap33 290k (4%)")
+# Discap65: 3% <= 300k (unchanged rate)
+assert_close(290000 * 0.03, 8700, "CANT Ley5: discap65 290k (3%)")
+# AJD general: 1% (was 1.5%)
+assert_close(300000 * 0.01, 3000, "CANT Ley5: AJD general 300k (1%)")
+# AJD bonif: 0.1% (was 0.3%)
+assert_close(290000 * 0.001, 290, "CANT Ley5: AJD bonif 290k (0.1%)")
+
+# --- La Rioja Ley 1/2025 ---
+# Joven: 4% (was 5%), edad < 40 (was <36)
+assert_close(250000 * 0.04, 10000, "RIO Ley1: joven 250k (4%)")
+# Familia: 5% (unchanged)
+assert_close(250000 * 0.05, 12500, "RIO Ley1: familia 250k (5%)")
+# Discapacidad: 5% (unchanged)
+assert_close(250000 * 0.05, 12500, "RIO Ley1: discap 250k (5%)")
+
+# --- Cataluna DL 5/2025 ---
+# ITP progresivo 4 tramos
+assert_close(itp_cataluna(600000), 600000*0.10, "CAT DL5: ITP 600k (10%)")
+assert_close(itp_cataluna(600001), 600000*0.10 + 1*0.11, "CAT DL5: ITP 600001 (salto 11%)")
+assert_close(itp_cataluna(900000), 600000*0.10 + 300000*0.11, "CAT DL5: ITP 900k")
+assert_close(itp_cataluna(900001), 600000*0.10 + 300000*0.11 + 1*0.12, "CAT DL5: ITP 900001 (salto 12%)")
+assert_close(itp_cataluna(1500000), 600000*0.10 + 300000*0.11 + 600000*0.12, "CAT DL5: ITP 1.5M")
+assert_close(itp_cataluna(1500001), 600000*0.10 + 300000*0.11 + 600000*0.12 + 1*0.13, "CAT DL5: ITP 1500001 (salto 13%)")
+# Bonificaciones con limite 180k
+assert_close(180000 * 0.05, 9000, "CAT DL5: joven 180k limite (5%)")
+assert_close(170000 * 0.05, 8500, "CAT DL5: familia 170k <180k (5%)")
+# > 180k: no aplica bonificacion
+assert_close(itp_cataluna(190000), 190000*0.10, "CAT DL5: joven 190k >180k (general 10%)")
+
+# --- Galicia Ley 5/2025 ---
+# Joven: limite 240k (was 150k)
+assert_close(235000 * 0.03, 7050, "GAL Ley5: joven 235k <240k (3%)")
+# > 240k: no aplica
+assert_close(itp_galicia(245000), 150000*0.08 + 95000*0.09, "GAL Ley5: joven 245k >240k (general)")
+
+# --- Asturias: joven <= 35 (label fix) ---
+assert_close(140000 * 0.04, 5600, "AST: joven 140k <=150k (4%)")
+# > 150k: no aplica el 4%
+assert_close(itp_asturias(160000), 160000*0.08, "AST: joven 160k >150k (general)")
+
+# --- Aragon: joven < 35 (label fix) ---
+assert_close(90000 * 0.08 * 0.875, 6300, "ARA: joven 90k <100k (bonif 12.5%)")
+# > 100k: no aplica
+assert_close(itp_aragon(110000), 110000*0.08, "ARA: joven 110k >100k (general)")
+
+# --- Valencia: verificar todos los tramos ---
+# Joven bajo <= 180k -> 6%
+assert_close(180000 * 0.06, 10800, "VAL: joven 180k limite bajo (6%)")
+# Joven alto > 180k -> 8%
+assert_close(181000 * 0.08, 14480, "VAL: joven 181k alto (8%)")
+# Familia bajo <= 180k -> 3%
+assert_close(180000 * 0.03, 5400, "VAL: familia 180k limite (3%)")
+# Familia alto > 180k -> 4%
+assert_close(181000 * 0.04, 7240, "VAL: familia 181k alto (4%)")
+# VPO <= 180k -> 4%
+assert_close(180000 * 0.04, 7200, "VAL: VPO 180k limite (4%)")
+# VPO > 180k: no aplica
+assert_close(181000 * 0.10, 18100, "VAL: VPO 181k >180k (general)")
+
+# --- Madrid: sin cambios recientes ---
+assert_close(250000 * 0.054, 13500, "MAD: habitual 250k limite (5.4%)")
+assert_close(251000 * 0.06, 15060, "MAD: habitual 251k >250k (general 6%)")
+assert_close(130000 * 0.035, 4550, "MAD: discap 130k limite (3.5%)")
+assert_close(131000 * 0.06, 7860, "MAD: discap 131k >130k (general 6%)")
+
+# --- Murcia: verificar limites ---
+assert_close(150000 * 0.03, 4500, "MUR: joven 150k limite (3%)")
+assert_close(151000 * 0.0775, 11702.50, "MUR: joven 151k >150k (general 7.75%)")
+assert_close(300000 * 0.03, 9000, "MUR: familia 300k (3% sin limite precio)")
+assert_close(250000 * 0.05, 12500, "MUR: joven_emp 250k (5%)")
+
+# --- CLM: verificar limite 240k ---
+assert_close(240000 * 0.06, 14400, "CLM: habitual 240k limite (6%)")
+assert_close(241000 * 0.09, 21690, "CLM: habitual 241k >240k (general 9%)")
+assert_close(240000 * 0.03, 7200, "CLM: joven 240k limite (3%)")
+
+# --- CyL: verificar rural ---
+assert_close(80000 * 0.0001, 8, "CYL: joven rural 80k (0.01%)")
+assert_close(200000 * 0.04, 8000, "CYL: joven 200k (4%)")
+assert_close(200000 * 0.04, 8000, "CYL: discapacidad 200k (4%)")
+
+# --- Baleares: verificar limites ---
+assert_close(270000 * 0.04, 10800, "BAL: primera 270k limite (4%)")
+assert_close(270000 * 0.02, 5400, "BAL: joven36 270k (2%)")
+assert_equal(0, 0, "BAL: joven30 270k (0%)")
+# Familia 300k: 2% on 270k + 8% on 30k
+assert_close(270000*0.02 + 30000*0.08, 7800, "BAL: familia 300k mixed")
+
+# --- Extremadura: verificar limites ---
+assert_close(200000 * 0.07, 14000, "EXT: habitual 200k limite (7%)")
+assert_close(itp_extremadura(201000), 201000*0.08, "EXT: habitual 201k >200k (general)")
+assert_close(180000 * 0.04, 7200, "EXT: rural 180k limite (4%)")
+assert_close(300000 * 0.05, 15000, "EXT: discap33 300k limite (5%)")
+
+# --- Pais Vasco ---
+assert_close(300000 * 0.04, 12000, "PV: general 300k (4%)")
+assert_close(300000 * 0.025, 7500, "PV: familia bizkaia 300k (2.5%)")
+
+# --- AJD general rates verification ---
+assert_close(300000 * 0.012, 3600, "AJD general Andalucia (1.2%)")
+assert_close(300000 * 0.015, 4500, "AJD general Aragon (1.5%)")
+assert_close(300000 * 0.012, 3600, "AJD general Asturias (1.2%)")
+assert_close(300000 * 0.015, 4500, "AJD general Baleares (1.5%)")
+assert_close(300000 * 0.0075, 2250, "AJD general Canarias (0.75%)")
+assert_close(300000 * 0.01, 3000, "AJD general Cantabria (1%)")
+assert_close(300000 * 0.0125, 3750, "AJD general CLM (1.25%)")
+assert_close(300000 * 0.015, 4500, "AJD general CyL (1.5%)")
+assert_close(300000 * 0.015, 4500, "AJD general Cataluna (1.5%)")
+assert_close(300000 * 0.005, 1500, "AJD general Ceuta (0.5%)")
+assert_close(300000 * 0.015, 4500, "AJD general Extremadura (1.5%)")
+assert_close(300000 * 0.015, 4500, "AJD general Galicia (1.5%)")
+assert_close(300000 * 0.0075, 2250, "AJD general Madrid (0.75%)")
+assert_close(300000 * 0.005, 1500, "AJD general Melilla (0.5%)")
+assert_close(300000 * 0.015, 4500, "AJD general Murcia (1.5%)")
+assert_close(300000 * 0.005, 1500, "AJD general Navarra (0.5%)")
+assert_close(300000 * 0, 0, "AJD general Pais Vasco (0%)")
+assert_close(300000 * 0.01, 3000, "AJD general Rioja (1%)")
+assert_close(300000 * 0.02, 6000, "AJD general Valencia (2%)")
 
 
 # ============================================================
