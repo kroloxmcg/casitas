@@ -1145,7 +1145,7 @@ const CCAA_DATA = {
         else tax = 400000 * 0.08 + 50000 * 0.085 + 50000 * 0.09 + 250000 * 0.095 + (base - 750000) * 0.10;
         return tax * 0.5;
       } },
-      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota (tipo efectivo ~7%).', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } },
+      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota (tipo efectivo ~7%).', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota (tipo efectivo ~7%).', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } },
       { id: 'victima', label: 'Victima violencia de genero (vivienda habitual < 100.000 €)', hint: 'Bonificacion del 12,5% sobre la cuota.', apply: function(base, precio) { return precio <= 100000 ? base * 0.08 * 0.875 : null; } }
     ],
