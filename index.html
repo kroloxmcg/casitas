@@ -1165,7 +1165,7 @@ const CCAA_DATA = {
     ivaNueva: 10,
     info: 'ITP progresivo: 8% hasta 300k, 9% hasta 500k, 10% > 500k.',
     bonificaciones: [
-      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 150.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.04 : null; } },
+      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 150.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.04 : null; } },
       { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo del 4% para vivienda habitual, sin limite de precio.', apply: function(base) { return base * 0.04; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65%', hint: 'Tipo del 4% para vivienda habitual.', apply: function(base) { return base * 0.04; } },
       { id: 'victima', label: 'Victima violencia de genero', hint: 'Tipo del 4% para vivienda habitual.', apply: function(base) { return base * 0.04; } },
@@ -1206,12 +1206,12 @@ const CCAA_DATA = {
     ajd: 0.75,
     ivaNueva: 7,
     ivaLabel: 'IGIC',
-    info: 'ITP 6,5%. En obra nueva IGIC 7% (no IVA). Tipos muy bajos para colectivos protegidos (hasta 1%).',
+    info: 'ITP 6,5%. En obra nueva IGIC 7% (no IVA). Ley 9/2025: tipo 1% jovenes < 40, bonif. 95% familias.',
     bonificaciones: [
-      { id: 'habitual', label: 'Vivienda habitual < 150.000 €', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.05 : null; } },
-      { id: 'joven', label: 'Menor de 35 anos', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } },
-      { id: 'familia', label: 'Familia numerosa', hint: 'Tipo del 4%.', apply: function(base) { return base * 0.04; } },
-      { id: 'discapacidad', label: 'Discapacidad >= 65%', hint: 'Tipo del 1%, con limites de renta (24.000 € individual / 42.000 € conjunta).', apply: function(base) { return base * 0.01; } }
+      { id: 'habitual', label: 'Vivienda habitual < 200.000 €', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.05 : null; } },
+      { id: 'joven', label: 'Menor de 40 anos (vivienda habitual < 200.000 €)', hint: 'Tipo del 1% (Ley 9/2025). Renta IRPF < 40.000 € (+6.000 €/persona a cargo).', apply: function(base, precio) { return precio <= 200000 ? base * 0.01 : null; } },
+      { id: 'familia', label: 'Familia numerosa (< 300.000 €)', hint: 'Bonificacion 95% sobre cuota (tipo efectivo ~0,3%). Cat. especial < 400.000 €.', apply: function(base, precio) { return precio <= 300000 ? base * 0.065 * 0.05 : null; } },
+      { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual < 200.000 €)', hint: 'Tipo del 1%. Renta IRPF < 40.000 € (+6.000 €/persona a cargo).', apply: function(base, precio) { return precio <= 200000 ? base * 0.01 : null; } }
     ],
     ajdBonificaciones: [
       { id: 'ajd_habitual', label: 'Vivienda habitual', hint: 'AJD baja del 0,75% al 0,4%.', apply: function(base) { return base * 0.004; } },
@@ -1227,17 +1227,17 @@ const CCAA_DATA = {
     },
     ajd: 1.5,
     ivaNueva: 10,
-    info: 'ITP progresivo: 9% hasta 300k, 10% > 300k. Tipo 7% vivienda habitual < 200k. Tipos 3-5% para colectivos protegidos.',
+    info: 'ITP progresivo: 9% hasta 300k, 10% > 300k. Tipo 7% vivienda habitual < 300k. Tipos 3-4% colectivos protegidos (Ley 3/2024).',
     bonificaciones: [
-      { id: 'habitual', label: 'Vivienda habitual < 200.000 €', hint: 'Tipo del 7%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.07 : null; } },
-      { id: 'joven', label: 'Menor de 35 anos (vivienda habitual < 200.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.05 : null; } },
-      { id: 'familia', label: 'Familia numerosa (vivienda habitual < 200.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.05 : null; } },
-      { id: 'discapacidad33', label: 'Discapacidad 33%-64% (vivienda habitual < 200.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.04 : null; } },
-      { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual < 200.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.03 : null; } },
-      { id: 'vpo', label: 'VPO (vivienda habitual < 200.000 €)', hint: 'Tipo del 5%.', apply: function(base, precio) { return precio <= 200000 ? base * 0.05 : null; } }
+      { id: 'habitual', label: 'Vivienda habitual < 300.000 €', hint: 'Tipo del 7%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.07 : null; } },
+      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 3/2024).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
+      { id: 'familia', label: 'Familia numerosa / monoparental (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 3/2024).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
+      { id: 'discapacidad33', label: 'Discapacidad 33%-64% (vivienda habitual < 300.000 €)', hint: 'Tipo del 4%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } },
+      { id: 'discapacidad65', label: 'Discapacidad >= 65% (vivienda habitual < 300.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 300000 ? base * 0.03 : null; } },
+      { id: 'vpo', label: 'VPO (vivienda habitual < 300.000 €)', hint: 'Tipo del 4% (Ley 3/2024).', apply: function(base, precio) { return precio <= 300000 ? base * 0.04 : null; } }
     ],
     ajdBonificaciones: [
-      { id: 'ajd_joven', label: 'Menor de 30 anos / familia numerosa / VPP / discapacidad >= 33%', hint: 'AJD baja del 1,5% al 0,3%.', apply: function(base) { return base * 0.003; } }
+      { id: 'ajd_joven', label: 'Menor de 36 anos / familia numerosa / VPO / discapacidad >= 33%', hint: 'AJD baja del 1,5% al 0,1% (Ley 3/2024).', apply: function(base) { return base * 0.001; } }
     ]
   },
   castilla_mancha: {
@@ -1287,11 +1287,11 @@ const CCAA_DATA = {
     },
     ajd: 1.5,
     ivaNueva: 10,
-    info: 'ITP 10% (11% > 1M €). Tipo 5% para jovenes < 32, familias y discapacidad.',
+    info: 'ITP 10% (11% > 1M €). Tipo 5% para jovenes <= 35, familias y discapacidad (DL 5/2025).',
     bonificaciones: [
-      { id: 'joven', label: 'Menor de 32 anos (renta < 30.000 €)', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
-      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
-      { id: 'discapacidad', label: 'Discapacidad >= 33%', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } }
+      { id: 'joven', label: 'Hasta 35 anos (IRPF < 36.000 €)', hint: 'Tipo del 5% (DL 5/2025, antes < 32 anos).', apply: function(base) { return base * 0.05; } },
+      { id: 'familia', label: 'Familia numerosa / monoparental', hint: 'Tipo del 5%. IRPF < 36.000 € (+12.000 €/hijo extra).', apply: function(base) { return base * 0.05; } },
+      { id: 'discapacidad', label: 'Discapacidad fisica >= 65% o psiquica >= 33%', hint: 'Tipo del 5%. IRPF < 36.000 €.', apply: function(base) { return base * 0.05; } }
     ],
     ajdBonificaciones: [
       { id: 'ajd_joven', label: 'Menor de 35 anos (vivienda habitual, IRPF < 36.000 €)', hint: 'AJD bonificacion 100% (0%).', apply: function(base) { return 0; } },
@@ -1346,7 +1346,7 @@ const CCAA_DATA = {
     info: 'ITP progresivo: 8% hasta 150k, 9% hasta 600k, 10% > 600k. Tipo 7% vivienda habitual, 3% colectivos protegidos, 0% en zonas rurales despobladas.',
     bonificaciones: [
       { id: 'habitual', label: 'Vivienda habitual (patrimonio < 200.000 €)', hint: 'Tipo del 7%.', apply: function(base) { return base * 0.07; } },
-      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual < 150.000 €)', hint: 'Tipo del 3%.', apply: function(base, precio) { return precio <= 150000 ? base * 0.03 : null; } },
+      { id: 'joven', label: 'Menor de 36 anos (precio + patrimonio < 240.000 €)', hint: 'Tipo del 3% (Ley 5/2025). Vivienda habitual.', apply: function(base, precio) { return precio <= 240000 ? base * 0.03 : null; } },
       { id: 'familia', label: 'Familia numerosa (vivienda habitual)', hint: 'Tipo del 3%.', apply: function(base) { return base * 0.03; } },
       { id: 'monoparental', label: 'Familia monoparental (vivienda habitual)', hint: 'Tipo del 3%. Requiere inscripcion en Registro de Familias Monoparentales de Galicia.', apply: function(base) { return base * 0.03; } },
       { id: 'discapacidad', label: 'Discapacidad >= 65% (vivienda habitual)', hint: 'Tipo del 3%.', apply: function(base) { return base * 0.03; } },
@@ -1430,14 +1430,14 @@ const CCAA_DATA = {
     itpCalc: function(base) { return base * 0.07; },
     ajd: 1.0,
     ivaNueva: 10,
-    info: 'ITP 7%. Tipo 5% para jovenes, familias y discapacidad >= 33%.',
+    info: 'ITP 7%. Tipo 4% jovenes < 40 (Ley 1/2025), 5% familias y discapacidad >= 33%.',
     bonificaciones: [
-      { id: 'joven', label: 'Menor de 36 anos (vivienda habitual)', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
+      { id: 'joven', label: 'Menor de 40 anos (primera vivienda habitual)', hint: 'Tipo del 4% (Ley 1/2025). Sin limite de renta.', apply: function(base) { return base * 0.04; } },
       { id: 'familia', label: 'Familia numerosa', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } },
       { id: 'discapacidad', label: 'Discapacidad >= 33%', hint: 'Tipo del 5%.', apply: function(base) { return base * 0.05; } }
     ],
     ajdBonificaciones: [
-      { id: 'ajd_joven', label: 'Menor de 36 anos / familias / discapacidad >= 33%', hint: 'AJD baja del 1% al 0,5%.', apply: function(base) { return base * 0.005; } }
+      { id: 'ajd_joven', label: 'Menor de 40 anos / familias / discapacidad >= 33%', hint: 'AJD baja del 1% al 0,5%.', apply: function(base) { return base * 0.005; } }
     ]
   },
   valencia: {
