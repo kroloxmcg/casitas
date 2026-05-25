@@ -265,6 +265,28 @@
     margin-top: 0.15rem;
   }
 
+  .bon-requisitos {
+    display: none;
+    margin: 0.2rem 0 0.6rem 1.6rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255,255,255,0.04);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .bon-requisitos.open { display: block; }
+  .bon-requisitos ul {
+    margin: 0.2rem 0 0;
+    padding-left: 1rem;
+    list-style: disc;
+  }
+  .bon-requisitos li { margin-bottom: 0.15rem; }
+  .bon-requisitos strong {
+    color: var(--text);
+    font-size: 0.78rem;
+  }
+
   .switch-row {
     display: flex;
     align-items: center;
@@ -1446,6 +1468,141 @@ const CCAA_DATA = {
   }
 };
 
+const BONIFICACION_REQUISITOS = {
+  // Andalucia ITP
+  andalucia_habitual150: ['Debe ser vivienda habitual', 'Precio < 150.000 €'],
+  andalucia_joven: ['Edad < 35 anos', 'Vivienda habitual', 'Precio < 150.000 €', 'En pareja, basta que uno sea < 35'],
+  andalucia_familia: ['Titulo de familia numerosa vigente', 'Vivienda habitual', 'Precio < 250.000 €'],
+  andalucia_discapacidad: ['Certificado de discapacidad >= 33%', 'Vivienda habitual', 'Precio < 250.000 €', 'En pareja, basta que uno tenga discapacidad'],
+  andalucia_victima: ['Acreditacion oficial de victima', 'Vivienda habitual', 'Precio < 150.000 €'],
+  andalucia_vpo: ['Calificacion de VPO vigente'],
+  // Andalucia AJD
+  andalucia_ajd_habitual: ['Vivienda habitual', 'Precio < 150.000 €'],
+  andalucia_ajd_joven: ['Edad < 35 anos', 'Vivienda habitual', 'Precio < 150.000 €'],
+  andalucia_ajd_familia: ['Titulo de familia numerosa', 'Vivienda habitual', 'Precio < 250.000 €'],
+  andalucia_ajd_discapacidad: ['Certificado de discapacidad >= 33%', 'Vivienda habitual', 'Precio < 250.000 €'],
+  andalucia_ajd_vpo: ['Calificacion de VPO o certificacion energetica A/B'],
+  // Aragon ITP
+  aragon_familia: ['Titulo de familia numerosa', 'Vivienda habitual', 'Vender vivienda anterior en plazo', 'Nueva vivienda con > 10% mas superficie'],
+  aragon_joven: ['Edad < 36 anos', 'Vivienda habitual', 'Precio < 100.000 €'],
+  aragon_discapacidad: ['Certificado de discapacidad >= 65%', 'Vivienda habitual', 'Precio < 100.000 €'],
+  aragon_victima: ['Acreditacion de victima de violencia de genero', 'Vivienda habitual', 'Precio < 100.000 €'],
+  // Aragon AJD
+  aragon_ajd_vpo: ['Calificacion de VPP (Vivienda Precio Protegido)'],
+  // Asturias ITP
+  asturias_joven: ['Edad < 35 anos', 'Vivienda habitual', 'Precio < 150.000 €'],
+  asturias_familia: ['Titulo de familia numerosa o monoparental', 'Vivienda habitual'],
+  asturias_discapacidad: ['Certificado de discapacidad >= 65%', 'Vivienda habitual'],
+  asturias_victima: ['Acreditacion de victima de violencia de genero', 'Vivienda habitual'],
+  asturias_vpo: ['Calificacion de VPO vigente'],
+  // Asturias AJD
+  asturias_ajd_vpo: ['Calificacion de VPO'],
+  // Baleares ITP
+  baleares_primera: ['Primera vivienda (no tener otra en propiedad)', 'Vivienda habitual', 'Precio < 270.000 €'],
+  baleares_joven36: ['Edad < 36 anos', 'Primera vivienda', 'Precio < 270.000 €'],
+  baleares_joven30: ['Edad < 30 anos', 'Primera vivienda', 'Precio < 270.000 €', 'Residencia en Baleares 3 anos previos', 'Cumplir limites de renta'],
+  baleares_familia: ['Titulo de familia numerosa o monoparental', 'Precio < 350.000 €'],
+  baleares_discapacidad: ['Certificado de discapacidad >= 33%', 'Primera vivienda', 'Precio < 270.000 €', 'Con 3 anos de residencia: bonificacion 100%'],
+  // Baleares AJD
+  baleares_ajd_habitual: ['Primera vivienda habitual', 'Precio < 270.000 €'],
+  // Canarias ITP
+  canarias_habitual: ['Vivienda habitual', 'Precio < 150.000 €'],
+  canarias_joven: ['Edad < 35 anos'],
+  canarias_familia: ['Titulo de familia numerosa'],
+  canarias_discapacidad: ['Certificado de discapacidad >= 65%', 'Renta < 24.000 € individual / 42.000 € conjunta'],
+  // Canarias AJD
+  canarias_ajd_habitual: ['Vivienda habitual'],
+  canarias_ajd_discapacidad: ['Certificado de discapacidad >= 33% o vivienda en zona de despoblacion'],
+  // Cantabria ITP
+  cantabria_habitual: ['Vivienda habitual', 'Precio < 200.000 €'],
+  cantabria_joven: ['Edad < 35 anos', 'Vivienda habitual', 'Precio < 200.000 €'],
+  cantabria_familia: ['Titulo de familia numerosa', 'Vivienda habitual', 'Precio < 200.000 €'],
+  cantabria_discapacidad33: ['Certificado de discapacidad 33%-64%', 'Vivienda habitual', 'Precio < 200.000 €'],
+  cantabria_discapacidad65: ['Certificado de discapacidad >= 65%', 'Vivienda habitual', 'Precio < 200.000 €'],
+  cantabria_vpo: ['Calificacion de VPO', 'Vivienda habitual', 'Precio < 200.000 €'],
+  // Cantabria AJD
+  cantabria_ajd_joven: ['Edad < 30 anos, o familia numerosa, o VPP, o discapacidad >= 33%'],
+  // Castilla-La Mancha ITP
+  castilla_mancha_habitual: ['Primera vivienda habitual', 'Precio < 240.000 €', 'Financiacion > 50% con hipoteca'],
+  castilla_mancha_joven: ['Edad < 36 anos', 'Primera vivienda', 'Precio < 240.000 €', 'Financiacion > 50% con hipoteca'],
+  castilla_mancha_familia: ['Titulo de familia numerosa o monoparental', 'Primera vivienda', 'Precio < 240.000 €'],
+  castilla_mancha_discapacidad: ['Certificado de discapacidad >= 65%', 'Primera vivienda', 'Precio < 240.000 €'],
+  // Castilla-La Mancha AJD
+  castilla_mancha_ajd_joven: ['Edad < 36 anos', 'Primera vivienda', 'Precio < 240.000 €'],
+  // Castilla y Leon ITP
+  castilla_leon_joven: ['Edad < 36 anos', 'Primera vivienda', 'Renta < 31.500 €'],
+  castilla_leon_joven_rural: ['Edad < 36 anos', 'Municipio < 10.000 habitantes'],
+  castilla_leon_familia: ['Titulo de familia numerosa'],
+  castilla_leon_discapacidad: ['Certificado de discapacidad >= 65%', 'Vivienda habitual'],
+  // Castilla y Leon AJD
+  castilla_leon_ajd_joven: ['Edad < 36 anos, o familia numerosa, o discapacidad >= 65%'],
+  castilla_leon_ajd_rural: ['Edad < 36 anos', 'Municipio < 10.000 habitantes'],
+  // Cataluna ITP
+  cataluna_joven: ['Edad < 32 anos', 'Renta < 30.000 €'],
+  cataluna_familia: ['Titulo de familia numerosa o monoparental'],
+  cataluna_discapacidad: ['Certificado de discapacidad >= 33%'],
+  // Cataluna AJD
+  cataluna_ajd_joven: ['Edad < 35 anos', 'Vivienda habitual', 'IRPF < 36.000 €'],
+  cataluna_ajd_familia: ['Titulo de familia numerosa'],
+  cataluna_ajd_vpo: ['Calificacion de VPO'],
+  // Extremadura ITP
+  extremadura_habitual: ['Vivienda habitual', 'Precio < 200.000 €', 'Cumplir limites de renta'],
+  extremadura_joven: ['Edad < 36 anos', 'Vivienda habitual'],
+  extremadura_familia: ['Titulo de familia numerosa'],
+  extremadura_vpo: ['Calificacion de VPO'],
+  extremadura_rural: ['Vivienda habitual', 'Municipio < 3.000 habitantes', 'Precio < 180.000 €', 'Cumplir limites de renta'],
+  extremadura_discapacidad33: ['Certificado de discapacidad 33%-64%', 'Vivienda habitual', 'Precio < 300.000 €'],
+  extremadura_discapacidad65: ['Certificado de discapacidad >= 65%', 'Vivienda habitual'],
+  // Extremadura AJD
+  extremadura_ajd_habitual: ['Vivienda habitual'],
+  extremadura_ajd_rural: ['Vivienda habitual en zona rural'],
+  // Galicia ITP
+  galicia_habitual: ['Vivienda habitual', 'Patrimonio preexistente < 200.000 €'],
+  galicia_joven: ['Edad < 36 anos', 'Vivienda habitual', 'Precio < 150.000 €'],
+  galicia_familia: ['Titulo de familia numerosa', 'Vivienda habitual'],
+  galicia_monoparental: ['Inscripcion en Registro de Familias Monoparentales de Galicia', 'Vivienda habitual'],
+  galicia_discapacidad: ['Certificado de discapacidad >= 65%', 'Vivienda habitual'],
+  galicia_victima: ['Acreditacion de victima de violencia de genero', 'Precio < 150.000 €'],
+  galicia_vpo: ['Calificacion de VPO'],
+  // Galicia AJD
+  galicia_ajd_habitual: ['Vivienda habitual'],
+  galicia_ajd_joven: ['Edad < 36 anos, o familia numerosa, o discapacidad, o victima VG'],
+  // Madrid ITP
+  madrid_habitual: ['Vivienda habitual', 'Precio <= 250.000 €'],
+  madrid_familia: ['Titulo de familia numerosa', 'Vivienda habitual', 'Vender vivienda anterior en 2 anos'],
+  madrid_discapacidad: ['Certificado de discapacidad >= 33%', 'Vivienda habitual', 'Precio <= 130.000 €'],
+  madrid_joven_rural: ['Edad < 35 anos', 'Municipio < 2.500 hab. en riesgo de despoblacion', 'Precio <= 250.000 €'],
+  // Murcia ITP
+  murcia_joven: ['Edad < 36 anos', 'Vivienda habitual', 'Precio < 150.000 €'],
+  murcia_familia: ['Titulo de familia numerosa', 'Vivienda habitual'],
+  murcia_joven_emp: ['Edad < 40 anos', 'Ser empresario o profesional autonomo'],
+  murcia_discapacidad: ['Certificado de discapacidad >= 65%', 'Vivienda habitual', 'Cumplir limites de renta'],
+  murcia_vpo: ['Calificacion de VPO'],
+  // Murcia AJD
+  murcia_ajd_joven: ['Edad < 35 anos', 'Vivienda habitual', 'Precio < 150.000 €'],
+  // Pais Vasco ITP
+  pais_vasco_familia_bizkaia: ['Titulo de familia numerosa', 'Residencia en Bizkaia'],
+  // La Rioja ITP
+  rioja_joven: ['Edad < 36 anos', 'Vivienda habitual'],
+  rioja_familia: ['Titulo de familia numerosa'],
+  rioja_discapacidad: ['Certificado de discapacidad >= 33%'],
+  // La Rioja AJD
+  rioja_ajd_joven: ['Edad < 36 anos, o familia numerosa, o discapacidad >= 33%'],
+  // Valencia ITP
+  valencia_joven_bajo: ['Edad del comprador < 35 anos', 'Vivienda habitual', 'Precio <= 180.000 €', 'Renta < 30.000 € individual / 47.000 € conjunta'],
+  valencia_joven_alto: ['Edad del comprador < 35 anos', 'Vivienda habitual', 'Precio > 180.000 €'],
+  valencia_familia_bajo: ['Titulo de familia numerosa o monoparental', 'Vivienda habitual', 'Precio <= 180.000 €'],
+  valencia_familia_alto: ['Titulo de familia numerosa o monoparental', 'Vivienda habitual', 'Precio > 180.000 €'],
+  valencia_discapacidad_bajo: ['Certificado discapacidad >= 65% fis./sens. o >= 33% psiq.', 'Vivienda habitual', 'Precio <= 180.000 €', 'Renta < 30.000 € individual / 47.000 € conjunta'],
+  valencia_discapacidad_alto: ['Certificado discapacidad >= 65% fis./sens. o >= 33% psiq.', 'Vivienda habitual', 'Precio > 180.000 €'],
+  valencia_victima_bajo: ['Acreditacion de victima de violencia de genero', 'Vivienda habitual', 'Precio <= 180.000 €'],
+  valencia_victima_alto: ['Acreditacion de victima de violencia de genero', 'Vivienda habitual', 'Precio > 180.000 €'],
+  valencia_vpo: ['Calificacion de VPO', 'Vivienda habitual', 'Precio <= 180.000 €'],
+  // Valencia AJD
+  valencia_ajd_joven: ['Edad < 35 anos o familia numerosa', 'Precio < 180.000 €'],
+  valencia_ajd_discapacidad: ['Certificado discapacidad >= 65% fis./sens. o >= 33% psiq.']
+};
+
 let tipo = 'segunda';
 let notariaManual = false;
 let registroManual = false;
@@ -1494,6 +1651,7 @@ function getCCAAData() {
 
 function renderBonificaciones() {
   var data = getCCAAData();
+  var ccaaKey = document.getElementById('ccaa').value;
   var container = document.getElementById('bonificacionesContent');
   var card = document.getElementById('cardBonificaciones');
   var titleEl = card.querySelector('.card-title');
@@ -1519,13 +1677,28 @@ function renderBonificaciones() {
   card.style.display = 'block';
   var html = '';
   bons.forEach(function(b) {
+    var reqs = BONIFICACION_REQUISITOS[ccaaKey + '_' + b.id];
     html += '<label class="checkbox-row">';
-    html += '<input type="checkbox" id="bon_' + b.id + '" onchange="calcular()">';
+    html += '<input type="checkbox" id="bon_' + b.id + '" onchange="onBonChange(\'' + b.id + '\')">';
     html += '<span class="checkbox-text">' + b.label;
     html += '<span class="checkbox-hint">' + b.hint + '</span>';
     html += '</span></label>';
+    if (reqs && reqs.length > 0) {
+      html += '<div class="bon-requisitos" id="req_' + b.id + '"><strong>Requisitos:</strong><ul>';
+      reqs.forEach(function(r) { html += '<li>' + r + '</li>'; });
+      html += '</ul></div>';
+    }
   });
   container.innerHTML = html;
+}
+
+function onBonChange(id) {
+  var chk = document.getElementById('bon_' + id);
+  var req = document.getElementById('req_' + id);
+  if (req) {
+    req.classList.toggle('open', chk.checked);
+  }
+  calcular();
 }
 
 function renderCCAAInfo() {
