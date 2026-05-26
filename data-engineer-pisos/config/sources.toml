@@ -1,0 +1,20 @@
+[idealista]
+base_url = "https://api.idealista.com/3.5"
+rate_limit_monthly = 100
+default_country = "es"
+default_operation = "sale"       # sale | rent
+default_property_type = "homes"  # homes | offices | premises | garages | bedrooms
+default_center = "40.4168,-3.7038"  # Madrid centro
+default_distance = 15000            # metros
+
+[ine]
+base_url = "https://servicios.ine.es/wstempus/js"
+ipv_operation = "25171"   # Indice de Precios de Vivienda
+
+[serpavi]
+download_url = "https://www.mivau.gob.es/vivienda/alquila-bien-es-tu-derecho/serpavi"
+description = "Sistema Estatal de Referencia del Precio del Alquiler"
+
+[datosgob]
+base_url = "https://datos.gob.es/apidata"
+catalog_theme = "vivienda"
