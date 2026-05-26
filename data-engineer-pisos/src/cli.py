@@ -43,11 +43,12 @@ def transform(
     raw_file: Path = typer.Argument(..., help="Path to raw JSON file"),
 ):
     """Transform raw data into structured Parquet."""
-    from src.transformers import transform_idealista, transform_ine
+    from src.transformers import transform_idealista, transform_ine, transform_serpavi
 
     transformers = {
         "idealista": transform_idealista,
         "ine": transform_ine,
+        "serpavi": transform_serpavi,
     }
 
     if source not in transformers:
@@ -98,13 +99,14 @@ def pipeline(
     source: str = typer.Argument("idealista", help="Source to run full pipeline for"),
 ):
     """Run the full ETL pipeline: extract -> transform -> load."""
-    from src.extractors import IdealistaExtractor, INEExtractor
+    from src.extractors import IdealistaExtractor, INEExtractor, SERPAVIExtractor
     from src.loaders import DuckDBLoader
-    from src.transformers import transform_idealista, transform_ine
+    from src.transformers import transform_idealista, transform_ine, transform_serpavi
 
     pipelines = {
         "idealista": (IdealistaExtractor, transform_idealista, "listings"),
         "ine": (INEExtractor, transform_ine, "ipv"),
+        "serpavi": (SERPAVIExtractor, transform_serpavi, "rentals"),
     }
 
     if source not in pipelines:
