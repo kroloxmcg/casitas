@@ -44,7 +44,9 @@ LIMIT 20;
 -- Evolución IPV (para cruzar con datos de anuncios)
 SELECT
     category,
+    year,
+    quarter,
     period,
     value
 FROM ipv
-ORDER BY category, period;
+ORDER BY category, year, quarter;

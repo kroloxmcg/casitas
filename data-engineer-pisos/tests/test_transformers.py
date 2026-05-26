@@ -51,11 +51,11 @@ def test_transform_idealista_basic():
 def test_transform_ine_basic():
     raw = {
         "ipv_general": [
-            {"periodo": "2024T4", "valor": 112.5},
-            {"periodo": "2024T3", "valor": 110.2},
+            {"anyo": 2024, "periodo_id": 22, "valor": 112.5, "fecha": 1735686000000},
+            {"anyo": 2024, "periodo_id": 21, "valor": 110.2, "fecha": 1727733600000},
         ],
         "ipv_nueva": [
-            {"periodo": "2024T4", "valor": 115.0},
+            {"anyo": 2024, "periodo_id": 22, "valor": 115.0, "fecha": 1735686000000},
         ],
     }
 
@@ -71,6 +71,7 @@ def test_transform_ine_basic():
     df = pl.read_parquet(output)
     assert len(df) == 3
     assert set(df["category"].to_list()) == {"ipv_general", "ipv_nueva"}
+    assert df.filter(pl.col("period") == "2024Q4")["value"][0] == 112.5
 
     raw_path.unlink()
     output.unlink()

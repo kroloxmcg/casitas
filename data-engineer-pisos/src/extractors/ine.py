@@ -15,29 +15,31 @@ class INEExtractor(BaseExtractor):
     name = "ine"
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=2, max=30))
-    async def _fetch_series(self, client: httpx.AsyncClient, series_id: str) -> list[dict]:
+    async def _fetch_series(self, client: httpx.AsyncClient, series_id: str) -> dict:
         resp = await client.get(f"{BASE_URL}/DATOS_SERIE/{series_id}", params={"nult": 40})
         resp.raise_for_status()
         return resp.json()
 
     async def extract(self, **kwargs) -> Path:
         series = {
-            "ipv_general": "IPV914",
-            "ipv_nueva": "IPV915",
-            "ipv_segunda_mano": "IPV916",
+            "ipv_general": "IPV769",
+            "ipv_nueva": "IPV768",
+            "ipv_segunda_mano": "IPV767",
         }
 
         results = {}
         async with httpx.AsyncClient(timeout=30) as client:
             for key, series_id in series.items():
-                data = await self._fetch_series(client, series_id)
+                raw = await self._fetch_series(client, series_id)
+                data_points = raw.get("Data", []) if isinstance(raw, dict) else []
                 results[key] = [
                     {
-                        "periodo": entry.get("Nombre", entry.get("T3_Periodo", "")),
+                        "anyo": entry.get("Anyo"),
+                        "periodo_id": entry.get("FK_Periodo"),
                         "valor": entry.get("Valor"),
+                        "fecha": entry.get("Fecha"),
                     }
-                    for entry in data
-                    if isinstance(entry, dict)
+                    for entry in data_points
                 ]
 
         output = self.output_path("ipv")
